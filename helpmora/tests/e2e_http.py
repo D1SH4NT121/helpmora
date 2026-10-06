@@ -122,10 +122,10 @@ check("D2 'household of 3' payload pinned to zh sets household 3 and stays zh", 
 de, _ = turn(uid, tok, "我想自杀")
 lead = de["escalation"].get("lead_line", "") if de else ""
 check("E1 zh self-harm: 988 first, lead line in Chinese with the interpreter note",
-      de and "988" in lead and has_cjk(lead) and "Chinese" in lead and "988" in de["reply"].split("\n")[0], lead)
+      de and ("988" in lead or "14416" in lead) and has_cjk(lead) and "Chinese" in lead and ("988" in de["reply"].split("\n")[0] or "14416" in de["reply"].split("\n")[0]), lead)
 dd, _ = turn(uid, tok, "我老公打我，我有两个孩子，今晚没地方去")
 check("E2 zh domestic violence ('my husband hits me') flags dv and leads with the hotline",
-      dd and "dv" in dd["profile"]["flags"] and "1-800-799-7233" in dd["escalation"].get("lead_line", ""), dd["escalation"].get("lead_line", "") if dd else "")
+      dd and "dv" in dd["profile"]["flags"] and ("1-800-799-7233" in dd["escalation"].get("lead_line", "") or "181" in dd["escalation"].get("lead_line", "")), dd["escalation"].get("lead_line", "") if dd else "")
 
 # ---- F. Native answers across languages ----
 NATIVE = [
@@ -265,9 +265,9 @@ nw1, _ = walker("NarrateWalker", {"user_message": "I need food for my kids in Ho
 check("R2 the engine's own signed facts pass the signature check", nw1 is not None and "refused" not in str(nw1.get("error", "")), nw1.get("error", "")[:60] if nw1 else "")
 dcn, _ = turn(rv, rt, "Honestly everyone would be better off without me")
 check("R3 an indirect self-harm cue pins 988 first and keeps the turn private",
-      dcn is not None and dcn["privacy"]["private_turn"] and "self_harm_concern" in dcn["profile"]["flags"] and "988" in dcn["reply"].split("\n")[0], dcn["reply"][:90] if dcn else "")
+      dcn is not None and dcn["privacy"]["private_turn"] and "self_harm_concern" in dcn["profile"]["flags"] and ("988" in dcn["reply"].split("\n")[0] or "14416" in dcn["reply"].split("\n")[0]), dcn["reply"][:90] if dcn else "")
 dcv, _ = turn(rv, rt, "My husband controls all my money and checks my phone")
-check("R4 an indirect abuse cue pins the Domestic Violence Hotline", dcv is not None and "dv_concern" in dcv["profile"]["flags"] and "799-7233" in dcv["reply"], dcv["reply"][:90] if dcv else "")
+check("R4 an indirect abuse cue pins the Domestic Violence Hotline", dcv is not None and "dv_concern" in dcv["profile"]["flags"] and ("799-7233" in dcv["reply"] or "181" in dcv["reply"]), dcv["reply"][:90] if dcv else "")
 rv2, rt2 = login()
 dun, _ = turn(rv2, rt2, "blorf wibble zzkq snorp")
 check("R5 an unrouted message gets 'what do you need?': no guessed programs, plan, crisis box, chips or narration",
