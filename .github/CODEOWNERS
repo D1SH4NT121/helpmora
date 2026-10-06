@@ -1,0 +1,14 @@
+# Review routing. The project has one maintainer today; the safety-critical paths
+# are listed separately so a second maintainer or partner reviewer can be added
+# to them first.
+*                                   @D1SH4NT121
+
+# Crisis handling, privacy and eligibility rules: a mistake here can hurt someone.
+/helpmora/engine/parse.jac         @D1SH4NT121
+/helpmora/engine/policy.jac        @D1SH4NT121
+/helpmora/engine/privacy.jac       @D1SH4NT121
+/helpmora/walkers/escalation.jac   @D1SH4NT121
+/helpmora/walkers/narrate.jac      @D1SH4NT121
+/helpmora/data/resources.json      @D1SH4NT121
+/helpmora/data/i18n/               @D1SH4NT121
+/PRIVACY.md                         @D1SH4NT121

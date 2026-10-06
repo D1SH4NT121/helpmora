@@ -1,0 +1,186 @@
+{
+  "transitions": [
+    {
+      "from": "Shelter for Urban Homeless (SUH - Deendayal Antyodaya Yojana - NULM)",
+      "to": "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)",
+      "reason": "Shelter social workers assist in biometric Aadhaar generation and guide in-situ PMAY-U EWS housing allotment applications.",
+      "days": 60,
+      "difficulty": "moderate"
+    },
+    {
+      "from": "Shelter for Urban Homeless (SUH - Deendayal Antyodaya Yojana - NULM)",
+      "to": "Community Kitchens & Subsidized Canteens (Indira Rasoi / Amma Canteen)",
+      "reason": "Night shelter inmates receive direct token vouchers for subsidized and community canteen daily meals.",
+      "days": 1,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Shakti Sadan (Swadhar Greh & Short Stay Homes for Women in Distress)",
+      "to": "One Stop Centres (OSC - Sakhi Centres for Women in Crisis)",
+      "reason": "Residents of short stay homes receive immediate police protection, forensic documentation, and crisis legal defense.",
+      "days": 2,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Shakti Sadan (Swadhar Greh & Short Stay Homes for Women in Distress)",
+      "to": "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)",
+      "reason": "Rehabilitated survivors receive prioritized EWS quota housing applications upon completing vocational skill training.",
+      "days": 90,
+      "difficulty": "moderate"
+    },
+    {
+      "from": "Affordable Rental Housing Complexes (ARHCs)",
+      "to": "PM SVANidhi Urban Vendor Shelter & Micro-Credit Upliftment",
+      "reason": "ARHC tenants with informal livelihoods are fast-tracked for PM SVANidhi collateral-free working capital micro-loans.",
+      "days": 14,
+      "difficulty": "easy"
+    },
+    {
+      "from": "National Disaster Relief Emergency Temporary Shelters (NDRF / SDRF)",
+      "to": "Pradhan Mantri Awas Yojana - Gramin (PMAY-G)",
+      "reason": "Disaster relief camp census enables fast-track priority sanction of PMAY-G disaster reconstruction financial grants.",
+      "days": 45,
+      "difficulty": "moderate"
+    },
+    {
+      "from": "State Slum Rehabilitation Authority (SRA / In-Situ Slum Redevelopment)",
+      "to": "Affordable Rental Housing Complexes (ARHCs)",
+      "reason": "Transit accommodation in ARHCs provided to eligible families while high-rise permanent rehabilitation tenements are under construction.",
+      "days": 21,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / NFSA Priority Households)",
+      "to": "Antyodaya Anna Yojana (AAY - Deepest Poverty Food Entitlement)",
+      "reason": "Households experiencing acute vulnerability or loss of primary earner can appeal for conversion from PHH to 35kg AAY cards.",
+      "days": 30,
+      "difficulty": "moderate"
+    },
+    {
+      "from": "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / NFSA Priority Households)",
+      "to": "One Nation One Ration Card (ONORC - Nationwide Portability)",
+      "reason": "Existing ration cardholders can instantly enable biometric nationwide portability on the Mera Ration portal for interstate work.",
+      "days": 3,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Mission Poshan 2.0 (ICDS Anganwadi Supplementary Nutrition)",
+      "to": "Pradhan Mantri Matru Vandana Yojana (PMMVY - Maternity Nutrition Benefit)",
+      "reason": "Anganwadi workers directly register pregnant women on the Poshan Tracker and facilitate their Rs 5,000 PMMVY maternity DBT claim.",
+      "days": 10,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Mission Poshan 2.0 (ICDS Anganwadi Supplementary Nutrition)",
+      "to": "PM POSHAN (Pradhan Mantri Poshan Shakti Nirman - Mid-Day Meal Scheme)",
+      "reason": "Graduating Anganwadi children at age 6 are automatically transitioned into government primary school mid-day meal records.",
+      "days": 15,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Annapurna Scheme for Senior Citizens",
+      "to": "Senior Citizen Assisted Living & Old Age Homes (Rashtriya Vayoshri & Shelter)",
+      "reason": "Indigent seniors receiving Annapurna grain can apply for comprehensive assisted residential care when living independently becomes unviable.",
+      "days": 20,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Akshaya Patra & NGO Food Relief Network",
+      "to": "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / NFSA Priority Households)",
+      "reason": "Emergency food kit distribution camps connect undocumented families with local Fair Price Shop ration enrollment drives.",
+      "days": 25,
+      "difficulty": "moderate"
+    },
+    {
+      "from": "Emergency Food Security Helpline (Dial 1967)",
+      "to": "One Nation One Ration Card (ONORC - Nationwide Portability)",
+      "reason": "Helpline grievance officers resolve biometric mismatch issues to restore nationwide ration lifting rights.",
+      "days": 5,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Ayushman Bharat - PM-JAY (Pradhan Mantri Jan Arogya Yojana)",
+      "to": "Rashtriya Arogya Nidhi (RAN - Treatment for Rare & Life-Threatening Diseases)",
+      "reason": "When hospital treatment costs exceed the Rs 5 lakh PM-JAY annual ceiling, hospital superintendents submit RAN supplemental grant requests.",
+      "days": 14,
+      "difficulty": "moderate"
+    },
+    {
+      "from": "Ayushman Bharat Health and Wellness Centres (Ayushman Arogya Mandirs)",
+      "to": "Pradhan Mantri Bhartiya Janaushadhi Pariyojana (PMBJP Jan Aushadhi Kendras)",
+      "reason": "Prescriptions from primary health wellness centres are linked with local Jan Aushadhi generic stores for medicines at 90% discount.",
+      "days": 1,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Ayushman Bharat Health and Wellness Centres (Ayushman Arogya Mandirs)",
+      "to": "National Tuberculosis Elimination Program (NTEP - Nikshay Poshan Yojana)",
+      "reason": "Positive screening at health wellness centres initiates instant Nikshay notification, free CBNAAT confirmation, and DBT cash support.",
+      "days": 3,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Janani Suraksha Yojana & JSSK (Institutional Delivery & Free Neonatal Care)",
+      "to": "Mission Poshan 2.0 (ICDS Anganwadi Supplementary Nutrition)",
+      "reason": "Newborns and post-natal mothers are enrolled directly by ASHA workers for Anganwadi supplementary take-home rations.",
+      "days": 7,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Tele-MANAS (Tele Mental Health Assistance and Networking Across States)",
+      "to": "National Legal Services Authority (NALSA - Free Legal Aid Clinics)",
+      "reason": "Counselors identify ongoing domestic harassment or property deprivation and connect distressed callers to DLSA legal aid lawyers.",
+      "days": 2,
+      "difficulty": "easy"
+    },
+    {
+      "from": "National Tuberculosis Elimination Program (NTEP - Nikshay Poshan Yojana)",
+      "to": "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / NFSA Priority Households)",
+      "reason": "TB patients without existing ration cards receive prioritized recommendation for food grain security to support nutritional recovery.",
+      "days": 14,
+      "difficulty": "easy"
+    },
+    {
+      "from": "National Legal Services Authority (NALSA - Free Legal Aid Clinics)",
+      "to": "District Legal Services Authority - Lok Adalat (Dispute Pre-Litigation & Settlement)",
+      "reason": "Legal aid advocates refer civil disputes to upcoming National Lok Adalats for binding amicable settlement with complete court fee refund.",
+      "days": 15,
+      "difficulty": "easy"
+    },
+    {
+      "from": "One Stop Centres (OSC - Sakhi Centres for Women in Crisis)",
+      "to": "Shakti Sadan (Swadhar Greh & Short Stay Homes for Women in Distress)",
+      "reason": "Victims of violence requiring extended shelter beyond 5 days at One Stop Centres are safely transferred to residential Shakti Sadan homes.",
+      "days": 5,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Tele-Law: Reaching the Unreached (Department of Justice & CSCs)",
+      "to": "National Legal Services Authority (NALSA - Free Legal Aid Clinics)",
+      "reason": "If pre-litigation advice indicates unavoidable court litigation, Tele-Law panel lawyers assign the case directly to DLSA for free representation.",
+      "days": 7,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Childline 1098 & District Child Protection Unit (DCPU / POCSO Support)",
+      "to": "PM POSHAN (Pradhan Mantri Poshan Shakti Nirman - Mid-Day Meal Scheme)",
+      "reason": "Rescued children restored to families or foster care are immediately admitted into local government schools with mid-day meal coverage.",
+      "days": 10,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Senior Citizens Maintenance and Welfare Tribunal (Maintenance Act 2007)",
+      "to": "National Legal Services Authority (NALSA - Free Legal Aid Clinics)",
+      "reason": "Senior citizens seeking enforcement of maintenance orders are provided dedicated pro bono advocates by the legal services authority.",
+      "days": 5,
+      "difficulty": "easy"
+    },
+    {
+      "from": "Labour Commissioner Conciliation & e-Shram Worker Grievance Redressal",
+      "to": "Employees' State Insurance Corporation (ESIC Medical & Sickness Benefits)",
+      "reason": "Investigation into informal contract labor reveals eligible establishments and triggers retrospective ESIC registration and health coverage.",
+      "days": 30,
+      "difficulty": "moderate"
+    }
+  ]
+}

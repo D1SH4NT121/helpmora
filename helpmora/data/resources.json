@@ -1,0 +1,2012 @@
+{
+  "resources": [
+    {
+      "agency_name": "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)",
+      "category": "housing",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "011-23063285",
+      "contact_email": "pmay-u@gov.in",
+      "address": "Ministry of Housing and Urban Affairs, Nirman Bhawan, New Delhi 110011",
+      "online_url": "https://pmaymis.gov.in",
+      "description": "Central urban housing mission providing central assistance, interest subsidies (CLSS), and affordable pucca houses for Economically Weaker Sections (EWS) and Low Income Groups (LIG) living in urban areas who do not own a pucca house in India.",
+      "eligibility": {
+        "rule_id": "pmay-u-rule",
+        "income_limit_annual": 300000,
+        "residency_requirement": "city",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 18,
+        "age_max": 0,
+        "exceptions": "LIG category income ceiling extends up to Rs 6,00,000 for credit linked subsidy. Female head of household ownership is prioritized.",
+        "criteria_summary": "Family income under Rs 3,00,000 (EWS) or Rs 6,00,000 (LIG), urban resident, no existing pucca house owned by any family member in India.",
+        "targets": [
+          "housing_crisis",
+          "tenant"
+        ]
+      },
+      "form": {
+        "form_id": "pmay-u-online",
+        "form_name": "PMAY(U) Online Beneficiary Registration Form",
+        "url": "https://pmaymis.gov.in/Open/Find_Beneficiary_Details.aspx",
+        "required_documents": [
+          "Aadhaar Card of all family members",
+          "Income Certificate issued by Revenue Authority / Tehsildar",
+          "Affidavit affirming no pucca house ownership in India",
+          "Aadhaar-linked Bank Passbook copy",
+          "Land ownership deed / title proof (for Beneficiary-Led Construction)"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "online",
+        "estimated_minutes": 45
+      }
+    },
+    {
+      "agency_name": "Pradhan Mantri Awas Yojana - Gramin (PMAY-G)",
+      "category": "housing",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1800-11-6446",
+      "contact_email": "support-pmayg@gov.in",
+      "address": "Ministry of Rural Development, Krishi Bhawan, Dr. Rajendra Prasad Road, New Delhi 110001",
+      "online_url": "https://pmayg.nic.in",
+      "description": "Direct financial assistance of Rs 1.20 lakh (plains) to Rs 1.30 lakh (hilly/difficult/NE states) directly into bank accounts for rural houseless families living in kutcha or dilapidated dwellings to build disaster-resilient pucca homes.",
+      "eligibility": {
+        "rule_id": "pmay-g-rule",
+        "income_limit_annual": 150000,
+        "residency_requirement": "state",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 18,
+        "age_max": 0,
+        "exceptions": "Identified via SECC 2011 deprivation criteria and Awaas+ survey verified by Gram Sabha.",
+        "criteria_summary": "Rural household without a pucca house, family income under Rs 1,50,000, validated through Gram Sabha rural beneficiary list.",
+        "targets": [
+          "housing_crisis"
+        ]
+      },
+      "form": {
+        "form_id": "pmay-g-awaassoft",
+        "form_name": "AwaasSoft Rural Housing Sanction Application",
+        "url": "https://pmayg.nic.in/netiay/AwaasPlus/AwaasPlusRegistration.aspx",
+        "required_documents": [
+          "Aadhaar Card",
+          "MGNREGS Job Card Number",
+          "Bank Account Passbook (Aadhaar DBT enabled)",
+          "Gram Sabha Verification Resolution / Awaas+ ID",
+          "Geotagged Site Photograph of existing kutcha structure"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 30
+      }
+    },
+    {
+      "agency_name": "Shelter for Urban Homeless (SUH - Deendayal Antyodaya Yojana - NULM)",
+      "category": "housing",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "011-23062850",
+      "contact_email": "suh-nulm@gov.in",
+      "address": "Urban Local Bodies / Municipal Corporations across India",
+      "online_url": "https://nulm.gov.in/Shelter/Home.aspx",
+      "description": "Free 24/7 permanent shelter facilities equipped with bedding, potable water, sanitation, CCTV security, social protection linkages, and first aid for destitute street dwellers, pavement sleepers, and urban homeless.",
+      "eligibility": {
+        "rule_id": "suh-nulm-rule",
+        "income_limit_annual": 60000,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "No person in acute need of shelter is turned away. Specialized wings available for women, families, and disabled individuals.",
+        "criteria_summary": "Homeless or unsheltered in urban area, no income or BPL destitute, universal emergency intake.",
+        "targets": [
+          "homeless",
+          "housing_crisis"
+        ]
+      },
+      "form": {
+        "form_id": "suh-intake",
+        "form_name": "SUH Night Shelter Intake & Identification Form",
+        "url": "https://nulm.gov.in",
+        "required_documents": [
+          "Self-declaration / Verbal Intake Statement if undocumented",
+          "Any identity proof (Aadhaar, Voter ID, Ration Card) if available",
+          "Recent Photograph (taken at shelter desk)"
+        ],
+        "deadline_type": "none",
+        "submission_method": "in_person",
+        "estimated_minutes": 10
+      }
+    },
+    {
+      "agency_name": "Shakti Sadan (Swadhar Greh & Short Stay Homes for Women in Distress)",
+      "category": "housing",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "181",
+      "contact_email": "shaktisadan-wcd@gov.in",
+      "address": "Ministry of Women and Child Development, Shastri Bhawan, New Delhi 110001",
+      "online_url": "https://wcd.nic.in/schemes/shakti-sadan",
+      "description": "Safe institutional residential shelter, trauma counseling, legal support, medical aid, clothing, and vocational skill training for women facing domestic violence, family desertion, trafficking, or communal displacement, along with their children.",
+      "eligibility": {
+        "rule_id": "shakti-sadan-rule",
+        "income_limit_annual": 120000,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 18,
+        "age_max": 0,
+        "exceptions": "Accompanies male children up to 8 years and female children up to 18 years of age. Immediate shelter provided without fee or prior notice.",
+        "criteria_summary": "Women in difficult circumstances, victims of domestic violence or abandonment, monthly family income under Rs 10,000.",
+        "targets": [
+          "dv",
+          "housing_crisis"
+        ]
+      },
+      "form": {
+        "form_id": "shakti-sadan-intake",
+        "form_name": "Shakti Sadan Emergency Residential Admission Form",
+        "url": "https://wcd.nic.in",
+        "required_documents": [
+          "Direct intake statement / Protection Officer referral",
+          "Aadhaar or any identity card (optional upon admission)",
+          "Medical examination report (coordinated by home staff)",
+          "Police DD entry or One Stop Centre referral (if applicable)"
+        ],
+        "deadline_type": "none",
+        "submission_method": "in_person",
+        "estimated_minutes": 15
+      }
+    },
+    {
+      "agency_name": "Affordable Rental Housing Complexes (ARHCs)",
+      "category": "housing",
+      "capacity": "limited",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "011-23061827",
+      "contact_email": "arhc-mohua@gov.in",
+      "address": "Ministry of Housing and Urban Affairs, Nirman Bhawan, New Delhi 110011",
+      "online_url": "https://arhc.mohua.gov.in",
+      "description": "Subsidized, dignified urban rental housing complexes developed near industrial corridors and urban centers for migrant laborers, daily wage earners, industrial workers, and urban service providers at nominal rental rates.",
+      "eligibility": {
+        "rule_id": "arhc-rental-rule",
+        "income_limit_annual": 300000,
+        "residency_requirement": "city",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 18,
+        "age_max": 0,
+        "exceptions": "Preference given to unorganized workers registered on e-Shram portal and urban street vendors.",
+        "criteria_summary": "Urban migrant or industrial worker, annual family income under Rs 3,00,000, no owned residential unit in the project city.",
+        "targets": [
+          "tenant"
+        ]
+      },
+      "form": {
+        "form_id": "arhc-allotment",
+        "form_name": "ARHC Tenancy Registration Application",
+        "url": "https://arhc.mohua.gov.in",
+        "required_documents": [
+          "Aadhaar Card",
+          "e-Shram Card or Employer / Contractor Certification",
+          "Passport-size Photographs of family members",
+          "Bank Account Passbook Copy"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "online",
+        "estimated_minutes": 25
+      }
+    },
+    {
+      "agency_name": "Working Women Hostel Scheme (Sakhi Niwas)",
+      "category": "housing",
+      "capacity": "limited",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "011-23381654",
+      "contact_email": "sakhiniwas-mwcd@gov.in",
+      "address": "Ministry of Women and Child Development, Shastri Bhawan, New Delhi 110001",
+      "online_url": "https://wcd.nic.in/schemes/sakhi-niwas",
+      "description": "Safe and affordable hostel accommodation with attached day-care crèche facilities for working women whose employment takes them away from their hometowns, single working mothers, and women undergoing job training.",
+      "eligibility": {
+        "rule_id": "sakhi-niwas-rule",
+        "income_limit_annual": 600000,
+        "residency_requirement": "city",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 18,
+        "age_max": 60,
+        "exceptions": "Gross monthly salary ceiling Rs 50,000 (metropolitan cities) or Rs 35,000 (other areas). Crèche facility for children up to 5 years.",
+        "criteria_summary": "Employed woman or woman undergoing job training, gross income under Rs 6,00,000/year, residing away from home district.",
+        "targets": [
+          "single_parent"
+        ]
+      },
+      "form": {
+        "form_id": "sakhi-niwas-app",
+        "form_name": "Sakhi Niwas Hostel Admission Application",
+        "url": "https://wcd.nic.in",
+        "required_documents": [
+          "Letter of Employment / Appointment Letter / Training Certificate",
+          "Salary Slip / Income Certificate",
+          "Aadhaar Card",
+          "Proof of Permanent Residence outside city",
+          "Child Birth Certificate (if enrolling in day-care crèche)"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 30
+      }
+    },
+    {
+      "agency_name": "PM SVANidhi Urban Vendor Shelter & Micro-Credit Upliftment",
+      "category": "housing",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1800-11-1979",
+      "contact_email": "pmsvanidhi-mohua@gov.in",
+      "address": "Ministry of Housing and Urban Affairs, Nirman Bhawan, New Delhi 110011",
+      "online_url": "https://pmsvanidhi.mohua.gov.in",
+      "description": "Integrated socio-economic protection for street vendors facing livelihood disruption or shelter distress, offering collateral-free working capital loans up to Rs 50,000, digital cashback, and social security scheme linkages.",
+      "eligibility": {
+        "rule_id": "pm-svanidhi-rule",
+        "income_limit_annual": 250000,
+        "residency_requirement": "city",
+        "min_family_size": 0,
+        "citizenship_required": true,
+        "age_min": 18,
+        "age_max": 0,
+        "exceptions": "Street vendors vending in urban areas on or before March 24, 2020 or with Letter of Recommendation (LoR) from Urban Local Body.",
+        "criteria_summary": "Urban street vendor with Certificate of Vending or ULB Letter of Recommendation, annual income under Rs 2,50,000.",
+        "targets": [
+          "consumer"
+        ]
+      },
+      "form": {
+        "form_id": "pmsvanidhi-form",
+        "form_name": "PM SVANidhi Loan & Scheme Linkage Application",
+        "url": "https://pmsvanidhi.mohua.gov.in/ApplicationForm",
+        "required_documents": [
+          "Certificate of Vending (CoV) or Letter of Recommendation (LoR)",
+          "Aadhaar Card",
+          "Voter ID Card",
+          "Bank Account Passbook copy"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "online",
+        "estimated_minutes": 20
+      }
+    },
+    {
+      "agency_name": "Senior Citizen Assisted Living & Old Age Homes (Rashtriya Vayoshri & Shelter)",
+      "category": "housing",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "14567",
+      "contact_email": "elderline-dosje@gov.in",
+      "address": "Ministry of Social Justice and Empowerment, Shastri Bhawan, New Delhi 110001",
+      "online_url": "https://socialjustice.gov.in/schemes/elderline",
+      "description": "Free institutional elder care homes providing assisted living, nutritious meals, primary medical care, physical rehabilitation devices (Rashtriya Vayoshri Yojana), and recreational facilities for indigent elderly persons.",
+      "eligibility": {
+        "rule_id": "rv-oldage-rule",
+        "income_limit_annual": 180000,
+        "residency_requirement": "state",
+        "min_family_size": 0,
+        "citizenship_required": true,
+        "age_min": 60,
+        "age_max": 0,
+        "exceptions": "Destitute elderly with no family support given immediate admissions without income proof upon social welfare officer certification.",
+        "criteria_summary": "Senior citizen aged 60+, annual income under Rs 1,80,000 or BPL cardholder, lack of family support.",
+        "targets": [
+          "homebound"
+        ]
+      },
+      "form": {
+        "form_id": "senior-shelter-intake",
+        "form_name": "Old Age Home Admission & Vayoshri Device Request Form",
+        "url": "https://elderline.dosje.gov.in",
+        "required_documents": [
+          "Age Proof (Aadhaar Card / Voter ID proving 60+ years)",
+          "BPL Card or Income Certificate from Revenue Authority",
+          "Medical Fitness / Disability Certificate",
+          "Passport-size Photographs"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 30
+      }
+    },
+    {
+      "agency_name": "National Disaster Relief Emergency Temporary Shelters (NDRF / SDRF)",
+      "category": "housing",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1070",
+      "contact_email": "ndma-relief@nic.in",
+      "address": "National Disaster Management Authority, NDMA Bhawan, A-1, Safdarjung Enclave, New Delhi 110029",
+      "online_url": "https://ndma.gov.in",
+      "description": "Immediate emergency relief camps, prefabricated temporary shelters, clean water, medical aid, and subsistence kits for families rendered homeless by floods, cyclones, landslides, earthquakes, or industrial disasters.",
+      "eligibility": {
+        "rule_id": "ndrf-shelter-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Universal non-discriminatory humanitarian relief provided to all disaster-affected persons.",
+        "criteria_summary": "Person or family displaced by natural or anthropogenic disaster, immediate emergency eligibility.",
+        "targets": [
+          "homeless",
+          "housing_crisis"
+        ]
+      },
+      "form": {
+        "form_id": "disaster-relief-intake",
+        "form_name": "SDRF Disaster Displacement Intake Manifest",
+        "url": "https://ndma.gov.in",
+        "required_documents": [
+          "Verbal intake declaration at camp registration desk",
+          "District relief camp token (issued on arrival)"
+        ],
+        "deadline_type": "none",
+        "submission_method": "in_person",
+        "estimated_minutes": 5
+      }
+    },
+    {
+      "agency_name": "State Slum Rehabilitation Authority (SRA / In-Situ Slum Redevelopment)",
+      "category": "housing",
+      "capacity": "waitlist",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "022-26565800",
+      "contact_email": "info@sra.gov.in",
+      "address": "Slum Rehabilitation Authority, Griha Nirman Bhawan, Bandra East, Mumbai 400051",
+      "online_url": "https://sra.gov.in",
+      "description": "In-situ redevelopment of notified slum clusters providing free, permanent, self-contained residential tenements (minimum 300 sq.ft carpet area) with pucca construction, piped water, electricity, and clean sanitation for verified slum dwellers.",
+      "eligibility": {
+        "rule_id": "sra-rehab-rule",
+        "income_limit_annual": 400000,
+        "residency_requirement": "city",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 18,
+        "age_max": 0,
+        "exceptions": "Requires proof of hutment structure and continuous occupation prior to state cutoff baseline year (e.g., 2000/2011).",
+        "criteria_summary": "Hutment dweller in notified slum pocket, family income under Rs 4,00,000, resident prior to statutory cutoff datum.",
+        "targets": [
+          "tenant",
+          "housing_crisis"
+        ]
+      },
+      "form": {
+        "form_id": "sra-annexure2",
+        "form_name": "SRA Annexure-II Tenancy Verification Document",
+        "url": "https://sra.gov.in",
+        "required_documents": [
+          "Electoral Roll extract proving residence prior to cutoff datum",
+          "Aadhaar Card of all family members",
+          "Electricity bill / Ration card of slum hutment",
+          "Photographs of the existing structure and family",
+          "Survey receipt / Biometric census slip"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 60
+      }
+    },
+    {
+      "agency_name": "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / NFSA Priority Households)",
+      "category": "food",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1967",
+      "contact_email": "nfsa-support@nic.in",
+      "address": "Department of Food and Public Distribution, Krishi Bhawan, New Delhi 110001",
+      "online_url": "https://nfsa.gov.in",
+      "description": "Free 5 kg food grains (wheat/rice) per person per month distributed to over 80 crore beneficiaries via electronic Point of Sale (ePoS) Fair Price Shops under the National Food Security Act (NFSA).",
+      "eligibility": {
+        "rule_id": "snap-rule",
+        "income_limit_annual": 150000,
+        "residency_requirement": "state",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Covers both urban (up to 50%) and rural (up to 75%) population based on state inclusion criteria. Female head of family is recognized as household head on ration cards.",
+        "criteria_summary": "Annual household income under Rs 1,50,000 or meeting state NFSA priority inclusion criteria.",
+        "targets": []
+      },
+      "form": {
+        "form_id": "nfsa-phh-form",
+        "form_name": "NFSA Priority Household Ration Card Application (Form A)",
+        "url": "https://nfsa.gov.in/portal/apply_ration_card",
+        "required_documents": [
+          "Aadhaar Cards of all family members",
+          "Income Certificate from Tehsildar / Revenue Department",
+          "Proof of Residence (Electricity / Water bill or LPG connection)",
+          "Passport Photographs of female head of household",
+          "Bank Account Passbook (first page copy)"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 30
+      }
+    },
+    {
+      "agency_name": "Antyodaya Anna Yojana (AAY - Deepest Poverty Food Entitlement)",
+      "category": "food",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1800-180-2087",
+      "contact_email": "aay-pds@nic.in",
+      "address": "Department of Food and Public Distribution, Krishi Bhawan, New Delhi 110001",
+      "online_url": "https://nfsa.gov.in/portal/aay",
+      "description": "35 kg of completely free food grains per family per month allocated to the poorest of the poor households, landless laborers, marginal farmers, rural artisans, widows, and terminally ill heads of households.",
+      "eligibility": {
+        "rule_id": "aay-food-rule",
+        "income_limit_annual": 75000,
+        "residency_requirement": "state",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Senior citizens living alone, single women, disabled persons without assured means of subsistence are auto-included.",
+        "criteria_summary": "Poorest stratum of BPL households, annual income below Rs 75,000, lack of regular employment or livelihood asset.",
+        "targets": [
+          "homeless",
+          "disability"
+        ]
+      },
+      "form": {
+        "form_id": "aay-ration-form",
+        "form_name": "Antyodaya Anna Yojana Special Yellow Ration Card Application",
+        "url": "https://nfsa.gov.in",
+        "required_documents": [
+          "Aadhaar Cards of all household members",
+          "Gram Panchayat / Ward Councillor Certificate of Destitution",
+          "BPL Survey Slip / SECC Deprivation match",
+          "Passport-size Photographs"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 40
+      }
+    },
+    {
+      "agency_name": "One Nation One Ration Card (ONORC - Nationwide Portability)",
+      "category": "food",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "14445",
+      "contact_email": "onorc-support@gov.in",
+      "address": "National Informatics Centre (NIC), A-Block, CGO Complex, Lodhi Road, New Delhi 110003",
+      "online_url": "https://meraration.gov.in",
+      "description": "Nationwide biometric ration card portability technology enabling migrant workers, daily wage laborers, and their family members to withdraw their subsidized NFSA food grain entitlements from any of the 5.3 lakh Fair Price Shops across all 36 States and UTs.",
+      "eligibility": {
+        "rule_id": "onorc-portability-rule",
+        "income_limit_annual": 150000,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": true,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Allows family members staying back in native village to lift their proportional share while migrant lifts their share in destination city.",
+        "criteria_summary": "Holder of an active NFSA / State ration card with Aadhaar seeding completed.",
+        "targets": []
+      },
+      "form": {
+        "form_id": "onorc-mera-ration",
+        "form_name": "Mera Ration Electronic Portability & Aadhaar Seeding",
+        "url": "https://meraration.gov.in/app",
+        "required_documents": [
+          "Existing Ration Card number (from any Indian state/UT)",
+          "Aadhaar Card of the migrating member",
+          "Biometric fingerprint authentication at ePoS shop"
+        ],
+        "deadline_type": "none",
+        "submission_method": "in_person",
+        "estimated_minutes": 5
+      }
+    },
+    {
+      "agency_name": "Mission Poshan 2.0 (ICDS Anganwadi Supplementary Nutrition)",
+      "category": "food",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "011-23386423",
+      "contact_email": "poshan-mwcd@gov.in",
+      "address": "Ministry of Women and Child Development, Shastri Bhawan, New Delhi 110001",
+      "online_url": "https://poshantracker.in",
+      "description": "Comprehensive supplementary nutrition providing daily hot cooked meals, morning snacks, and Take-Home Rations (THR) meeting fortified micro-nutrient standards for infants and children (6 months to 6 years), pregnant women, and nursing mothers at local Anganwadi Centres.",
+      "eligibility": {
+        "rule_id": "icds-poshan-rule",
+        "income_limit_annual": 300000,
+        "residency_requirement": "none",
+        "min_family_size": 1,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 45,
+        "exceptions": "Universal coverage for all children under 6 years, pregnant women, and lactating mothers regardless of caste, religion, or income.",
+        "criteria_summary": "Pregnant woman, lactating mother, or child aged 6 months to 6 years residing near an Anganwadi Centre.",
+        "targets": [
+          "young_child"
+        ]
+      },
+      "form": {
+        "form_id": "poshan-tracker-reg",
+        "form_name": "Poshan Tracker Anganwadi Mother & Child Registration",
+        "url": "https://poshantracker.in",
+        "required_documents": [
+          "Mother's Aadhaar Card (or father's Aadhaar)",
+          "Child's Birth Certificate or Hospital Discharge Slip",
+          "Mother and Child Protection (MCP) Card"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 15
+      }
+    },
+    {
+      "agency_name": "PM POSHAN (Pradhan Mantri Poshan Shakti Nirman - Mid-Day Meal Scheme)",
+      "category": "food",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "011-23381698",
+      "contact_email": "pmposhan-mhrd@gov.in",
+      "address": "Department of School Education and Literacy, Shastri Bhawan, New Delhi 110001",
+      "online_url": "https://pmposhan.education.gov.in",
+      "description": "Free, fresh, hot cooked nutritious midday meal (450 calories and 12g protein for Primary, 700 calories and 20g protein for Upper Primary) served on all school working days to children studying in government and government-aided schools (Classes I to VIII) and Balvatikas.",
+      "eligibility": {
+        "rule_id": "pm-poshan-school-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 1,
+        "citizenship_required": false,
+        "age_min": 5,
+        "age_max": 14,
+        "exceptions": "Universal statutory entitlement for every enrolled student in government and local body schools under Section 5 of the National Food Security Act.",
+        "criteria_summary": "Child enrolled in Classes I to VIII in any government, local body, or government-aided school.",
+        "targets": [
+          "children"
+        ]
+      },
+      "form": {
+        "form_id": "school-enrollment-form",
+        "form_name": "Government School Admission & Mid-Day Meal Enrolment",
+        "url": "https://pmposhan.education.gov.in",
+        "required_documents": [
+          "School Admission Form / Student UDISE+ ID",
+          "Birth Certificate or Self-Declaration of age",
+          "Child Aadhaar Card (voluntary for DBT tracking)"
+        ],
+        "deadline_type": "annual",
+        "submission_method": "in_person",
+        "estimated_minutes": 20
+      }
+    },
+    {
+      "agency_name": "Community Kitchens & Subsidized Canteens (Indira Rasoi / Amma Canteen)",
+      "category": "food",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1800-180-6127",
+      "contact_email": "urban-canteens@gov.in",
+      "address": "Municipal Corporations and District Headquarters across India",
+      "online_url": "https://indirarasoi.rajasthan.gov.in",
+      "description": "Network of subsidized urban community canteens serving hygienic, freshly cooked, balanced thali meals (chapati, dal, sabzi, pickle) twice daily at a token cost of Rs 5 to Rs 8 per meal (and completely free for destitute/unsheltered individuals).",
+      "eligibility": {
+        "rule_id": "subsidized-canteen-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Universal walk-in access with no documentation, identity, or residency barrier.",
+        "criteria_summary": "Universal walk-in access for daily wage workers, rickshaw pullers, hospital attendants, students, and vulnerable citizens.",
+        "targets": [
+          "homeless"
+        ]
+      },
+      "form": {
+        "form_id": "canteen-token",
+        "form_name": "Direct Walk-in Token / Digital Token Slip",
+        "url": "https://indirarasoi.rajasthan.gov.in",
+        "required_documents": [
+          "No documents required - Walk-in direct access at counter"
+        ],
+        "deadline_type": "none",
+        "submission_method": "in_person",
+        "estimated_minutes": 2
+      }
+    },
+    {
+      "agency_name": "Pradhan Mantri Matru Vandana Yojana (PMMVY - Maternity Nutrition Benefit)",
+      "category": "food",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "011-23382393",
+      "contact_email": "pmmvy-wcd@gov.in",
+      "address": "Ministry of Women and Child Development, Shastri Bhawan, New Delhi 110001",
+      "online_url": "https://pmmvy.wcd.gov.in",
+      "description": "Direct cash benefit transfer of Rs 5,000 in two installments for pregnant women and lactating mothers for the first living child, plus Rs 6,000 for a second girl child, compensating wage loss and ensuring essential nutritional intake during pregnancy.",
+      "eligibility": {
+        "rule_id": "pmmvy-maternity-rule",
+        "income_limit_annual": 250000,
+        "residency_requirement": "state",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 19,
+        "age_max": 45,
+        "exceptions": "Women employed with Central/State Government or PSUs or receiving similar maternity benefits under other laws are excluded.",
+        "criteria_summary": "Pregnant woman or lactating mother aged 19+, annual family income under Rs 2,50,000 or SC/ST/BPL/e-Shram cardholder.",
+        "targets": [
+          "young_child"
+        ]
+      },
+      "form": {
+        "form_id": "pmmvy-form-1a",
+        "form_name": "PMMVY Form 1-A (Claim for Maternity Nutrition Installment)",
+        "url": "https://pmmvy.wcd.gov.in",
+        "required_documents": [
+          "Mother and Child Protection (MCP) Card with Antenatal Check-up (ANC) record",
+          "Aadhaar Card of pregnant woman and husband",
+          "Aadhaar-linked Bank Passbook copy (for DBT cash transfer)",
+          "Child Birth Registration and Immunization card (for second tranche)"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "online",
+        "estimated_minutes": 25
+      }
+    },
+    {
+      "agency_name": "Annapurna Scheme for Senior Citizens",
+      "category": "food",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1800-180-1555",
+      "contact_email": "annapurna-rural@nic.in",
+      "address": "Ministry of Rural Development, Krishi Bhawan, New Delhi 110001",
+      "online_url": "https://rural.nic.in/en/scheme-websites",
+      "description": "Free allocation of 10 kg food grains per month to destitute senior citizens aged 65 years and older who meet the eligibility criteria for National Old Age Pension Scheme (NOAPS) but are currently not receiving any pension.",
+      "eligibility": {
+        "rule_id": "annapurna-senior-rule",
+        "income_limit_annual": 50000,
+        "residency_requirement": "state",
+        "min_family_size": 0,
+        "citizenship_required": true,
+        "age_min": 65,
+        "age_max": 0,
+        "exceptions": "Must not be receiving social security old age pension or any retirement pension benefits.",
+        "criteria_summary": "Indigent senior citizen aged 65+, annual income under Rs 50,000, not enrolled in old age pension scheme.",
+        "targets": [
+          "homebound"
+        ]
+      },
+      "form": {
+        "form_id": "annapurna-app-form",
+        "form_name": "Annapurna Scheme Grain Beneficiary Application Form",
+        "url": "https://rural.nic.in",
+        "required_documents": [
+          "Age Proof (Aadhaar Card / Voter ID proving age 65+)",
+          "Non-Pensioner Certificate from Gram Panchayat / Sub-Divisional Officer",
+          "BPL Certificate or Proof of Destitution",
+          "Passport-size Photographs"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 25
+      }
+    },
+    {
+      "agency_name": "Akshaya Patra & NGO Food Relief Network",
+      "category": "food",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1800-425-8622",
+      "contact_email": "infodesk@akshayapatra.org",
+      "address": "The Akshaya Patra Foundation, Hare Krishna Hill, Chord Road, Rajajinagar, Bengaluru 560010",
+      "online_url": "https://www.akshayapatra.org",
+      "description": "Civil society humanitarian food distribution delivering freshly prepared hot meals, emergency dry grocery kits (atta, pulses, rice, cooking oil, spices), and community feeding drives during localized hunger emergencies, floods, or economic distress.",
+      "eligibility": {
+        "rule_id": "akshaya-patra-relief-rule",
+        "income_limit_annual": 120000,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Universal humanitarian food relief; priority given to children, unorganized migrant clusters, and disaster evacuees.",
+        "criteria_summary": "Acute food insufficiency, low income under Rs 1,20,000, community distress or displaced status.",
+        "targets": [
+          "homeless",
+          "housing_crisis"
+        ]
+      },
+      "form": {
+        "form_id": "ngo-relief-request",
+        "form_name": "Emergency Food Relief Distribution Request Roster",
+        "url": "https://www.akshayapatra.org/emergency-relief",
+        "required_documents": [
+          "Community worker referral or local identification",
+          "Contact phone number / Settlement address"
+        ],
+        "deadline_type": "none",
+        "submission_method": "in_person",
+        "estimated_minutes": 5
+      }
+    },
+    {
+      "agency_name": "Emergency Food Security Helpline (Dial 1967)",
+      "category": "food",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1967",
+      "contact_email": "pds-helpline@nic.in",
+      "address": "State Food & Civil Supplies Directorates across India",
+      "online_url": "https://nfsa.gov.in/portal/helpline",
+      "description": "24/7 dedicated national food grievance toll-free helpline assisting citizens facing ration denial, overcharging by Fair Price Shops, delayed monthly grain allocations, biometric ePoS failures, or emergency grain starvation alerts.",
+      "eligibility": {
+        "rule_id": "nfsa-helpline-1967-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Open to all callers across India; fast-track escalation for distress starvation reports.",
+        "criteria_summary": "Any citizen experiencing food grain distress, ration denial, or PDS dealer malpractice.",
+        "targets": []
+      },
+      "form": {
+        "form_id": "grievance-docket",
+        "form_name": "NFSA Food Grievance Docket Registration",
+        "url": "https://nfsa.gov.in/portal/grievance",
+        "required_documents": [
+          "Ration Card Number (if available)",
+          "Fair Price Shop (FPS) Number or location details",
+          "Caller Name and Mobile Number"
+        ],
+        "deadline_type": "none",
+        "submission_method": "online",
+        "estimated_minutes": 5
+      }
+    },
+    {
+      "agency_name": "Ayushman Bharat - PM-JAY (Pradhan Mantri Jan Arogya Yojana)",
+      "category": "healthcare",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "14443",
+      "contact_email": "pmjay-nha@gov.in",
+      "address": "National Health Authority (NHA), Jeevan Bharati Building, Connaught Place, New Delhi 110001",
+      "online_url": "https://pmjay.gov.in",
+      "description": "Government health assurance scheme providing cashless and paperless inpatient secondary and tertiary hospital care up to Rs 5,00,000 per family per year across 27,000+ empaneled public and private hospitals, including all senior citizens aged 70+ regardless of income.",
+      "eligibility": {
+        "rule_id": "pmjay-health-rule",
+        "income_limit_annual": 250000,
+        "residency_requirement": "country",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "All senior citizens aged 70 and above receive dedicated Rs 5 lakh cover irrespective of economic status. Pre-existing conditions covered from day one.",
+        "criteria_summary": "SECC 2011 deprivation household, NFSA ration cardholder, or senior citizen aged 70+.",
+        "targets": []
+      },
+      "form": {
+        "form_id": "ayushman-card-form",
+        "form_name": "Ayushman Card (Golden Card) KYC Verification",
+        "url": "https://beneficiary.nha.gov.in",
+        "required_documents": [
+          "Aadhaar Card",
+          "Ration Card (NFSA / State Priority / AAY) or PM-JAY Family ID",
+          "Aadhaar-linked Mobile Number for OTP Verification"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "online",
+        "estimated_minutes": 15
+      }
+    },
+    {
+      "agency_name": "Pradhan Mantri Bhartiya Janaushadhi Pariyojana (PMBJP Jan Aushadhi Kendras)",
+      "category": "healthcare",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1800-180-8080",
+      "contact_email": "pmbjp-pharmaceuticals@gov.in",
+      "address": "Pharmaceuticals & Medical Devices Bureau of India (PMBI), Videocon Tower, Jhandewalan Extension, New Delhi 110055",
+      "online_url": "https://janaushadhi.gov.in",
+      "description": "Universal network of over 10,000 Jan Aushadhi Kendras dispensing over 2,046 high-quality WHO-GMP certified generic medicines, 300 surgical consumables, and oxo-biodegradable sanitary pads (Suvidha at Rs 1/pad) at prices 50% to 90% lower than branded market equivalents.",
+      "eligibility": {
+        "rule_id": "pmbjp-generic-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Open to all citizens without any income, residence, or identity restrictions.",
+        "criteria_summary": "Universal walk-in access for affordable essential medications and surgical supplies.",
+        "targets": [
+          "medication"
+        ]
+      },
+      "form": {
+        "form_id": "pmbjp-prescription-walkin",
+        "form_name": "Jan Aushadhi Prescription Walk-in Dispensation",
+        "url": "https://janaushadhi.gov.in/Kendra_List.aspx",
+        "required_documents": [
+          "Valid Doctor's Prescription (from any registered MBBS / AYUSH medical practitioner)",
+          "Patient Identity Card (optional)"
+        ],
+        "deadline_type": "none",
+        "submission_method": "in_person",
+        "estimated_minutes": 5
+      }
+    },
+    {
+      "agency_name": "Ayushman Bharat Health and Wellness Centres (Ayushman Arogya Mandirs)",
+      "category": "healthcare",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "104",
+      "contact_email": "ab-hwe@nhsrcindia.org",
+      "address": "Ministry of Health and Family Welfare, Nirman Bhawan, New Delhi 110011",
+      "online_url": "https://ab-hwe.nhp.gov.in",
+      "description": "Over 1.6 lakh comprehensive primary healthcare centres providing 12 free service packages: maternal and child health, communicable diseases, non-communicable disease screening (hypertension, diabetes, cancers), free essential drugs, free diagnostic tests, and tele-consultation.",
+      "eligibility": {
+        "rule_id": "aam-phc-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Universal free primary care at neighborhood Sub-Health Centres and Primary Health Centres.",
+        "criteria_summary": "Universal free primary care, diagnostic screening, and outpatient treatment for all residents.",
+        "targets": []
+      },
+      "form": {
+        "form_id": "abha-health-id",
+        "form_name": "ABHA (Ayushman Bharat Health Account) Registration",
+        "url": "https://abha.abdm.gov.in",
+        "required_documents": [
+          "Aadhaar Card",
+          "Mobile Phone (for instant 14-digit ABHA creation and digital health records)"
+        ],
+        "deadline_type": "none",
+        "submission_method": "online",
+        "estimated_minutes": 5
+      }
+    },
+    {
+      "agency_name": "Tele-MANAS (Tele Mental Health Assistance and Networking Across States)",
+      "category": "healthcare",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "14416",
+      "contact_email": "telemanas@nimhans.ac.in",
+      "address": "National Institute of Mental Health and Neuro Sciences (NIMHANS), Hosur Road, Bengaluru 560029",
+      "online_url": "https://telemanas.mohfw.gov.in",
+      "description": "24/7 dedicated national psychological support and crisis counseling helpline (toll-free 14416 / 1800-891-4416) providing immediate confidential mental health triage, suicide crisis de-escalation, psychiatric consultations, and District Mental Health Program referrals in 20+ regional languages.",
+      "eligibility": {
+        "rule_id": "tele-manas-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Universal confidential toll-free crisis service across all 36 States/UTs.",
+        "criteria_summary": "Anyone experiencing psychological distress, anxiety, depression, suicidal ideation, or seeking mental healthcare guidance.",
+        "targets": [
+          "crisis",
+          "mental_health"
+        ]
+      },
+      "form": {
+        "form_id": "telemanas-intake",
+        "form_name": "Tele-MANAS Caller Clinical Screening & Triage",
+        "url": "https://telemanas.mohfw.gov.in",
+        "required_documents": [
+          "No documentation required - Instant confidential telephonic intake"
+        ],
+        "deadline_type": "none",
+        "submission_method": "online",
+        "estimated_minutes": 2
+      }
+    },
+    {
+      "agency_name": "Janani Suraksha Yojana & JSSK (Institutional Delivery & Free Neonatal Care)",
+      "category": "healthcare",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "104",
+      "contact_email": "jsy-mohfw@gov.in",
+      "address": "Ministry of Health and Family Welfare, Nirman Bhawan, New Delhi 110011",
+      "online_url": "https://nhm.gov.in/index1.php?lang=1&level=3&sublinkid=841&lid=309",
+      "description": "Safe motherhood intervention under National Health Mission providing completely free delivery (including caesarean section), free diagnostics, medicines, blood, food, and transport (JSSK), along with direct cash incentive of Rs 1,400 (rural) or Rs 1,000 (urban) to mother for institutional delivery.",
+      "eligibility": {
+        "rule_id": "jsy-jssk-maternal-rule",
+        "income_limit_annual": 200000,
+        "residency_requirement": "state",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 18,
+        "age_max": 45,
+        "exceptions": "In Low Performing States (LPS), cash assistance covers all women delivering in government health facilities regardless of age, caste, or birth order.",
+        "criteria_summary": "Pregnant woman delivering at a public or accredited private healthcare facility, BPL or SC/ST or LPS resident.",
+        "targets": [
+          "young_child"
+        ]
+      },
+      "form": {
+        "form_id": "jsy-hospital-claim",
+        "form_name": "JSY / JSSK Institutional Delivery Record & Cash Claim Form",
+        "url": "https://nhm.gov.in",
+        "required_documents": [
+          "Mother and Child Protection (MCP) Card with ANC records",
+          "Aadhaar Card of mother",
+          "BPL Ration Card or SC/ST certificate (in High Performing States)",
+          "Bank Account Passbook copy (for DBT cash payment)"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 20
+      }
+    },
+    {
+      "agency_name": "Rashtriya Arogya Nidhi (RAN - Treatment for Rare & Life-Threatening Diseases)",
+      "category": "healthcare",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "011-23061986",
+      "contact_email": "ran-mohfw@nic.in",
+      "address": "Ministry of Health and Family Welfare, Nirman Bhawan, New Delhi 110011",
+      "online_url": "https://mohfw.gov.in/schemes/schemes-for-patients-financial-assistance/rashtriya-arogya-nidhi",
+      "description": "One-time financial assistance of up to Rs 15,00,000 for poor patients suffering from major life-threatening diseases (cancer, cardiovascular, nephrology, organ transplants) to receive specialized treatment at super-speciality government institutes (AIIMS, PGIMER, etc.).",
+      "eligibility": {
+        "rule_id": "ran-fin-aid-rule",
+        "income_limit_annual": 120000,
+        "residency_requirement": "country",
+        "min_family_size": 0,
+        "citizenship_required": true,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Patients eligible for PM-JAY who exceed the annual package ceiling can obtain emergency gap funding.",
+        "criteria_summary": "Patient living below state poverty line suffering from life-threatening illness, treated at a designated central/state government super-specialty hospital.",
+        "targets": []
+      },
+      "form": {
+        "form_id": "ran-application-form",
+        "form_name": "RAN Financial Grant Application & Clinical Protocol Form",
+        "url": "https://mohfw.gov.in",
+        "required_documents": [
+          "Application form countersigned by Medical Superintendent / Head of Department",
+          "Detailed clinical summary, investigation reports, and cost estimate",
+          "Income Certificate from Tehsildar / Sub-Divisional Magistrate",
+          "Ration Card (BPL / Antyodaya)",
+          "Aadhaar Card"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 45
+      }
+    },
+    {
+      "agency_name": "National Tuberculosis Elimination Program (NTEP - Nikshay Poshan Yojana)",
+      "category": "healthcare",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1800-11-6666",
+      "contact_email": "tbc-mohfw@nic.in",
+      "address": "Central TB Division, Nirman Bhawan, New Delhi 110011",
+      "online_url": "https://nikshay.in",
+      "description": "Comprehensive TB care providing free molecular diagnostic tests (CBNAAT/TrueNat), anti-TB drug regimens, contact tracing, and direct benefit transfer of Rs 500 per month (Nikshay Poshan Yojana) to every notified TB patient for nutritional support throughout the treatment duration.",
+      "eligibility": {
+        "rule_id": "ntep-nikshay-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Universal coverage for all clinically or microbiologically diagnosed TB patients in both public and private sectors.",
+        "criteria_summary": "Any person diagnosed with Tuberculosis notified on the Ni-kshay portal.",
+        "targets": [
+          "medication"
+        ]
+      },
+      "form": {
+        "form_id": "nikshay-enrollment",
+        "form_name": "Nikshay Portal Patient Notification & DBT Bank Entry",
+        "url": "https://nikshay.in",
+        "required_documents": [
+          "Diagnostic Lab Confirmation Report / Sputum test result",
+          "Aadhaar Card or Photo ID proof",
+          "Bank Account Passbook (first page with IFSC for DBT credit)"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 10
+      }
+    },
+    {
+      "agency_name": "Employees' State Insurance Corporation (ESIC Medical & Sickness Benefits)",
+      "category": "healthcare",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1800-11-2526",
+      "contact_email": "esic-med@esic.nic.in",
+      "address": "ESIC Headquarters, Panchdeep Bhawan, Comrade Indrajeet Gupta Marg, New Delhi 110002",
+      "online_url": "https://www.esic.gov.in",
+      "description": "Social security health insurance scheme providing full medical care, tertiary hospital treatment, super-specialty referrals, sickness cash benefit, maternity benefit, and disability pension to insured employees and their dependents without any upper spending ceiling.",
+      "eligibility": {
+        "rule_id": "esic-medical-rule",
+        "income_limit_annual": 252000,
+        "residency_requirement": "state",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 18,
+        "age_max": 60,
+        "exceptions": "Wage ceiling is Rs 21,000/month (Rs 25,000/month for persons with disabilities). Medical benefit continues post-retirement at nominal Rs 120/year.",
+        "criteria_summary": "Employee working in covered factory/establishment earning monthly wage up to Rs 21,000, registered with ESIC.",
+        "targets": []
+      },
+      "form": {
+        "form_id": "esic-form-1",
+        "form_name": "ESIC Pehchan Identity Card Registration (Form 1)",
+        "url": "https://www.esic.gov.in",
+        "required_documents": [
+          "Employer Declaration & ESIC Insurance Number (IP number)",
+          "Aadhaar Cards of Insured Person and eligible family dependents",
+          "Family photograph",
+          "Bank Account Details"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "online",
+        "estimated_minutes": 20
+      }
+    },
+    {
+      "agency_name": "National AIDS Control Program (NACO ART Centers & Free Viral Load Testing)",
+      "category": "healthcare",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1097",
+      "contact_email": "naco.helpline@gmail.com",
+      "address": "National AIDS Control Organisation, Chanderlok Building, Janpath, New Delhi 110001",
+      "online_url": "https://naco.gov.in",
+      "description": "Universal network of Integrated Counseling and Testing Centers (ICTC) and Antiretroviral Therapy (ART) Centers delivering free HIV testing, free lifelong antiretroviral treatment, free CD4 and viral load testing, opportunistic infection drugs, and psycho-social counseling in strict confidentiality.",
+      "eligibility": {
+        "rule_id": "naco-art-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Universal free care guaranteed under the HIV and AIDS (Prevention and Control) Act, 2017; discrimination strictly prohibited by law.",
+        "criteria_summary": "Universal free diagnosis, counseling, and ART medication for any person living with or vulnerable to HIV.",
+        "targets": [
+          "hiv",
+          "medication"
+        ]
+      },
+      "form": {
+        "form_id": "art-center-intake",
+        "form_name": "ICTC / ART Center Registration Form",
+        "url": "https://naco.gov.in",
+        "required_documents": [
+          "Unique Patient ID (assigned confidentially at center)",
+          "Government Photo ID (optional for testing, required for welfare travel concessions)"
+        ],
+        "deadline_type": "none",
+        "submission_method": "in_person",
+        "estimated_minutes": 15
+      }
+    },
+    {
+      "agency_name": "eSanjeevani National Teleconsultation Service (MoHFW)",
+      "category": "healthcare",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "011-23062325",
+      "contact_email": "esanjeevani-support@cdac.in",
+      "address": "C-DAC Mohali / Ministry of Health and Family Welfare, Nirman Bhawan, New Delhi 110011",
+      "online_url": "https://esanjeevani.mohfw.gov.in",
+      "description": "Free national telemedicine portal enabling citizens anywhere in India to consult registered government doctors and medical specialists via audio/video call from smartphones or laptops, and download digital, legally valid e-prescriptions instantly.",
+      "eligibility": {
+        "rule_id": "esanjeevani-teleopd-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Completely free tele-consultation service available to all citizens of India.",
+        "criteria_summary": "Universal free doctor consultation for general and specialty medical queries.",
+        "targets": []
+      },
+      "form": {
+        "form_id": "esanjeevani-app-reg",
+        "form_name": "eSanjeevani Patient Registration & Token Generation",
+        "url": "https://esanjeevani.mohfw.gov.in/#/patient/signin",
+        "required_documents": [
+          "Active Mobile Number (for OTP token authentication)",
+          "Previous medical prescriptions / diagnostic reports (optional image upload)"
+        ],
+        "deadline_type": "none",
+        "submission_method": "online",
+        "estimated_minutes": 5
+      }
+    },
+    {
+      "agency_name": "National Legal Services Authority (NALSA - Free Legal Aid Clinics)",
+      "category": "legal",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "15100",
+      "contact_email": "nalsa-jda@nic.in",
+      "address": "Supreme Court of India, New Delhi 110001",
+      "online_url": "https://nalsa.gov.in",
+      "description": "Statutory constitutional legal assistance providing free legal counsel, advocate appointment, drafting of pleadings, payment of court fees, and certified copies for women, children, SC/ST, persons with disabilities, custody inmates, and low-income citizens across all courts under Section 12 of the Legal Services Authorities Act, 1987.",
+      "eligibility": {
+        "rule_id": "nalsa-free-aid-rule",
+        "income_limit_annual": 300000,
+        "residency_requirement": "country",
+        "min_family_size": 0,
+        "citizenship_required": true,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "No income ceiling applies to women, children, SC/ST, victims of human trafficking or disaster, disabled persons, and persons in custody.",
+        "criteria_summary": "Woman, child, SC/ST, person with disability, or annual income under Rs 3,00,000 (Supreme Court limit Rs 5,00,000).",
+        "targets": [
+          "dv",
+          "disability"
+        ]
+      },
+      "form": {
+        "form_id": "nalsa-legal-aid-app",
+        "form_name": "NALSA Legal Aid Application Form (Form-1)",
+        "url": "https://nalsa.gov.in/services/legal-aid/application-form",
+        "required_documents": [
+          "Application statement describing legal grievance or dispute brief",
+          "Aadhaar Card or Voter ID Card",
+          "Income Certificate (not required for women, children, SC/ST, or custody inmates)",
+          "Caste / Disability Certificate (if applicable)",
+          "Court Notice, Summons, or Case papers (if received)"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "online",
+        "estimated_minutes": 25
+      }
+    },
+    {
+      "agency_name": "Tele-Law: Reaching the Unreached (Department of Justice & CSCs)",
+      "category": "legal",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "14430",
+      "contact_email": "tele-law@gov.in",
+      "address": "Department of Justice, Jaisalmer House, 26 Mansingh Road, New Delhi 110011",
+      "online_url": "https://www.tele-law.in",
+      "description": "Pre-litigation legal advice connecting panel lawyers directly with rural and marginalized citizens via video conferencing and telephone facilities through Common Service Centres (CSCs) located in Gram Panchayats. Free for women, SC/ST, BPL, children, and disabled persons.",
+      "eligibility": {
+        "rule_id": "tele-law-csc-rule",
+        "income_limit_annual": 250000,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": true,
+        "age_min": 18,
+        "age_max": 0,
+        "exceptions": "Completely free legal consultation for women, SC/ST, BPL cardholders, and persons with disabilities. Nominal Rs 30 CSC fee for others.",
+        "criteria_summary": "Citizen seeking pre-litigation legal consultation on land, family, domestic violence, consumer, or civil disputes.",
+        "targets": [
+          "dv",
+          "consumer"
+        ]
+      },
+      "form": {
+        "form_id": "telelaw-booking",
+        "form_name": "Tele-Law Citizen Registration & Consultation Slot Booking",
+        "url": "https://www.tele-law.in/citizen-portal",
+        "required_documents": [
+          "Aadhaar Card or Photo ID",
+          "Mobile Phone number (for appointment SMS confirmation)",
+          "Summary note on dispute subject matter"
+        ],
+        "deadline_type": "none",
+        "submission_method": "online",
+        "estimated_minutes": 10
+      }
+    },
+    {
+      "agency_name": "One Stop Centres (OSC - Sakhi Centres for Women in Crisis)",
+      "category": "legal",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "181",
+      "contact_email": "osc-wcd@gov.in",
+      "address": "Ministry of Women and Child Development, Shastri Bhawan, New Delhi 110001",
+      "online_url": "https://wcd.nic.in/schemes/one-stop-centre-scheme-1",
+      "description": "Integrated 24/7 one-stop support for women affected by violence (domestic violence, sexual assault, harassment, trafficking), providing immediate medical care, police reporting facilitation, legal aid, psycho-social counseling, and temporary shelter up to 5 days under one roof.",
+      "eligibility": {
+        "rule_id": "one-stop-centre-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Open to all women regardless of age, caste, religion, income, marital status, or nationality.",
+        "criteria_summary": "Any woman or girl facing violence or harassment in public or private spaces.",
+        "targets": [
+          "dv"
+        ]
+      },
+      "form": {
+        "form_id": "osc-sakhi-intake",
+        "form_name": "One Stop Centre Case Intake & Action Record",
+        "url": "https://wcd.nic.in",
+        "required_documents": [
+          "No documentation required for immediate admission and medical treatment",
+          "Photo ID / Aadhaar Card (recorded subsequently if available)"
+        ],
+        "deadline_type": "none",
+        "submission_method": "in_person",
+        "estimated_minutes": 10
+      }
+    },
+    {
+      "agency_name": "District Legal Services Authority - Lok Adalat (Dispute Pre-Litigation & Settlement)",
+      "category": "legal",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "15100",
+      "contact_email": "lokadalat-nalsa@nic.in",
+      "address": "District Court Complexes across all Districts of India",
+      "online_url": "https://nalsa.gov.in/lok-adalat",
+      "description": "Statutory Alternative Dispute Resolution forum organized regularly by DLSAs offering swift, cost-free, amicable settlements for pending compoundable court cases and pre-litigation disputes (matrimonial, debt recovery, labor, landlord-tenant, accident claims) with complete refund of court fees and final non-appealable award status.",
+      "eligibility": {
+        "rule_id": "lok-adalat-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "state",
+        "min_family_size": 0,
+        "citizenship_required": true,
+        "age_min": 18,
+        "age_max": 0,
+        "exceptions": "No court fees charged; non-compoundable criminal offences excluded by law.",
+        "criteria_summary": "Parties seeking mutually agreeable conciliation and dispute settlement outside protracted adversarial trials.",
+        "targets": [
+          "consumer",
+          "tenant"
+        ]
+      },
+      "form": {
+        "form_id": "lok-adalat-application",
+        "form_name": "Pre-Litigation Settlement Reference to Lok Adalat",
+        "url": "https://nalsa.gov.in",
+        "required_documents": [
+          "Joint application or individual petition requesting Lok Adalat settlement",
+          "Aadhaar Card / Identification proof",
+          "Copies of relevant agreement, debt notice, or pending case brief"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 20
+      }
+    },
+    {
+      "agency_name": "Childline 1098 & District Child Protection Unit (DCPU / POCSO Support)",
+      "category": "legal",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1098",
+      "contact_email": "childline1098@gov.in",
+      "address": "Ministry of Women and Child Development, Shastri Bhawan, New Delhi 110001",
+      "online_url": "https://wcd.nic.in/mission-vatsalya",
+      "description": "24/7 national emergency outreach response service for children in need of care and protection, child labor rescue, runaway intervention, prevention of child marriage, POCSO victim rehabilitation, and production before Child Welfare Committees (CWCs).",
+      "eligibility": {
+        "rule_id": "childline-1098-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 18,
+        "exceptions": "Universal emergency protection for all individuals under 18 years of age.",
+        "criteria_summary": "Any child in distress, abandoned, subjected to abuse, child labor, trafficking, or child marriage.",
+        "targets": [
+          "children"
+        ]
+      },
+      "form": {
+        "form_id": "childline-sir",
+        "form_name": "Social Investigation Report (SIR) & CWC Referral Form",
+        "url": "https://wcd.nic.in",
+        "required_documents": [
+          "No documents required for emergency rescue call",
+          "Birth certificate or age estimation report (prepared by CWC after rescue)"
+        ],
+        "deadline_type": "none",
+        "submission_method": "in_person",
+        "estimated_minutes": 10
+      }
+    },
+    {
+      "agency_name": "National Cyber Crime Reporting Portal (1930 / cybercrime.gov.in)",
+      "category": "legal",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1930",
+      "contact_email": "cybercrime-help@gov.in",
+      "address": "Indian Cyber Crime Coordination Centre (I4C), Jai Singh Road, New Delhi 110001",
+      "online_url": "https://cybercrime.gov.in",
+      "description": "National citizen cyber crime reporting system (National Cyber Helpline 1930) facilitating urgent reporting of financial cyber fraud, online bank phishing, UPI scams, social media identity theft, non-consensual images, and cyber-stalking with real-time financial lien freezing.",
+      "eligibility": {
+        "rule_id": "cyber-crime-1930-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "none",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Golden hour financial fraud reports to 1930 enable immediate bank-level freezing of stolen funds.",
+        "criteria_summary": "Victim of cyber financial fraud, unauthorized banking debit, online harassment, or cyber threats.",
+        "targets": [
+          "consumer"
+        ]
+      },
+      "form": {
+        "form_id": "cyber-complaint-form",
+        "form_name": "Citizen Financial Cyber Fraud / Crime Incident Complaint",
+        "url": "https://cybercrime.gov.in/Webform/Accept.aspx",
+        "required_documents": [
+          "Bank Account number, Transaction UTR / Reference ID, and transaction date/time",
+          "Screenshots of fraudulent messages, UPI handles, or debit SMS",
+          "Complainant Identity Proof (Aadhaar / Voter ID / PAN)"
+        ],
+        "deadline_type": "none",
+        "submission_method": "online",
+        "estimated_minutes": 15
+      }
+    },
+    {
+      "agency_name": "Senior Citizens Maintenance and Welfare Tribunal (Maintenance Act 2007)",
+      "category": "legal",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "14567",
+      "contact_email": "elderline-tribunal@gov.in",
+      "address": "Office of Sub-Divisional Magistrate (SDM) / Maintenance Tribunal across all Sub-Divisions",
+      "online_url": "https://socialjustice.gov.in/schemes/elderline",
+      "description": "Quasi-judicial summary tribunal established under the Maintenance and Welfare of Parents and Senior Citizens Act, 2007 providing senior parents swift, enforceable maintenance orders (monthly allowances) and declaring property transfers to unfilial children null and void.",
+      "eligibility": {
+        "rule_id": "senior-tribunal-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "state",
+        "min_family_size": 0,
+        "citizenship_required": true,
+        "age_min": 60,
+        "age_max": 0,
+        "exceptions": "Statutory summary proceedings must conclude within 90 days of application; lawyers are barred from representing respondents to prevent delay.",
+        "criteria_summary": "Senior citizen aged 60+ or biological/adoptive parent unable to maintain themselves from own earnings or property.",
+        "targets": [
+          "homebound"
+        ]
+      },
+      "form": {
+        "form_id": "senior-maintenance-petition",
+        "form_name": "Application under Section 5 of Maintenance & Welfare of Parents Act",
+        "url": "https://socialjustice.gov.in",
+        "required_documents": [
+          "Age Proof / Aadhaar Card showing 60+ years",
+          "Particulars and addresses of children / legal heirs",
+          "Property deed or gift deed copy (if seeking annulment of property transfer)",
+          "Bank Account Passbook copy"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 30
+      }
+    },
+    {
+      "agency_name": "Labour Commissioner Conciliation & e-Shram Worker Grievance Redressal",
+      "category": "legal",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "14434",
+      "contact_email": "eshram-care@gov.in",
+      "address": "Office of the Deputy Labour Commissioner / Shram Shakti Bhawan, Rafi Marg, New Delhi 110001",
+      "online_url": "https://eshram.gov.in",
+      "description": "Statutory conciliation and dispute adjudication machinery for unorganized workers, factory workers, gig workers, and contractual laborers facing illegal wage deductions, denial of minimum wages, arbitrary dismissal, or non-payment of statutory gratuity and retrenchment compensation.",
+      "eligibility": {
+        "rule_id": "labour-dispute-rule",
+        "income_limit_annual": 300000,
+        "residency_requirement": "state",
+        "min_family_size": 0,
+        "citizenship_required": true,
+        "age_min": 18,
+        "age_max": 60,
+        "exceptions": "Registered e-Shram unorganized workers receive free legal assistance and conciliation representation.",
+        "criteria_summary": "Worker employed in industry, trade, or unorganized sector with unpaid wages or industrial dispute.",
+        "targets": [
+          "consumer"
+        ]
+      },
+      "form": {
+        "form_id": "labour-claim-form",
+        "form_name": "Claim Application under Payment of Wages / Minimum Wages Act",
+        "url": "https://clc.gov.in/clc/claims-application",
+        "required_documents": [
+          "e-Shram Card or Worker Identification / Employee ID",
+          "Appointment letter, wage slip, attendance card, or bank passbook entries",
+          "Written grievance stating period of employment and dues claimed",
+          "Employer / Contractor contact address"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 35
+      }
+    },
+    {
+      "agency_name": "State Consumer Disputes Redressal Commission (e-Daakhil Portal)",
+      "category": "legal",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1915",
+      "contact_email": "consumer-helpline@nic.in",
+      "address": "National Consumer Disputes Redressal Commission, Upbhokta Nyay Bhawan, New Delhi 110023",
+      "online_url": "https://edaakhil.nic.in",
+      "description": "Digital e-filing portal under the Consumer Protection Act, 2019 allowing consumers across India to file online grievances and legal complaints against defective goods, deficiency of services, medical negligence, real estate builder defaults, and deceptive advertising with zero court fee for claims up to Rs 5 lakh.",
+      "eligibility": {
+        "rule_id": "edaakhil-consumer-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "country",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 18,
+        "age_max": 0,
+        "exceptions": "Fee waived completely for consumer claims up to Rs 5,00,000 in District Consumer Commissions.",
+        "criteria_summary": "Any person who buys goods or hires services suffering deficiency, defect, unfair trade practice, or builder delay.",
+        "targets": [
+          "consumer"
+        ]
+      },
+      "form": {
+        "form_id": "edaakhil-petition",
+        "form_name": "e-Daakhil Online Consumer Complaint Petition",
+        "url": "https://edaakhil.nic.in/edaakhil",
+        "required_documents": [
+          "Tax Invoice / Purchase receipt / Service contract",
+          "Legal notice sent to opposite party and postal proof of delivery",
+          "Affidavit in support of the consumer complaint",
+          "Aadhaar Card or Photo ID"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "online",
+        "estimated_minutes": 40
+      }
+    },
+    {
+      "agency_name": "National Human Rights Commission (NHRC Citizen Complaint Portal)",
+      "category": "legal",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "14433",
+      "contact_email": "nhrc-complaint@nic.in",
+      "address": "Manav Adhikar Bhawan, Block-C, GPO Complex, INA, New Delhi 110023",
+      "online_url": "https://hrcnet.nic.in",
+      "description": "Constitutional statutory human rights watchdog investigating complaints of custodial torture, police excess, illegal detention, encounters, bonded labor, manual scavenging, and atrocities against vulnerable minorities or marginalized citizens with independent investigative powers.",
+      "eligibility": {
+        "rule_id": "nhrc-complaint-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "country",
+        "min_family_size": 0,
+        "citizenship_required": false,
+        "age_min": 0,
+        "age_max": 0,
+        "exceptions": "Complaints filed within one year of the incident date; no fee or legal representation needed.",
+        "criteria_summary": "Victim or concerned citizen reporting violation of human rights or negligence by public servants.",
+        "targets": []
+      },
+      "form": {
+        "form_id": "nhrc-online-form",
+        "form_name": "NHRC Online Citizen Human Rights Complaint",
+        "url": "https://hrcnet.nic.in/HRCNet/public/CitizenComplaint.aspx",
+        "required_documents": [
+          "Narrative description of the human rights incident and public authority involved",
+          "Medical examination report, FIR copy, or photographs (if available)",
+          "Complainant name, mobile number, and address"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "online",
+        "estimated_minutes": 20
+      }
+    }
+  ]
+}
