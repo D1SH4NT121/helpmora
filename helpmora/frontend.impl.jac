@@ -165,6 +165,14 @@ impl ClientApp.tabIcon(tab_id: str, is_active: bool) -> JsxElement {
                 <rect x="16.5" y="5" width="3.5" height="15" rx="0.6" stroke={stroke} strokeWidth="1.6"/>
             </svg>;
     }
+    if tab_id == "adaptive" {
+        # Guided navigation compass / pathway icon
+        return
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke={stroke} strokeWidth="1.8"/>
+                <path d="M16 8 L 13.5 13.5 L 8 16 L 10.5 10.5 Z" stroke={stroke} strokeWidth="1.6" strokeLinejoin="round"/>
+            </svg>;
+    }
     if tab_id == "impact" {
         # Heart outline — anchors the Impact tab to its outcomes story
         return

@@ -113,15 +113,15 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
     container_style = {
         "maxWidth": "1200px",
         "margin": "0 auto",
-        "padding": "24px 16px",
+        "padding": "16px 8px 32px 8px",
         "fontFamily": "system-ui, -apple-system, sans-serif",
-        "color": "#F3F4F6",
-        "fontSize": ("18px" if large_text else "14px"),
+        "color": "#FFFFFF",
+        "fontSize": ("17px" if large_text else "13px"),
         "lineHeight": "1.5"
     };
 
-    card_bg = "#000000" if high_contrast else "#111827";
-    border_color = "#FFFFFF" if high_contrast else "rgba(255, 255, 255, 0.1)";
+    card_bg = "#000000" if high_contrast else "rgba(255, 255, 255, 0.03)";
+    border_color = "#FFFFFF" if high_contrast else "rgba(255, 255, 255, 0.08)";
 
     return
         <div style={container_style}>
@@ -129,17 +129,18 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                 "display": "flex",
                 "alignItems": "center",
                 "justifyContent": "space-between",
-                "padding": "20px",
+                "padding": "18px 24px",
                 "background": card_bg,
-                "borderRadius": "12px",
-                "border": "1px solid " + border_color,
-                "marginBottom": "24px",
+                "backdropFilter": "blur(12px)",
+                "borderRadius": "16px",
+                "border": "0.5px solid " + border_color,
+                "marginBottom": "20px",
                 "flexWrap": "wrap",
                 "gap": "16px"
             }}>
                 <div style={{"display": "flex", "alignItems": "center", "gap": "16px"}}>
                     <HELPmoraLogo
-                        size={56}
+                        size={52}
                         show_wordmark={True}
                         show_tagline={True}
                         state={agent_state}
@@ -148,14 +149,15 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                     />
                 </div>
                 <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "flexWrap": "wrap"}}>
-                    <span style={{"fontSize": "11px", "color": "#9CA3AF", "textTransform": "uppercase", "letterSpacing": "0.05em"}}>Current State:</span>
+                    <span style={{"fontSize": "11px", "color": "rgba(255, 255, 255, 0.45)", "textTransform": "uppercase", "letterSpacing": "0.06em", "fontWeight": "600"}}>System State</span>
                     <span style={{
-                        "padding": "4px 10px",
-                        "borderRadius": "999px",
+                        "padding": "3px 10px",
+                        "borderRadius": "20px",
                         "fontSize": "11px",
                         "fontWeight": "600",
-                        "background": ("#10B981" if agent_state == "action_complete" else ("#3B82F6" if agent_state == "verified" else ("#F59E0B" if agent_state == "reasoning" else ("#EC4899" if agent_state == "listening" else "#374151")))),
-                        "color": "#FFFFFF"
+                        "background": ("rgba(0, 255, 136, 0.12)" if agent_state == "action_complete" else ("rgba(90, 162, 255, 0.12)" if agent_state == "verified" else ("rgba(255, 229, 0, 0.12)" if agent_state == "reasoning" else ("rgba(255, 68, 68, 0.15)" if agent_state == "listening" else "rgba(255, 255, 255, 0.06)")))),
+                        "color": ("#00FF88" if agent_state == "action_complete" else ("#5AA2FF" if agent_state == "verified" else ("#FFE500" if agent_state == "reasoning" else ("#FF4444" if agent_state == "listening" else "rgba(255, 255, 255, 0.65)")))),
+                        "border": ("0.5px solid rgba(0, 255, 136, 0.3)" if agent_state == "action_complete" else ("0.5px solid rgba(90, 162, 255, 0.3)" if agent_state == "verified" else ("0.5px solid rgba(255, 229, 0, 0.3)" if agent_state == "reasoning" else ("0.5px solid rgba(255, 68, 68, 0.3)" if agent_state == "listening" else "0.5px solid rgba(255, 255, 255, 0.1)"))))
                     }}>
                         {agent_state.upper()}
                     </span>
@@ -165,42 +167,93 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
             <div style={{
                 "display": "flex",
                 "alignItems": "center",
-                "gap": "12px",
-                "padding": "12px 16px",
+                "gap": "10px",
+                "padding": "10px 18px",
                 "background": card_bg,
-                "borderRadius": "8px",
-                "border": "1px solid " + border_color,
-                "marginBottom": "24px",
+                "backdropFilter": "blur(12px)",
+                "borderRadius": "12px",
+                "border": "0.5px solid " + border_color,
+                "marginBottom": "20px",
                 "flexWrap": "wrap"
             }}>
-                <span style={{"fontSize": "12px", "fontWeight": "600", "color": "#9CA3AF"}}>Accessibility Modes:</span>
+                <span style={{"fontSize": "11px", "fontWeight": "600", "color": "rgba(255, 255, 255, 0.5)", "letterSpacing": "0.04em", "textTransform": "uppercase"}}>Accessibility</span>
                 <button
                     onClick={lambda _e: MouseEvent { voice_first = not voice_first; }}
-                    style={{"padding": "4px 10px", "borderRadius": "4px", "fontSize": "11px", "cursor": "pointer", "background": ("#2563EB" if voice_first else "#1F2937"), "color": "#FFFFFF", "border": "none"}}
+                    style={{
+                        "padding": "4px 10px",
+                        "borderRadius": "8px",
+                        "fontSize": "11px",
+                        "cursor": "pointer",
+                        "background": ("rgba(255, 229, 0, 0.15)" if voice_first else "rgba(255, 255, 255, 0.04)"),
+                        "color": ("#FFE500" if voice_first else "rgba(255, 255, 255, 0.65)"),
+                        "border": ("0.5px solid rgba(255, 229, 0, 0.3)" if voice_first else "0.5px solid rgba(255, 255, 255, 0.08)"),
+                        "fontWeight": "500",
+                        "transition": "all 0.15s ease"
+                    }}
                 >
                     {"Voice-First: " + ("ON" if voice_first else "OFF")}
                 </button>
                 <button
                     onClick={lambda _e: MouseEvent { large_text = not large_text; }}
-                    style={{"padding": "4px 10px", "borderRadius": "4px", "fontSize": "11px", "cursor": "pointer", "background": ("#2563EB" if large_text else "#1F2937"), "color": "#FFFFFF", "border": "none"}}
+                    style={{
+                        "padding": "4px 10px",
+                        "borderRadius": "8px",
+                        "fontSize": "11px",
+                        "cursor": "pointer",
+                        "background": ("rgba(255, 229, 0, 0.15)" if large_text else "rgba(255, 255, 255, 0.04)"),
+                        "color": ("#FFE500" if large_text else "rgba(255, 255, 255, 0.65)"),
+                        "border": ("0.5px solid rgba(255, 229, 0, 0.3)" if large_text else "0.5px solid rgba(255, 255, 255, 0.08)"),
+                        "fontWeight": "500",
+                        "transition": "all 0.15s ease"
+                    }}
                 >
                     {"Large Text: " + ("ON" if large_text else "OFF")}
                 </button>
                 <button
                     onClick={lambda _e: MouseEvent { high_contrast = not high_contrast; }}
-                    style={{"padding": "4px 10px", "borderRadius": "4px", "fontSize": "11px", "cursor": "pointer", "background": ("#2563EB" if high_contrast else "#1F2937"), "color": "#FFFFFF", "border": "none"}}
+                    style={{
+                        "padding": "4px 10px",
+                        "borderRadius": "8px",
+                        "fontSize": "11px",
+                        "cursor": "pointer",
+                        "background": ("rgba(255, 229, 0, 0.15)" if high_contrast else "rgba(255, 255, 255, 0.04)"),
+                        "color": ("#FFE500" if high_contrast else "rgba(255, 255, 255, 0.65)"),
+                        "border": ("0.5px solid rgba(255, 229, 0, 0.3)" if high_contrast else "0.5px solid rgba(255, 255, 255, 0.08)"),
+                        "fontWeight": "500",
+                        "transition": "all 0.15s ease"
+                    }}
                 >
                     {"High Contrast: " + ("ON" if high_contrast else "OFF")}
                 </button>
                 <button
                     onClick={lambda _e: MouseEvent { reduced_motion = not reduced_motion; }}
-                    style={{"padding": "4px 10px", "borderRadius": "4px", "fontSize": "11px", "cursor": "pointer", "background": ("#2563EB" if reduced_motion else "#1F2937"), "color": "#FFFFFF", "border": "none"}}
+                    style={{
+                        "padding": "4px 10px",
+                        "borderRadius": "8px",
+                        "fontSize": "11px",
+                        "cursor": "pointer",
+                        "background": ("rgba(255, 229, 0, 0.15)" if reduced_motion else "rgba(255, 255, 255, 0.04)"),
+                        "color": ("#FFE500" if reduced_motion else "rgba(255, 255, 255, 0.65)"),
+                        "border": ("0.5px solid rgba(255, 229, 0, 0.3)" if reduced_motion else "0.5px solid rgba(255, 255, 255, 0.08)"),
+                        "fontWeight": "500",
+                        "transition": "all 0.15s ease"
+                    }}
                 >
                     {"Reduced Motion: " + ("ON" if reduced_motion else "OFF")}
                 </button>
                 <button
                     onClick={lambda _e: MouseEvent { simple_lang = not simple_lang; }}
-                    style={{"padding": "4px 10px", "borderRadius": "4px", "fontSize": "11px", "cursor": "pointer", "background": ("#2563EB" if simple_lang else "#1F2937"), "color": "#FFFFFF", "border": "none"}}
+                    style={{
+                        "padding": "4px 10px",
+                        "borderRadius": "8px",
+                        "fontSize": "11px",
+                        "cursor": "pointer",
+                        "background": ("rgba(255, 229, 0, 0.15)" if simple_lang else "rgba(255, 255, 255, 0.04)"),
+                        "color": ("#FFE500" if simple_lang else "rgba(255, 255, 255, 0.65)"),
+                        "border": ("0.5px solid rgba(255, 229, 0, 0.3)" if simple_lang else "0.5px solid rgba(255, 255, 255, 0.08)"),
+                        "fontWeight": "500",
+                        "transition": "all 0.15s ease"
+                    }}
                 >
                     {"Simple Language: " + ("ON" if simple_lang else "OFF")}
                 </button>
@@ -209,116 +262,135 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
             <div style={{
                 "display": "grid",
                 "gridTemplateColumns": "repeat(auto-fit, minmax(340px, 1fr))",
-                "gap": "24px"
+                "gap": "20px"
             }}>
                 <div style={{
                     "background": card_bg,
-                    "borderRadius": "12px",
-                    "border": "1px solid " + border_color,
-                    "padding": "20px"
+                    "backdropFilter": "blur(12px)",
+                    "borderRadius": "16px",
+                    "border": "0.5px solid " + border_color,
+                    "padding": "24px"
                 }}>
-                    <h3 style={{"fontSize": "16px", "fontWeight": "700", "margin": "0 0 16px 0", "display": "flex", "alignItems": "center", "gap": "8px"}}>
+                    <h3 style={{"fontSize": "15px", "fontWeight": "600", "margin": "0 0 16px 0", "color": "#FFFFFF", "display": "flex", "alignItems": "center", "gap": "8px"}}>
                         <span>Track 4: Guided Welfare Workflow</span>
                     </h3>
 
-                    <div style={{"display": "flex", "flexDirection": "column", "gap": "10px", "marginBottom": "20px"}}>
-                        <div style={{"display": "flex", "alignItems": "center", "gap": "8px"}}>
-                            <span style={{"color": "#10B981", "fontWeight": "bold"}}>✓</span>
-                            <span style={{"fontSize": "13px", "color": "#9CA3AF"}}>1. Personal Information</span>
+                    <div style={{"display": "flex", "flexDirection": "column", "gap": "8px", "marginBottom": "20px"}}>
+                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": "13px"}}>✓</span>
+                            <span style={{"fontSize": "13px", "color": "rgba(255, 255, 255, 0.7)"}}>1. Personal Information</span>
                         </div>
-                        <div style={{"display": "flex", "alignItems": "center", "gap": "8px"}}>
-                            <span style={{"color": "#10B981", "fontWeight": "bold"}}>✓</span>
-                            <span style={{"fontSize": "13px", "color": "#9CA3AF"}}>2. Household Composition (2 children, 3 members)</span>
+                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": "13px"}}>✓</span>
+                            <span style={{"fontSize": "13px", "color": "rgba(255, 255, 255, 0.7)"}}>2. Household Composition (2 children, 3 members)</span>
                         </div>
                         <div style={{
                             "display": "flex",
                             "alignItems": "center",
-                            "gap": "8px",
-                            "background": "rgba(59, 130, 246, 0.1)",
-                            "padding": "6px 10px",
-                            "borderRadius": "6px",
-                            "borderLeft": "3px solid #3B82F6"
+                            "gap": "10px",
+                            "background": "rgba(255, 229, 0, 0.08)",
+                            "padding": "8px 12px",
+                            "borderRadius": "8px",
+                            "borderLeft": "3px solid #FFE500"
                         }}>
-                            <span style={{"color": "#3B82F6", "fontWeight": "bold"}}>→</span>
-                            <span style={{"fontSize": "13px", "fontWeight": "600", "color": "#60A5FA"}}>3. Income Verification (Current Step)</span>
+                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": "13px"}}>→</span>
+                            <span style={{"fontSize": "13px", "fontWeight": "600", "color": "#FFE500"}}>3. Income Verification (Current Step)</span>
                         </div>
-                        <div style={{"display": "flex", "alignItems": "center", "gap": "8px"}}>
-                            <span style={{"color": ("#10B981" if active_step >= 4 else "#6B7280")}}>○</span>
-                            <span style={{"fontSize": "13px", "color": "#9CA3AF"}}>4. Housing Program (PMAY-U / SUH Shelter)</span>
+                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": ("#00FF88" if active_step >= 4 else "rgba(255, 255, 255, 0.3)")}}>○</span>
+                            <span style={{"fontSize": "13px", "color": "rgba(255, 255, 255, 0.45)"}}>4. Housing Program (PMAY-U / SUH Shelter)</span>
                         </div>
-                        <div style={{"display": "flex", "alignItems": "center", "gap": "8px"}}>
-                            <span style={{"color": ("#10B981" if active_step >= 5 else "#6B7280")}}>○</span>
-                            <span style={{"fontSize": "13px", "color": "#9CA3AF"}}>5. Required Documents (Aadhaar, Income Proof)</span>
+                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": ("#00FF88" if active_step >= 5 else "rgba(255, 255, 255, 0.3)")}}>○</span>
+                            <span style={{"fontSize": "13px", "color": "rgba(255, 255, 255, 0.45)"}}>5. Required Documents (Aadhaar, Income Proof)</span>
                         </div>
-                        <div style={{"display": "flex", "alignItems": "center", "gap": "8px"}}>
-                            <span style={{"color": ("#10B981" if approval_status == "approved" else "#6B7280")}}>○</span>
-                            <span style={{"fontSize": "13px", "color": "#9CA3AF"}}>6. Review & Human Approval</span>
+                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": ("#00FF88" if approval_status == "approved" else "rgba(255, 255, 255, 0.3)")}}>○</span>
+                            <span style={{"fontSize": "13px", "color": "rgba(255, 255, 255, 0.45)"}}>6. Review & Human Approval</span>
                         </div>
                     </div>
 
                     <div style={{
-                        "background": "#1F2937",
-                        "borderRadius": "8px",
-                        "padding": "16px",
-                        "border": "1px solid rgba(255, 255, 255, 0.08)",
+                        "background": "rgba(255, 255, 255, 0.02)",
+                        "borderRadius": "12px",
+                        "padding": "18px",
+                        "border": "0.5px solid rgba(255, 255, 255, 0.07)",
                         "marginBottom": "20px"
                     }}>
                         <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "marginBottom": "10px"}}>
-                            <span style={{"fontSize": "12px", "fontWeight": "600", "color": "#D1D5DB"}}>Voice-to-Form Capture:</span>
+                            <span style={{"fontSize": "12px", "fontWeight": "600", "color": "rgba(255, 255, 255, 0.85)"}}>Voice-to-Form Capture:</span>
                             <button
                                 onClick={lambda _e: MouseEvent { triggerVoiceInput(); }}
                                 style={{
                                     "padding": "4px 10px",
-                                    "borderRadius": "4px",
+                                    "borderRadius": "6px",
                                     "fontSize": "11px",
-                                    "background": ("#EF4444" if voice_active else "#374151"),
-                                    "color": "#FFFFFF",
-                                    "border": "none",
-                                    "cursor": "pointer"
+                                    "background": ("rgba(255, 68, 68, 0.2)" if voice_active else "rgba(255, 255, 255, 0.06)"),
+                                    "color": ("#FF4444" if voice_active else "rgba(255, 255, 255, 0.85)"),
+                                    "border": ("0.5px solid rgba(255, 68, 68, 0.4)" if voice_active else "0.5px solid rgba(255, 255, 255, 0.12)"),
+                                    "cursor": "pointer",
+                                    "fontWeight": "500"
                                 }}
                             >
                                 {("Stop Recording" if voice_active else "Speak Field")}
                             </button>
                         </div>
-                        <div style={{"fontSize": "12px", "fontStyle": "italic", "color": "#9CA3AF", "marginBottom": "12px"}}>
+                        <div style={{"fontSize": "12px", "fontStyle": "italic", "color": "rgba(255, 255, 255, 0.45)", "marginBottom": "12px"}}>
                             {"Spoken input: \"My monthly income is eight thousand rupees.\""}
                         </div>
 
                         <div style={{
-                            "background": "#111827",
-                            "padding": "12px",
-                            "borderRadius": "6px",
-                            "border": "1px solid rgba(255, 255, 255, 0.05)",
+                            "background": "rgba(0, 0, 0, 0.4)",
+                            "padding": "12px 14px",
+                            "borderRadius": "8px",
+                            "border": "0.5px solid rgba(255, 255, 255, 0.06)",
                             "marginBottom": "12px"
                         }}>
                             <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "marginBottom": "4px"}}>
-                                <span style={{"fontSize": "11px", "color": "#9CA3AF"}}>{voice_field_name}</span>
+                                <span style={{"fontSize": "11px", "color": "rgba(255, 255, 255, 0.5)"}}>{voice_field_name}</span>
                                 <button
                                     onClick={lambda _e: MouseEvent { showFieldHelp("Income Verification", "Total gross earnings of all adult members. Under PMAY-U EWS rules, this must be under ₹3,00,000 annually (₹25,000/month)."); }}
-                                    style={{"background": "none", "border": "none", "color": "#60A5FA", "fontSize": "11px", "cursor": "pointer", "padding": "0"}}
+                                    style={{"background": "none", "border": "none", "color": "#FFE500", "fontSize": "11px", "cursor": "pointer", "padding": "0", "textDecoration": "underline"}}
                                 >
                                     Ask HELPmora
                                 </button>
                             </div>
-                            <div style={{"fontSize": "18px", "fontWeight": "700", "color": "#10B981"}}>
+                            <div style={{"fontSize": "20px", "fontWeight": "700", "color": "#00FF88"}}>
                                 {voice_field_val}
                             </div>
                         </div>
 
-                        <div style={{"fontSize": "12px", "color": "#E5E7EB", "marginBottom": "10px"}}>
+                        <div style={{"fontSize": "12px", "color": "rgba(255, 255, 255, 0.7)", "marginBottom": "12px"}}>
                             {("Field confirmed and saved to CaseState." if voice_confirmed else "HELPmora: \"I have entered ₹8,000 for Monthly Income. Is that correct?\"")}
                         </div>
 
-                        {(not voice_confirmed) and <div style={{"display": "flex", "gap": "8px"}}>
+                        {(not voice_confirmed) and <div style={{"display": "flex", "gap": "8px", "flexWrap": "wrap"}}>
                             <button
                                 onClick={lambda _e: MouseEvent { confirmVoiceField(); }}
-                                style={{"padding": "6px 14px", "background": "#10B981", "color": "#FFFFFF", "borderRadius": "4px", "border": "none", "fontWeight": "600", "fontSize": "12px", "cursor": "pointer"}}
+                                style={{
+                                    "padding": "7px 16px",
+                                    "background": "#00FF88",
+                                    "color": "#0A0A0A",
+                                    "borderRadius": "8px",
+                                    "border": "none",
+                                    "fontWeight": "600",
+                                    "fontSize": "12px",
+                                    "cursor": "pointer"
+                                }}
                             >
                                 Yes, Confirm ₹8,000
                             </button>
                             <button
                                 onClick={lambda _e: MouseEvent { toggleRecovery(); }}
-                                style={{"padding": "6px 14px", "background": "#374151", "color": "#D1D5DB", "borderRadius": "4px", "border": "none", "fontSize": "12px", "cursor": "pointer"}}
+                                style={{
+                                    "padding": "7px 14px",
+                                    "background": "rgba(255, 255, 255, 0.06)",
+                                    "color": "rgba(255, 255, 255, 0.8)",
+                                    "borderRadius": "8px",
+                                    "border": "0.5px solid rgba(255, 255, 255, 0.12)",
+                                    "fontSize": "12px",
+                                    "cursor": "pointer"
+                                }}
                             >
                                 Cannot find document?
                             </button>
@@ -326,19 +398,19 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                     </div>
 
                     {recovery_open and <div style={{
-                        "background": "#1E293B",
-                        "border": "1px solid #38BDF8",
-                        "borderRadius": "8px",
-                        "padding": "14px",
+                        "background": "rgba(90, 162, 255, 0.05)",
+                        "border": "0.5px solid rgba(90, 162, 255, 0.25)",
+                        "borderRadius": "12px",
+                        "padding": "16px",
                         "marginBottom": "20px"
                     }}>
-                        <div style={{"fontWeight": "700", "fontSize": "13px", "color": "#38BDF8", "marginBottom": "6px"}}>
+                        <div style={{"fontWeight": "600", "fontSize": "13px", "color": "#5AA2FF", "marginBottom": "6px"}}>
                             Guided Recovery: Missing Income Certificate
                         </div>
-                        <div style={{"fontSize": "12px", "color": "#CBD5E1", "marginBottom": "10px"}}>
+                        <div style={{"fontSize": "12px", "color": "rgba(255, 255, 255, 0.7)", "marginBottom": "10px"}}>
                             If you do not have a formal income certificate right now, you do not have to start over:
                         </div>
-                        <ul style={{"margin": "0 0 10px 18px", "padding": "0", "fontSize": "12px", "color": "#94A3B8"}}>
+                        <ul style={{"margin": "0 0 12px 18px", "padding": "0", "fontSize": "12px", "color": "rgba(255, 255, 255, 0.65)", "lineHeight": "1.6"}}>
                             <li>Use your BPL / Antyodaya ration card as presumptive income proof</li>
                             <li>Generate a self-declaration affidavit signed by a local notary</li>
                             <li>Apply online through your state e-District portal (Services.india.gov.in)</li>
@@ -346,50 +418,59 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                         </ul>
                         <button
                             onClick={lambda _e: MouseEvent { toggleRecovery(); }}
-                            style={{"padding": "4px 10px", "background": "#334155", "color": "#F8FAFC", "borderRadius": "4px", "border": "none", "fontSize": "11px", "cursor": "pointer"}}
+                            style={{
+                                "padding": "5px 12px",
+                                "background": "rgba(90, 162, 255, 0.15)",
+                                "color": "#5AA2FF",
+                                "borderRadius": "6px",
+                                "border": "0.5px solid rgba(90, 162, 255, 0.3)",
+                                "fontSize": "11px",
+                                "cursor": "pointer"
+                            }}
                         >
                             Close Recovery Guide
                         </button>
                     </div>}
 
                     <div style={{
-                        "background": "#111827",
-                        "border": "1px solid rgba(255, 255, 255, 0.1)",
-                        "borderRadius": "8px",
-                        "padding": "16px"
+                        "background": "rgba(255, 229, 0, 0.04)",
+                        "border": "0.5px solid rgba(255, 229, 0, 0.2)",
+                        "borderRadius": "12px",
+                        "padding": "18px"
                     }}>
-                        <div style={{"fontSize": "12px", "fontWeight": "700", "color": "#F59E0B", "marginBottom": "4px", "textTransform": "uppercase"}}>
+                        <div style={{"fontSize": "11px", "fontWeight": "600", "color": "#FFE500", "marginBottom": "4px", "textTransform": "uppercase", "letterSpacing": "0.06em"}}>
                             Human Approval Gate (External Action)
                         </div>
                         <div style={{"fontSize": "13px", "fontWeight": "600", "color": "#FFFFFF", "marginBottom": "6px"}}>
                             {"Prepare and Submit Application for: " + approved_program}
                         </div>
-                        <div style={{"fontSize": "12px", "color": "#9CA3AF", "marginBottom": "12px"}}>
+                        <div style={{"fontSize": "12px", "color": "rgba(255, 255, 255, 0.55)", "marginBottom": "14px", "lineHeight": "1.5"}}>
                             HELPmora will never submit external welfare applications without your explicit consent. Please review the statutory data before approval.
                         </div>
 
                         {approval_status == "pending" and <button
                             onClick={lambda _e: MouseEvent { approveAction(); }}
                             style={{
-                                "padding": "8px 18px",
-                                "background": "#2563EB",
-                                "color": "#FFFFFF",
-                                "borderRadius": "6px",
+                                "padding": "9px 20px",
+                                "background": "#FFE500",
+                                "color": "#0A0A0A",
+                                "borderRadius": "8px",
                                 "border": "none",
                                 "fontWeight": "600",
                                 "fontSize": "13px",
-                                "cursor": "pointer"
+                                "cursor": "pointer",
+                                "transition": "all 0.15s ease"
                             }}
                         >
                             Approve Application Submission
                         </button>}
 
                         {approval_status == "approved" and <div style={{
-                            "padding": "8px 14px",
-                            "background": "rgba(16, 185, 129, 0.15)",
-                            "border": "1px solid #10B981",
-                            "borderRadius": "6px",
-                            "color": "#10B981",
+                            "padding": "10px 16px",
+                            "background": "rgba(0, 255, 136, 0.12)",
+                            "border": "0.5px solid rgba(0, 255, 136, 0.35)",
+                            "borderRadius": "8px",
+                            "color": "#00FF88",
                             "fontWeight": "600",
                             "fontSize": "13px"
                         }}>
@@ -405,25 +486,27 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                 }}>
                     <div style={{
                         "background": card_bg,
-                        "borderRadius": "12px",
-                        "border": "1px solid " + border_color,
-                        "padding": "20px"
+                        "backdropFilter": "blur(12px)",
+                        "borderRadius": "16px",
+                        "border": "0.5px solid " + border_color,
+                        "padding": "24px"
                     }}>
-                        <h3 style={{"fontSize": "16px", "fontWeight": "700", "margin": "0 0 16px 0", "display": "flex", "alignItems": "center", "gap": "8px"}}>
+                        <h3 style={{"fontSize": "15px", "fontWeight": "600", "margin": "0 0 16px 0", "color": "#FFFFFF", "display": "flex", "alignItems": "center", "gap": "8px"}}>
                             <span>Live Observable Execution Trace</span>
                         </h3>
 
-                        <div style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}>
+                        <div style={{"display": "flex", "flexDirection": "column", "gap": "8px"}}>
                             {[<div
                                 key={str(i)}
                                 style={{
                                     "display": "flex",
                                     "alignItems": "flex-start",
                                     "gap": "10px",
-                                    "padding": "8px 10px",
-                                    "background": "rgba(255, 255, 255, 0.03)",
-                                    "borderRadius": "6px",
-                                    "borderLeft": "3px solid " + ("#10B981" if trace_events[i]["status"] == "completed" else "#F59E0B")
+                                    "padding": "10px 12px",
+                                    "background": "rgba(255, 255, 255, 0.02)",
+                                    "borderRadius": "8px",
+                                    "border": "0.5px solid rgba(255, 255, 255, 0.05)",
+                                    "borderLeft": "3px solid " + ("#00FF88" if trace_events[i]["status"] == "completed" else "#FFE500")
                                 }}
                             >
                                 <span style={{
@@ -431,22 +514,23 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                                     "borderRadius": "4px",
                                     "fontSize": "9px",
                                     "fontWeight": "700",
-                                    "background": "#374151",
-                                    "color": "#F3F4F6",
+                                    "background": "rgba(255, 255, 255, 0.06)",
+                                    "border": "0.5px solid rgba(255, 255, 255, 0.1)",
+                                    "color": "rgba(255, 255, 255, 0.85)",
                                     "minWidth": "65px",
                                     "textAlign": "center"
                                 }}>
                                     {trace_events[i]["badge"]}
                                 </span>
                                 <div style={{"flex": "1", "minWidth": "0"}}>
-                                    <div style={{"fontSize": "12px", "fontWeight": "600", "color": "#F9FAFB"}}>
+                                    <div style={{"fontSize": "12px", "fontWeight": "600", "color": "#FFFFFF"}}>
                                         {trace_events[i]["title"]}
                                     </div>
-                                    <div style={{"fontSize": "11px", "color": "#9CA3AF"}}>
+                                    <div style={{"fontSize": "11px", "color": "rgba(255, 255, 255, 0.5)", "marginTop": "2px"}}>
                                         {trace_events[i]["detail"]}
                                     </div>
                                 </div>
-                                <span style={{"color": ("#10B981" if trace_events[i]["status"] == "completed" else "#F59E0B"), "fontSize": "12px"}}>
+                                <span style={{"color": ("#00FF88" if trace_events[i]["status"] == "completed" else "#FFE500"), "fontSize": "12px", "fontWeight": "bold"}}>
                                     {("✓" if trace_events[i]["status"] == "completed" else "●")}
                                 </span>
                             </div> for i in range(len(trace_events))]}
@@ -455,61 +539,107 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
 
                     <div style={{
                         "background": card_bg,
-                        "borderRadius": "12px",
-                        "border": "1px solid " + border_color,
-                        "padding": "20px"
+                        "backdropFilter": "blur(12px)",
+                        "borderRadius": "16px",
+                        "border": "0.5px solid " + border_color,
+                        "padding": "24px"
                     }}>
-                        <h3 style={{"fontSize": "16px", "fontWeight": "700", "margin": "0 0 14px 0"}}>
+                        <h3 style={{"fontSize": "15px", "fontWeight": "600", "margin": "0 0 16px 0", "color": "#FFFFFF"}}>
                             Privacy & Qdrant Memory Governance
                         </h3>
 
-                        <div style={{"display": "flex", "flexDirection": "column", "gap": "10px", "marginBottom": "16px"}}>
-                            <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between"}}>
-                                <span style={{"fontSize": "12px", "color": "#D1D5DB"}}>Conversation Memory</span>
+                        <div style={{"display": "flex", "flexDirection": "column", "gap": "10px", "marginBottom": "18px"}}>
+                            <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "padding": "4px 0"}}>
+                                <span style={{"fontSize": "12px", "color": "rgba(255, 255, 255, 0.7)"}}>Conversation Memory</span>
                                 <button
                                     onClick={lambda _e: MouseEvent { togglePrivacy("conv"); }}
-                                    style={{"padding": "2px 8px", "borderRadius": "4px", "fontSize": "11px", "cursor": "pointer", "background": ("#10B981" if conv_memory_on else "#4B5563"), "color": "#FFF", "border": "none"}}
+                                    style={{
+                                        "padding": "3px 10px",
+                                        "borderRadius": "6px",
+                                        "fontSize": "11px",
+                                        "cursor": "pointer",
+                                        "background": ("rgba(0, 255, 136, 0.12)" if conv_memory_on else "rgba(255, 255, 255, 0.04)"),
+                                        "color": ("#00FF88" if conv_memory_on else "rgba(255, 255, 255, 0.45)"),
+                                        "border": ("0.5px solid rgba(0, 255, 136, 0.3)" if conv_memory_on else "0.5px solid rgba(255, 255, 255, 0.08)"),
+                                        "fontWeight": "600"
+                                    }}
                                 >
                                     {("ON" if conv_memory_on else "OFF")}
                                 </button>
                             </div>
-                            <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between"}}>
-                                <span style={{"fontSize": "12px", "color": "#D1D5DB"}}>Application History</span>
+                            <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "padding": "4px 0"}}>
+                                <span style={{"fontSize": "12px", "color": "rgba(255, 255, 255, 0.7)"}}>Application History</span>
                                 <button
                                     onClick={lambda _e: MouseEvent { togglePrivacy("app"); }}
-                                    style={{"padding": "2px 8px", "borderRadius": "4px", "fontSize": "11px", "cursor": "pointer", "background": ("#10B981" if app_history_on else "#4B5563"), "color": "#FFF", "border": "none"}}
+                                    style={{
+                                        "padding": "3px 10px",
+                                        "borderRadius": "6px",
+                                        "fontSize": "11px",
+                                        "cursor": "pointer",
+                                        "background": ("rgba(0, 255, 136, 0.12)" if app_history_on else "rgba(255, 255, 255, 0.04)"),
+                                        "color": ("#00FF88" if app_history_on else "rgba(255, 255, 255, 0.45)"),
+                                        "border": ("0.5px solid rgba(0, 255, 136, 0.3)" if app_history_on else "0.5px solid rgba(255, 255, 255, 0.08)"),
+                                        "fontWeight": "600"
+                                    }}
                                 >
                                     {("ON" if app_history_on else "OFF")}
                                 </button>
                             </div>
-                            <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between"}}>
-                                <span style={{"fontSize": "12px", "color": "#D1D5DB"}}>Documents Retention</span>
+                            <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "padding": "4px 0"}}>
+                                <span style={{"fontSize": "12px", "color": "rgba(255, 255, 255, 0.7)"}}>Documents Retention</span>
                                 <button
                                     onClick={lambda _e: MouseEvent { togglePrivacy("docs"); }}
-                                    style={{"padding": "2px 8px", "borderRadius": "4px", "fontSize": "11px", "cursor": "pointer", "background": ("#10B981" if docs_on else "#4B5563"), "color": "#FFF", "border": "none"}}
+                                    style={{
+                                        "padding": "3px 10px",
+                                        "borderRadius": "6px",
+                                        "fontSize": "11px",
+                                        "cursor": "pointer",
+                                        "background": ("rgba(0, 255, 136, 0.12)" if docs_on else "rgba(255, 255, 255, 0.04)"),
+                                        "color": ("#00FF88" if docs_on else "rgba(255, 255, 255, 0.45)"),
+                                        "border": ("0.5px solid rgba(0, 255, 136, 0.3)" if docs_on else "0.5px solid rgba(255, 255, 255, 0.08)"),
+                                        "fontWeight": "600"
+                                    }}
                                 >
                                     {("ON" if docs_on else "OFF")}
                                 </button>
                             </div>
-                            <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between"}}>
-                                <span style={{"fontSize": "12px", "color": "#D1D5DB"}}>Raw Voice Retention</span>
+                            <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "padding": "4px 0"}}>
+                                <span style={{"fontSize": "12px", "color": "rgba(255, 255, 255, 0.7)"}}>Raw Voice Retention</span>
                                 <button
                                     onClick={lambda _e: MouseEvent { togglePrivacy("voice"); }}
-                                    style={{"padding": "2px 8px", "borderRadius": "4px", "fontSize": "11px", "cursor": "pointer", "background": ("#10B981" if raw_voice_on else "#4B5563"), "color": "#FFF", "border": "none"}}
+                                    style={{
+                                        "padding": "3px 10px",
+                                        "borderRadius": "6px",
+                                        "fontSize": "11px",
+                                        "cursor": "pointer",
+                                        "background": ("rgba(0, 255, 136, 0.12)" if raw_voice_on else "rgba(255, 255, 255, 0.04)"),
+                                        "color": ("#00FF88" if raw_voice_on else "rgba(255, 255, 255, 0.45)"),
+                                        "border": ("0.5px solid rgba(0, 255, 136, 0.3)" if raw_voice_on else "0.5px solid rgba(255, 255, 255, 0.08)"),
+                                        "fontWeight": "600"
+                                    }}
                                 >
                                     {("ON" if raw_voice_on else "OFF (Default)")}
                                 </button>
                             </div>
                         </div>
 
-                        <div style={{"display": "flex", "gap": "10px"}}>
+                        <div style={{"display": "flex", "gap": "10px", "alignItems": "center", "flexWrap": "wrap"}}>
                             <button
                                 onClick={lambda _e: MouseEvent { wipeAllMemory(); }}
-                                style={{"padding": "6px 12px", "background": "#DC2626", "color": "#FFFFFF", "borderRadius": "4px", "border": "none", "fontSize": "11px", "fontWeight": "600", "cursor": "pointer"}}
+                                style={{
+                                    "padding": "7px 14px",
+                                    "background": "rgba(255, 68, 68, 0.12)",
+                                    "color": "#FF4444",
+                                    "borderRadius": "8px",
+                                    "border": "0.5px solid rgba(255, 68, 68, 0.3)",
+                                    "fontSize": "11px",
+                                    "fontWeight": "600",
+                                    "cursor": "pointer"
+                                }}
                             >
                                 Delete All Personal Memory
                             </button>
-                            {memory_wiped and <span style={{"fontSize": "11px", "color": "#10B981", "alignSelf": "center"}}>
+                            {memory_wiped and <span style={{"fontSize": "11px", "color": "#00FF88"}}>
                                 All Qdrant memories deleted!
                             </span>}
                         </div>
@@ -523,7 +653,8 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                 "left": "0",
                 "right": "0",
                 "bottom": "0",
-                "background": "rgba(0, 0, 0, 0.75)",
+                "background": "rgba(0, 0, 0, 0.8)",
+                "backdropFilter": "blur(8px)",
                 "display": "flex",
                 "alignItems": "center",
                 "justifyContent": "center",
@@ -531,22 +662,32 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                 "padding": "16px"
             }}>
                 <div style={{
-                    "background": "#1F2937",
+                    "background": "#141414",
                     "padding": "24px",
-                    "borderRadius": "12px",
+                    "borderRadius": "16px",
                     "maxWidth": "480px",
                     "width": "100%",
-                    "border": "1px solid rgba(255, 255, 255, 0.15)"
+                    "border": "0.5px solid rgba(255, 255, 255, 0.15)",
+                    "boxShadow": "0 20px 40px rgba(0, 0, 0, 0.6)"
                 }}>
-                    <h4 style={{"margin": "0 0 10px 0", "fontSize": "15px", "color": "#60A5FA"}}>
+                    <h4 style={{"margin": "0 0 10px 0", "fontSize": "15px", "color": "#FFE500", "fontWeight": "600"}}>
                         {"Ask HELPmora: " + field_help_title}
                     </h4>
-                    <p style={{"fontSize": "13px", "color": "#D1D5DB", "lineHeight": "1.6", "margin": "0 0 16px 0"}}>
+                    <p style={{"fontSize": "13px", "color": "rgba(255, 255, 255, 0.75)", "lineHeight": "1.6", "margin": "0 0 18px 0"}}>
                         {field_help_body}
                     </p>
                     <button
                         onClick={lambda _e: MouseEvent { closeFieldHelp(); }}
-                        style={{"padding": "6px 14px", "background": "#374151", "color": "#FFFFFF", "borderRadius": "4px", "border": "none", "cursor": "pointer"}}
+                        style={{
+                            "padding": "7px 16px",
+                            "background": "#FFE500",
+                            "color": "#0A0A0A",
+                            "borderRadius": "8px",
+                            "border": "none",
+                            "cursor": "pointer",
+                            "fontWeight": "600",
+                            "fontSize": "12px"
+                        }}
                     >
                         Got it
                     </button>
