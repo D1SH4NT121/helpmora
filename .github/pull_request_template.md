@@ -1,21 +1,18 @@
-## What this changes
+﻿## Description
+<!-- Provide a brief summary of the changes introduced in this pull request. -->
 
-<!-- One or two sentences. Link the issue if there is one. -->
+## Category
+- [ ] Bug fix (non-breaking change fixing an issue)
+- [ ] New welfare program or rule update (`data/resources.json`)
+- [ ] Transition edge update (`data/transitions.json`)
+- [ ] Translation / i18n catalog update (`data/i18n/`)
+- [ ] UI / Accessibility improvement
+- [ ] Engine / Walker optimization
+- [ ] Documentation update
 
-## Checks run
-
-- [ ] `jac run tests/eval_engine.jac` passes (372 cases + metamorphic check)
-- [ ] `jac run tests/check_messages.jac` passes (if a message catalog changed)
-- [ ] `jac run tests/check_privacy.jac` passes (if scrubbing or storage changed)
-- [ ] `jac run tests/check_policy.jac` passes (if a rule, limit or date changed)
-
-## Engine house rules
-
-Tick what applies and delete the rest. Details in [CONTRIBUTING.md](../CONTRIBUTING.md).
-
-- [ ] A failing case was fixed in `engine/`, not by editing the case
-- [ ] Every new trigger word has a benign probe in `tests/golden_probes.json`
-- [ ] Crisis handling only adds a hotline, never removes one
-- [ ] Person facts come from the parser's flags, not from matching raw text elsewhere
-- [ ] No user words reach storage, logs or a model call
-- [ ] No real person's message, name or contact details in code, tests or this PR
+## Verification Checklist
+- [ ] Verified locally using `python -m jaclang test helpmora/tests/test_schema.jac`
+- [ ] Verified policy rules using `python -m jaclang run helpmora/tests/check_policy.jac`
+- [ ] Verified i18n catalogs using `python -m jaclang run helpmora/tests/check_messages.jac`
+- [ ] No secrets, API keys, or personal credentials committed
+- [ ] Maintains clean deterministic output without unvetted external calls

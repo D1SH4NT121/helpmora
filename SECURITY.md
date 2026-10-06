@@ -1,63 +1,32 @@
-# Security policy
+﻿# Security Policy
 
-HELPmora is used by people in hard situations: immigrants, survivors of abuse,
-people in crisis. A security or privacy bug here can hurt someone, so reports
-are welcome and taken seriously.
+**Project:** HELPmora  
+**Repository:** [https://github.com/D1SH4NT121/helpmora](https://github.com/D1SH4NT121/helpmora)
 
-## Reporting a vulnerability
+HELPmora is designed for individuals in vulnerable situations: survivors of domestic violence, unhoused persons, and families in acute need. A security vulnerability or privacy leak could directly compromise someone's safety. Security reports are handled with high priority.
 
-Please **don't open a public issue** for a security or privacy problem.
+---
 
-- Use GitHub's private vulnerability reporting: the repository's **Security**
-  tab → **Report a vulnerability**.
-- If that isn't available to you, open an issue titled "Security contact
-  request" with no details, and a maintainer will reply with a private channel.
+## Reporting a Vulnerability
 
-Include what you found, how to reproduce it, and what data or users it could
-affect. The maintainer aims to acknowledge reports within a week, will say when
-a fix ships, and will credit you if you want to be credited.
+Please **do not open a public issue** for suspected security or privacy vulnerabilities.
 
-## Especially in scope
+- Open a private security advisory report via the repository's **Security** tab: [https://github.com/D1SH4NT121/helpmora/security/advisories/new](https://github.com/D1SH4NT121/helpmora/security/advisories/new).
+- Or email the maintainer directly at: `mohapatradishant@gmail.com` with the subject line `[HELPmora Security Advisory]`.
 
-- Anything that lets one visitor read or change another visitor's case.
-- User text reaching logs, storage or a model provider, which the
-  [privacy notice](./PRIVACY.md) says doesn't happen.
-- Ways around the crisis handling: a message that should show 988 or the
-  Domestic Violence Hotline but doesn't, or the device-safety features (Quick
-  exit, private session) leaving something behind.
-- Abuse of the model endpoints, such as using the app as a free relay to its
-  model quota.
-- Wrong phone numbers or eligibility rules that could misdirect someone. This
-  isn't a security bug, but please report it (privately if you prefer).
+Please include:
+1. Detailed description of the vulnerability and reproduction steps.
+2. Affected endpoints, walkers, or components.
+3. Potential impact on user privacy or system integrity.
 
-## What's already hardened
+Reports will be acknowledged promptly, followed by a status update and patch timeline.
 
-Details and the tests behind them are in the README ("Security notes",
-"Privacy") and PRIVACY.md:
+---
 
-- Login tokens are signed with a per-boot secret (`HELPMORA_JWT_SECRET`), not
-  jac-scale's public default; the server refuses to start with a weak one.
-- One public port: a gateway (`cmguard/gateway.py`) in front of jac-scale on
-  loopback, with a route allowlist, body and JSON caps, token checks, rate
-  limits per address, per visitor and server-wide, concurrency caps,
-  duplicate collapse and timeouts.
-- Narration and translation run only on short-lived, visitor-bound,
-  replay-limited tokens over the engine's own answer (`cmguard/tokens.py`).
-- A process-wide model budget and circuit breaker around every model call
-  (`cmguard/budget.py`); when it refuses, the deterministic answer still works.
-- No default admin accounts (jac-scale's admin portal is off; the system
-  account gets a random password on every boot).
-- Walker reports, client-error reports and request addresses are not written
-  to server logs; security telemetry is aggregate counts only.
-- The routing model is off unless an operator opts in.
-- `tests/security_e2e.py` (59 attack simulations) and `tests/test_cmguard.py`
-  run in CI on every push.
+## Built-In Security Architecture (`cmguard`)
 
-## Not yet done
-
-This is a student project on free hosting. It has had no independent security
-review or penetration test; the 2026-09-29 audit described in the README was
-done by the project itself. Known limits (in-memory, single-process state;
-what a large botnet can still do) are listed in the README's "Security notes".
-If you can offer an independent review, please get in touch through the
-channel above.
+- **Reverse Gateway Defense:** All requests pass through `cmguard/gateway.py` with strict HTTP route allowlists, JSON payload size caps, and per-IP / per-session rate limits.
+- **Signed Tokens:** Session tokens are cryptographically signed using a strong random secret (`HELPMORA_JWT_SECRET`).
+- **No PII Retention:** Raw conversational transcripts and personally identifiable data are scrubbed and excluded from server log outputs.
+- **Deterministic Crisis Routing:** Emergency escalation paths are locked in deterministic Python/Jac code and cannot be bypassed or modified by user prompt injections.
+- **Budget Circuit Breakers:** Model invocation budgets are strictly throttled by `cmguard/budget.py` to prevent denial-of-wallet or resource exhaustion attacks.

@@ -1,68 +1,50 @@
-# Contributing
+﻿# Contributing to HELPmora
 
-Thank you. The most useful contributions, in order:
+Thank you for your interest in improving HELPmora! As an open-source civic technology platform, contributions from developers, social workers, legal aid advocates, and translators are deeply appreciated.
 
-1. **Native-speaker review of a language.** See
-   [docs/TRANSLATION_REVIEW.md](./docs/TRANSLATION_REVIEW.md). 0 of 50 catalogs are
-   reviewed yet, and the safety-critical rows of one language are a small, concrete
-   start.
-2. **Real wording we get wrong.** If HELPmora misreads how someone actually
-   describes their situation, open an issue with a *de-identified* version of
-   the sentence and what it should have understood. Never paste anyone's real
-   message, name or contact details.
-3. **Corrections to program data or rules.** Wrong phone numbers, closed
-   programs, outdated income limits, immigrant-eligibility rules. Cite a source.
-4. Code. Please open an issue first for anything bigger than a fix.
+---
 
-## Running the checks
+## High-Priority Contribution Areas
 
-```bash
-cd helpmora
-jac run tests/eval_engine.jac        # 439 cases, 14 conversations + metamorphic check; must PASS
-jac run tests/check_messages.jac     # every catalog: keys, placeholders, numbers
-jac run tests/check_privacy.jac      # scrubber: caught, kept, documented misses
-jac run tests/check_policy.jac       # dated rules vs the published figures
-rm -rf .jac/data && jac test tests/test_privacy_graph.jac   # in-process walkers
-jac run tests/eval_external.jac      # real posts (measured, not gated)
-python3 -m unittest tests.test_cmguard   # abuse protection: limits, tokens, model budget
+1. **Native-Speaker Language Reviews:**
+   - 50 language catalogs are located in [`helpmora/data/i18n/`](./helpmora/data/i18n/).
+   - See [docs/TRANSLATION_REVIEW.md](./docs/TRANSLATION_REVIEW.md) for review procedures and guidelines.
+2. **Welfare Scheme & Policy Accuracy:**
+   - Updates to Indian social welfare rules, documentation requirements, or income limits in [`helpmora/data/resources.json`](./helpmora/data/resources.json).
+   - Please always cite official government circulars, ministry portals, or gazette notifications when proposing changes.
+3. **Escalation & Crisis Helpline Verification:**
+   - Verifying state-level and national crisis lines in [`helpmora/walkers/escalation.jac`](./helpmora/walkers/escalation.jac).
+4. **Core Engine & UI Enhancements:**
+   - Optimizing Jac graph traversals, accessibility (axe-core / WCAG standards), or UX responsiveness.
+
+---
+
+## Running the Automated Test Suite
+
+Before submitting a pull request, ensure all tests and smoke checks pass:
+
+```powershell
+# Set Python path to helpmora
+$env:PYTHONPATH = "helpmora"
+
+# Run schema and seed loader smoke test
+python -m jaclang test helpmora/tests/test_schema.jac
+
+# Run policy date and rule calculations
+python -m jaclang run helpmora/tests/check_policy.jac
+
+# Run i18n message catalogs integrity check
+python -m jaclang run helpmora/tests/check_messages.jac
+
+# Run cmguard security tests
+python -m unittest helpmora/tests/test_cmguard.py
 ```
 
-With the app running (`docker build -t helpmora . && docker run -p 7860:7860 helpmora`):
-`python3 helpmora/tests/e2e_http.py http://localhost:7860`.
+---
 
-CI runs all of these on every pull request.
+## Pull Request Guidelines
 
-## Sending a change
-
-`main` is protected, for the maintainer too. Every change lands through a pull
-request, and three CI jobs must pass first: the engine eval, the same eval on
-the engine ejected to plain Python, and the Docker end-to-end run. No approval
-is required while the project has one maintainer.
-
-```bash
-git switch -c fix/short-name
-# edit, run the checks above, commit
-git push -u origin fix/short-name
-gh pr create --fill
-gh pr merge --auto --squash   # maintainers: merges by itself once CI is green
-```
-
-The pull request template repeats the house rules below as a checklist.
-
-## House rules for the engine
-
-- **Fix the lexicon, never the test case.** When a case fails, the fix goes in
-  `engine/`, and the case stays as written.
-- **Every trigger word needs a benign case.** When you add a word to a flag
-  lexicon, add a probe to `tests/golden_probes.json` where that word appears in
-  another sense (see "the Salvation Army", "a car parked on the street").
-- **Crisis detection is escalate-only.** It may add a hotline, never suppress
-  one. False alarms are acceptable; misses are not.
-- **Person facts have one source of truth**: the parser's flags. Don't match
-  raw text for them elsewhere.
-- **No user words in storage or model calls.** See `engine/privacy.jac` and PRIVACY.md.
-
-## Code of conduct
-
-Be kind. Many of the people this app serves are having the worst week of their
-lives; keep that in mind in issues and reviews too.
+1. Fork the repository: [https://github.com/D1SH4NT121/helpmora](https://github.com/D1SH4NT121/helpmora).
+2. Create a descriptive feature branch (`git checkout -b feat/add-state-welfare-scheme`).
+3. Ensure no secrets, tokens, or temporary files are committed.
+4. Open a pull request against `main` using the provided [pull request template](./.github/pull_request_template.md).
