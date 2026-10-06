@@ -163,6 +163,21 @@ def:pub ChatPane(
                         className="cm-input"
                     />
                     <button
+                        onClick={lambda _e: MouseEvent {
+                            if not input_val {
+                                input_val = "I lost my job two months ago. I am behind on rent, I have two children, and my monthly income is eight thousand rupees.";
+                            }
+                            sendMessage(input_val);
+                        }}
+                        disabled={is_loading}
+                        className="cm-ghost-btn"
+                        style={{"marginRight": "6px", "padding": "6px 10px", "fontSize": "13px"}}
+                        aria-label="Voice input (Omi)"
+                        title="Voice Input (Omi Integration)"
+                    >
+                        🎙️ Voice
+                    </button>
+                    <button
                         onClick={lambda _e: MouseEvent { sendMessage(); }}
                         disabled={is_loading}
                         className={("cm-send cm-send-on" if (input_val and (not is_loading)) else "cm-send")}

@@ -52,3 +52,9 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Vector store & local database storage
+helpmora/data/qdrant_db/
+**/qdrant_db/
+*.sqlite
+*.lock

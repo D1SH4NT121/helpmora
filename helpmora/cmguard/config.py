@@ -66,20 +66,21 @@ DEFAULT_RATES = {
     "seed":     {"ip": "40/600",     "user": "6/600",        "global": "400/600"},
     "forget":   {"ip": "20/600",     "user": "4/600",        "global": "200/600"},
     "sink":     {"ip": "10/60",      "user": None,           "global": "120/60"},
+    "api":      {"ip": "180/60",     "user": "60/60",        "global": "2000/60"},
 }
 
 # Largest request body per class, in bytes (checked before it is read).
 DEFAULT_BODY_BYTES = {
     "register": 2048, "login": 2048, "me": 0, "chat": 65536, "model": 32768,
     "external": 8192, "light": 8192, "seed": 4096, "forget": 4096, "sink": 8192,
-    "static": 0, "health": 0,
+    "static": 0, "health": 0, "api": 65536,
 }
 
 # Upstream timeout per class, seconds.
 DEFAULT_TIMEOUT_S = {
     "static": 30.0, "health": 5.0, "register": 15.0, "login": 15.0, "me": 10.0,
     "chat": 40.0, "model": 60.0, "external": 30.0, "light": 20.0, "seed": 30.0,
-    "forget": 20.0,
+    "forget": 20.0, "api": 30.0,
 }
 
 

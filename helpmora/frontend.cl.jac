@@ -20,6 +20,7 @@ import from .components.TelemetryPanel { TelemetryPanel }
 import from .components.LandingPage { LandingPage }
 import from .components.HELPmoraLogo { HELPmoraLogo }
 import from .components.ImpactReport { ImpactReport }
+import from .components.AdaptiveAssistant { AdaptiveAssistant }
 
 sv import from walkers.memory { MemoryWalker }
 sv import from walkers.seed { SeedWalker }
@@ -49,14 +50,15 @@ def:pub ClientApp -> JsxElement {
     # (label, kind, payload) triple so navigate actions and side effects
     # share a single dispatch path in runPaletteAction.
     palette_actions: list[dict] = [
-        {"label": "Switch to Chat tab",        "kind": "tab",    "payload": "chat"},
-        {"label": "Switch to Graph tab",       "kind": "tab",    "payload": "graph"},
-        {"label": "Switch to Action Plan tab", "kind": "tab",    "payload": "plan"},
-        {"label": "Switch to Telemetry tab",   "kind": "tab",    "payload": "telemetry"},
-        {"label": "Switch to Impact tab",      "kind": "tab",    "payload": "impact"},
-        {"label": "Replay walker chain",       "kind": "replay", "payload": ""},
-        {"label": "Show /docs OpenAPI",        "kind": "docs",   "payload": ""},
-        {"label": "Reset session",             "kind": "reset",  "payload": ""}
+        {"label": "Switch to Chat tab",               "kind": "tab",    "payload": "chat"},
+        {"label": "Switch to Adaptive Assistant tab", "kind": "tab",    "payload": "adaptive"},
+        {"label": "Switch to Graph tab",              "kind": "tab",    "payload": "graph"},
+        {"label": "Switch to Action Plan tab",        "kind": "tab",    "payload": "plan"},
+        {"label": "Switch to Telemetry tab",          "kind": "tab",    "payload": "telemetry"},
+        {"label": "Switch to Impact tab",             "kind": "tab",    "payload": "impact"},
+        {"label": "Replay walker chain",              "kind": "replay", "payload": ""},
+        {"label": "Show /docs OpenAPI",               "kind": "docs",   "payload": ""},
+        {"label": "Reset session",                    "kind": "reset",  "payload": ""}
     ];
 
     def startApp -> None;
@@ -70,7 +72,7 @@ def:pub ClientApp -> JsxElement {
         # Restore navigation state across page reloads (F5) so refresh does not reset to landing page
         try {
             h = window.location.hash.replace("#", "");
-            if h in ["chat", "graph", "plan", "telemetry", "impact"] {
+            if h in ["chat", "adaptive", "graph", "plan", "telemetry", "impact"] {
                 show_landing = False;
                 active_tab = h;
                 sessionStorage.setItem("cm_navigated", "1");
@@ -78,7 +80,7 @@ def:pub ClientApp -> JsxElement {
             } elif sessionStorage.getItem("cm_navigated") == "1" {
                 show_landing = False;
                 st = sessionStorage.getItem("cm_tab");
-                if st in ["chat", "graph", "plan", "telemetry", "impact"] {
+                if st in ["chat", "adaptive", "graph", "plan", "telemetry", "impact"] {
                     active_tab = str(st);
                     window.location.hash = str(st);
                 }
@@ -198,6 +200,7 @@ def:pub ClientApp -> JsxElement {
                     }}
                 >
                     {navTab("chat", "Chat")}
+                    {navTab("adaptive", "Adaptive Assistant (Track 4)")}
                     {navTab("graph", "Graph")}
                     {navTab("plan", "Action Plan")}
                     {navTab("telemetry", "Telemetry")}
@@ -261,6 +264,7 @@ def:pub ClientApp -> JsxElement {
                     walker_events={walker_events}
                     platform={platform}
                 />}
+                {active_tab == "adaptive" and <AdaptiveAssistant user_id={user_id} on_walker_event={pushWalkerEvent}/>}
                 {active_tab == "graph" and <GraphViz walker_events={walker_events} user_id={user_id}/>}
                 {active_tab == "plan" and <ActionPlan user_id={user_id} walker_events={walker_events}/>}
                 {active_tab == "telemetry" and <TelemetryPanel walker_events={walker_events} user_id={user_id}/>}

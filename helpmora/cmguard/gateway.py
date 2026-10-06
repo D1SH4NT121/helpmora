@@ -54,6 +54,7 @@ PUBLIC_WALKERS = {
     "ImpactWalker": "light",
     "PlatformWalker": "light",
     "ReflectionReadWalker": "light",
+    "IntegratedPipelineWalker": "chat",
 }
 API_CLASSES = {"register", "login", "me", "chat", "model", "external", "light", "seed", "forget"}
 AUTH_CLASSES = {"me", "chat", "model", "external", "light", "seed", "forget"}
@@ -109,6 +110,8 @@ def classify(method: str, path: str):
         return ("health", None) if method in ("GET", "HEAD") else ("blocked", None)
     if path in DOC_PATHS:
         return ("static", None) if method in ("GET", "HEAD") else ("blocked", None)
+    if path.startswith("/api/"):
+        return ("api", None)
     for prefix in BLOCKED_PREFIXES:
         if path == prefix or path.startswith(prefix + "/") or path.startswith(prefix + "?"):
             return "blocked", None
@@ -340,6 +343,10 @@ class Gateway:
                                 extra=[(b"retry-after", str(int(wait + 0.999)).encode())])
             return
 
+        if cls == "api":
+            await self._handle_api(scope, receive, send, body)
+            return
+
         if cls in API_CLASSES:
             await self._api(scope, send, headers, body, cls, ip, user)
         else:
@@ -523,6 +530,29 @@ class Gateway:
             await send({"type": "http.response.body", "body": b"", "more_body": False})
         finally:
             await r.aclose()
+
+    async def _handle_api(self, scope, receive, send, body: bytes):
+        try:
+            from fastapi import FastAPI
+            from helpmora.integrations.api import router as integrations_router
+            if not hasattr(self, "_api_app"):
+                api_app = FastAPI(title="HELPmora Integrations API")
+                api_app.include_router(integrations_router)
+                self._api_app = api_app
+
+            body_sent = False
+
+            async def custom_receive():
+                nonlocal body_sent
+                if not body_sent:
+                    body_sent = True
+                    return {"type": "http.request", "body": body, "more_body": False}
+                return await receive()
+
+            await self._api_app(scope, custom_receive, send)
+        except Exception as ex:
+            telemetry.count("gateway_error:api")
+            await self._respond(send, 500, error_body(500, "API_ERROR", str(ex)))
 
     async def _respond(self, send, status: int, payload: bytes, extra=None, headers_raw=None):
         hdrs = list(headers_raw) if headers_raw is not None else [(b"content-type", b"application/json")]
