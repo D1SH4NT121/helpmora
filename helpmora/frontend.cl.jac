@@ -225,6 +225,7 @@ def:pub ClientApp -> JsxElement {
                 </nav>
                 <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
                     <button className="cm-back-btn" onClick={lambda _e: MouseEvent { goHome(); }} title="Go back to previous page">← Back</button>
+                    <button className="cm-quick-exit" onClick={lambda _e: MouseEvent { quickExit(); }} title="Leave this page quickly">Quick exit</button>
                     <button
                         onClick={lambda _e: MouseEvent { togglePalette(); }}
                         title="Open command palette (⌘K)"
