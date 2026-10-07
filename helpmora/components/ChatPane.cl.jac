@@ -86,7 +86,7 @@ def:pub ChatPane(
                     status: '',
                     rec: null,
                     currentLang: 'en-US',
-                    accumulated: '',
+                    baseText: '',
                     runInstance: function() {
                         var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
                         if (!SR) return false;
@@ -110,16 +110,18 @@ def:pub ChatPane(
                             };
 
                             rec.onresult = function(event) {
-                                var interim = '';
-                                for (var i = event.resultIndex; i < event.results.length; i++) {
+                                var instanceFinal = '';
+                                var instanceInterim = '';
+                                for (var i = 0; i < event.results.length; i++) {
                                     var item = event.results[i];
                                     if (item.isFinal) {
-                                        window._cm_voice_bridge.accumulated += item[0].transcript + ' ';
+                                        instanceFinal += item[0].transcript + ' ';
                                     } else {
-                                        interim += item[0].transcript;
+                                        instanceInterim += item[0].transcript;
                                     }
                                 }
-                                var full = (window._cm_voice_bridge.accumulated + interim).trim();
+                                var base = window._cm_voice_bridge.baseText || '';
+                                var full = (base + ' ' + instanceFinal + ' ' + instanceInterim).replace(/\\s+/g, ' ').trim();
                                 if (full) {
                                     if (window._cm_on_voice) {
                                         window._cm_on_voice(full);
@@ -152,15 +154,35 @@ def:pub ChatPane(
                                     if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, false); }
                                     return;
                                 }
+                                if (err === 'network') {
+                                    var msg = 'Speech network warning: speech service unreachable. Speak clearly or use Omi presets.';
+                                    window._cm_voice_bridge.status = msg;
+                                    if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, true); }
+                                    return;
+                                }
+                                if (err === 'audio-capture') {
+                                    window._cm_voice_bridge.userActive = false;
+                                    window._cm_voice_bridge.isListening = false;
+                                    var msg = 'No microphone device found or microphone is muted in system sound settings.';
+                                    window._cm_voice_bridge.status = msg;
+                                    if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, false); }
+                                    return;
+                                }
+                                window._cm_voice_bridge.status = 'Voice: ' + err;
+                                if (window._cm_on_voice_status) { window._cm_on_voice_status('Voice: ' + err, true); }
                             };
 
                             rec.onend = function() {
+                                var inputEl = document.querySelector('.cm-input');
+                                if (inputEl && inputEl.value) {
+                                    window._cm_voice_bridge.baseText = inputEl.value;
+                                }
                                 if (window._cm_voice_bridge.userActive) {
                                     setTimeout(function() {
                                         if (window._cm_voice_bridge.userActive) {
                                             try { window._cm_voice_bridge.runInstance(); } catch(e) {}
                                         }
-                                    }, 200);
+                                    }, 150);
                                 } else {
                                     window._cm_voice_bridge.isListening = false;
                                     if (window._cm_on_voice_status) { window._cm_on_voice_status('', false); }
@@ -181,19 +203,49 @@ def:pub ChatPane(
                             if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, false); }
                             return false;
                         }
-                        var speechLang = 'en-US';
-                        if (lang === 'hi') speechLang = 'hi-IN';
-                        else if (lang === 'es') speechLang = 'es-ES';
-                        else if (lang === 'zh') speechLang = 'zh-CN';
-                        else if (lang === 'ta') speechLang = 'ta-IN';
-                        else if (lang && lang.length === 2) speechLang = lang;
+                        var langMap = {
+                            'en': 'en-US',
+                            'hi': 'hi-IN',
+                            'es': 'es-US',
+                            'zh': 'zh-CN',
+                            'ta': 'ta-IN',
+                            'te': 'te-IN',
+                            'bn': 'bn-IN',
+                            'mr': 'mr-IN',
+                            'gu': 'gu-IN',
+                            'ur': 'ur-IN',
+                            'ar': 'ar-SA',
+                            'fr': 'fr-FR',
+                            'de': 'de-DE',
+                            'pt': 'pt-BR',
+                            'ru': 'ru-RU',
+                            'ja': 'ja-JP',
+                            'ko': 'ko-KR'
+                        };
+                        var speechLang = (lang && langMap[lang]) ? langMap[lang] : ((lang && lang.indexOf('-') > 0) ? lang : 'en-US');
                         window._cm_voice_bridge.currentLang = speechLang;
                         window._cm_voice_bridge.userActive = true;
                         window._cm_voice_bridge.isListening = true;
-                        window._cm_voice_bridge.accumulated = '';
-                        window._cm_voice_bridge.status = 'Listening... Speak now into your microphone';
-                        if (window._cm_on_voice_status) { window._cm_on_voice_status('Listening... Speak now into your microphone', true); }
-                        return window._cm_voice_bridge.runInstance();
+                        var inputEl = document.querySelector('.cm-input');
+                        window._cm_voice_bridge.baseText = (inputEl && inputEl.value) ? inputEl.value : '';
+                        window._cm_voice_bridge.status = 'Listening (' + speechLang + ')... Speak now';
+                        if (window._cm_on_voice_status) { window._cm_on_voice_status('Listening (' + speechLang + ')... Speak now', true); }
+
+                        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                            navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+                                stream.getTracks().forEach(function(t) { t.stop(); });
+                                window._cm_voice_bridge.runInstance();
+                            }).catch(function(err) {
+                                window._cm_voice_bridge.userActive = false;
+                                window._cm_voice_bridge.isListening = false;
+                                var msg = 'Microphone permission blocked. Please allow microphone access in your browser address bar.';
+                                window._cm_voice_bridge.status = msg;
+                                if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, false); }
+                            });
+                            return true;
+                        } else {
+                            return window._cm_voice_bridge.runInstance();
+                        }
                     },
                     stop: function() {
                         window._cm_voice_bridge.userActive = false;
