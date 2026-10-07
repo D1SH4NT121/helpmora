@@ -652,7 +652,7 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
                     {[<span key={"f" + str(i)} className="cm-fact">{facts[i]}</span> for i in range(len(facts))]}
                     {prof["carried_category"] and <span className="cm-fact cm-fact-dim">carried from earlier</span>}
                 </div>}
-                {(d["privacy"] and d["privacy"]["private_turn"] and is_last) and <div className="cm-private-note">{("Sesión privada activada: cuando cierre esta pestaña, este navegador no guardará nada de esta conversación. «Volver» (arriba a la derecha) regresa al inicio." if lang == "es" else "Private session is on: once you close this tab, this browser keeps nothing about this conversation. «Back» (top right) returns home.")}</div>}
+                {(d["privacy"] and d["privacy"]["private_turn"] and is_last) and <div className="cm-private-note">{("Sesión privada activada: cuando cierre esta pestaña, este navegador no guardará nada de esta conversación. «Quick exit» (arriba a la derecha, o pulse Mayús tres veces) sale al instante." if lang == "es" else "Private session is on: once you close this tab, this browser keeps nothing about this conversation. Quick exit (top right, or press Shift three times) leaves instantly.")}</div>}
                 {esc["lead_line"] and <div className="cm-crisis">
                     <div className="cm-crisis-lead">{str(esc["lead_line"])}</div>
                     {esc["lead_line_en"] and <div className="cm-crisis-en" lang="en" dir="ltr">{"In English: " + str(esc["lead_line_en"])}</div>}

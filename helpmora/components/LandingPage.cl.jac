@@ -117,7 +117,7 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                             "boxShadow": "0 2px 10px rgba(255,229,0,0.3)"
                         }}
                     >
-                        Enter Navigator →
+                        Enter the Navigator →
                     </button>
                 </div>
             </header>
