@@ -1289,3 +1289,7 @@ html, body { overflow-x: hidden; }
     display: none !important;
   }
 }
+
+.cm-quick-exit {
+  display: none !important;
+}
