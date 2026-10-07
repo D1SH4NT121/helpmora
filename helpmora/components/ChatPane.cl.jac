@@ -114,6 +114,7 @@ def:pub ChatPane(
                                 rec.onstart = function() {
                                     window._cm_voice_bridge.isListening = true;
                                     window._cm_voice_bridge.status = 'Listening... Speak now';
+                                    if (window._cm_on_voice_status) { window._cm_on_voice_status('Listening... Speak now', true); }
                                 };
                                 rec.onresult = function(event) {
                                     var transcript = '';
@@ -121,11 +122,18 @@ def:pub ChatPane(
                                         transcript += event.results[i][0].transcript;
                                     }
                                     if (transcript) {
+                                        if (window._cm_on_voice) {
+                                            window._cm_on_voice(transcript);
+                                        }
                                         var inputEl = document.querySelector('.cm-input');
                                         if (inputEl) {
+                                            if (inputEl._valueTracker) {
+                                                inputEl._valueTracker.setValue('');
+                                            }
                                             var nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
                                             nativeSetter.call(inputEl, transcript);
                                             inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+                                            inputEl.dispatchEvent(new Event('change', { bubbles: true }));
                                         }
                                         window._cm_voice_bridge.status = 'Hearing: "' + transcript + '"';
                                     }
@@ -140,15 +148,19 @@ def:pub ChatPane(
                                         msg = 'No speech detected. Speak clearly into your microphone.';
                                     }
                                     window._cm_voice_bridge.status = msg;
+                                    if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, false); }
                                 };
                                 rec.onend = function() {
                                     window._cm_voice_bridge.isListening = false;
+                                    if (window._cm_on_voice_status) { window._cm_on_voice_status('', false); }
                                 };
                                 rec.start();
                                 return true;
                             } catch (err) {
                                 window._cm_voice_bridge.isListening = false;
-                                window._cm_voice_bridge.status = 'Microphone activation failed: ' + (err.message || err);
+                                var msg = 'Microphone activation failed: ' + (err.message || err);
+                                window._cm_voice_bridge.status = msg;
+                                if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, false); }
                                 return false;
                             }
                         },
@@ -158,10 +170,19 @@ def:pub ChatPane(
                                 try { window._cm_voice_bridge.rec.stop(); } catch(e) {}
                                 window._cm_voice_bridge.rec = null;
                             }
+                            if (window._cm_on_voice_status) { window._cm_on_voice_status('', false); }
                         }
                     };
                 """);
             }
+            window._cm_on_voice = lambda txt: str {
+                input_val = txt;
+                voice_status = 'Hearing: "' + txt + '"';
+            };
+            window._cm_on_voice_status = lambda st: str, listening: bool {
+                voice_status = st;
+                is_listening = listening;
+            };
         } except Exception as _ex {}
     }
 
