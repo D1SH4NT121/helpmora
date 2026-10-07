@@ -29,7 +29,7 @@ sv import from walkers.platform { PlatformWalker }
 # Quick exit (GOV.UK "Exit this page" pattern): Shift pressed 3 times within
 # 5 seconds, or the button. Not Escape: it also stops a page load.
 glob CM_SHIFTS: dict = {"t": []};
-glob CM_EXIT_URL: str = "/";
+glob CM_EXIT_URL: str = "https://weather.com";
 
 def:pub ClientApp -> JsxElement {
     has active_tab: str = "chat",
