@@ -82,7 +82,11 @@ def:pub ClientApp -> JsxElement {
                 st = sessionStorage.getItem("cm_tab");
                 if st in ["chat", "adaptive", "graph", "plan", "telemetry", "impact"] {
                     active_tab = str(st);
-                    window.location.hash = str(st);
+                    try {
+                        window.history.replaceState(None, "", "#" + str(st));
+                    } except Exception as _ex {
+                        window.location.hash = str(st);
+                    }
                 }
             }
         } except Exception as _ex {}

@@ -67,7 +67,11 @@ impl ClientApp.startApp -> None {
     try {
         sessionStorage.setItem("cm_navigated", "1");
         sessionStorage.setItem("cm_tab", "chat");
-        window.location.hash = "chat";
+        try {
+            window.history.replaceState(None, "", "#chat");
+        } except Exception as _ex {
+            window.location.hash = "chat";
+        }
     } except Exception as _ex {}
 }
 
@@ -76,7 +80,11 @@ impl ClientApp.goHome -> None {
     try {
         sessionStorage.removeItem("cm_navigated");
         sessionStorage.removeItem("cm_tab");
-        window.location.hash = "";
+        try {
+            window.history.replaceState(None, "", window.location.pathname);
+        } except Exception as _ex {
+            window.location.hash = "";
+        }
     } except Exception as _ex {}
 }
 
@@ -96,7 +104,11 @@ impl ClientApp.navTab(tab_id: str, label: str) -> JsxElement {
                 active_tab = tab_id;
                 try {
                     sessionStorage.setItem("cm_tab", tab_id);
-                    window.location.hash = tab_id;
+                    try {
+                        window.history.replaceState(None, "", "#" + tab_id);
+                    } except Exception as _ex {
+                        window.location.hash = tab_id;
+                    }
                 } except Exception as _ex {}
             }}
             style={{
@@ -391,7 +403,9 @@ impl ClientApp.quickExit -> None {
     try {
         sessionStorage.removeItem("cm_navigated");
         sessionStorage.removeItem("cm_tab");
-        window.location.hash = "";
+        try {
+            window.history.replaceState(None, "", window.location.pathname);
+        } except Exception as _ex {}
     } except Exception as _ex {}
     # Leave now. location.replace means Back won't return here. In a private
     # session also erase the case on the server and everything in this browser.
