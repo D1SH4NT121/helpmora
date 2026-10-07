@@ -97,7 +97,7 @@ def:pub ClientApp -> JsxElement {
         # Global Cmd/Ctrl+K listener wired at the document level so the
         # palette is reachable from any tab without per-component plumbing.
         try {
-            document.addEventListener("keydown", lambda e: KeyboardEvent {
+            on_kd = lambda e: KeyboardEvent {
                 k_raw = e.key;
                 k = str(k_raw) if k_raw else "";
                 is_k = k == "k" or k == "K";
@@ -111,14 +111,27 @@ def:pub ClientApp -> JsxElement {
                 } elif palette_open and k == "Escape" {
                     palette_open = False;
                 }
-                if k == "Shift" and not e.repeat {
+                c_raw = e.code;
+                c = str(c_raw) if c_raw else "";
+                is_shift = k == "Shift" or c == "ShiftLeft" or c == "ShiftRight";
+                if is_shift and not e.repeat {
                     now = Date.now();
-                    kept: list = [t for t in list(CM_SHIFTS["t"]) if now - Number(t) < 5000];
+                    times: list = list(CM_SHIFTS["t"]);
+                    if len(times) > 0 and (now - Number(times[-1])) < 40 {
+                        return;
+                    }
+                    kept: list = [t for t in times if now - Number(t) < 5000];
                     kept.append(now);
                     CM_SHIFTS["t"] = kept;
-                    if len(CM_SHIFTS["t"]) >= 3 { quickExit(); }
+                    if len(CM_SHIFTS["t"]) >= 3 {
+                        CM_SHIFTS["t"] = [];
+                        quickExit();
+                    }
                 }
-            });
+            };
+            document.addEventListener("keydown", on_kd);
+            try { window.addEventListener("keydown", on_kd); } except Exception as _ex {}
+        } except Exception as _ex {
             # A private session (crisis turns switch it on) leaves nothing in
             # this browser once the page closes: the login lives in
             # sessionStorage and localStorage is wiped on the way out.
