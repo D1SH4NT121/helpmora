@@ -8,15 +8,15 @@ from fastapi import APIRouter, Header, HTTPException, Query, Request, Response
 from pydantic import BaseModel, Field
 
 try:
-    from helpmora.integrations.lyzr.client import get_lyzr_client
-    from helpmora.integrations.omi.adapter import normalize_omi_event, validate_omi_auth
-    from helpmora.integrations.qdrant.memory import get_memory_store
-    from helpmora.orchestration.workflow import _ACTIVE_RUNS, get_workflow_manager
-except ImportError:
     from integrations.lyzr.client import get_lyzr_client
     from integrations.omi.adapter import normalize_omi_event, validate_omi_auth
     from integrations.qdrant.memory import get_memory_store
     from orchestration.workflow import _ACTIVE_RUNS, get_workflow_manager
+except ImportError:
+    from helpmora.integrations.lyzr.client import get_lyzr_client
+    from helpmora.integrations.omi.adapter import normalize_omi_event, validate_omi_auth
+    from helpmora.integrations.qdrant.memory import get_memory_store
+    from helpmora.orchestration.workflow import _ACTIVE_RUNS, get_workflow_manager
 
 logger = logging.getLogger("helpmora.integrations.api")
 

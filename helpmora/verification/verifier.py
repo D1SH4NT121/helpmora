@@ -15,7 +15,10 @@ import logging
 import os
 from typing import Any, Dict, List, Optional, Tuple
 
-from helpmora.orchestration.case_state import CaseState, VerificationState
+try:
+    from orchestration.case_state import CaseState, VerificationState
+except ImportError:
+    from helpmora.orchestration.case_state import CaseState, VerificationState
 
 logger = logging.getLogger("helpmora.verification")
 

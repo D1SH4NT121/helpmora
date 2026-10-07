@@ -12,17 +12,30 @@ import re
 import uuid
 from typing import Any, Dict, List, Optional
 
-from helpmora.integrations.lyzr.agents import (
-    ContextAgent,
-    ResourceAgent,
-    EligibilityAgent,
-    PathfinderAgent,
-    VerificationAgent,
-    ActionAgent,
-    check_crisis_safety_gate,
-)
-from helpmora.integrations.qdrant.memory import get_memory_store
-from helpmora.orchestration.case_state import CaseState
+try:
+    from integrations.lyzr.agents import (
+        ContextAgent,
+        ResourceAgent,
+        EligibilityAgent,
+        PathfinderAgent,
+        VerificationAgent,
+        ActionAgent,
+        check_crisis_safety_gate,
+    )
+    from integrations.qdrant.memory import get_memory_store
+    from orchestration.case_state import CaseState
+except ImportError:
+    from helpmora.integrations.lyzr.agents import (
+        ContextAgent,
+        ResourceAgent,
+        EligibilityAgent,
+        PathfinderAgent,
+        VerificationAgent,
+        ActionAgent,
+        check_crisis_safety_gate,
+    )
+    from helpmora.integrations.qdrant.memory import get_memory_store
+    from helpmora.orchestration.case_state import CaseState
 
 logger = logging.getLogger("helpmora.orchestration.workflow")
 

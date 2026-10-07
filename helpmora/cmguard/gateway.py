@@ -534,7 +534,10 @@ class Gateway:
     async def _handle_api(self, scope, receive, send, body: bytes):
         try:
             from fastapi import FastAPI
-            from helpmora.integrations.api import router as integrations_router
+            try:
+                from integrations.api import router as integrations_router
+            except ImportError:
+                from helpmora.integrations.api import router as integrations_router
             if not hasattr(self, "_api_app"):
                 api_app = FastAPI(title="HELPmora Integrations API")
                 api_app.include_router(integrations_router)

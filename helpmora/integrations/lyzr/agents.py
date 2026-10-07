@@ -17,8 +17,12 @@ import os
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
-from helpmora.orchestration.case_state import CaseState
-from helpmora.verification.verifier import verify_case_state
+try:
+    from orchestration.case_state import CaseState
+    from verification.verifier import verify_case_state
+except ImportError:
+    from helpmora.orchestration.case_state import CaseState
+    from helpmora.verification.verifier import verify_case_state
 
 logger = logging.getLogger("helpmora.integrations.lyzr.agents")
 

@@ -11,13 +11,132 @@ Implements:
 import hashlib
 import json
 import logging
+import math
 import os
 import uuid
 from typing import Any, Dict, List, Optional
 
-import numpy as np
-from qdrant_client import QdrantClient
-from qdrant_client.http import models
+try:
+    from qdrant_client import QdrantClient
+    from qdrant_client.http import models
+except ImportError:
+    QdrantClient = None
+    models = None
+
+if models is None:
+    class _ModelsFallback:
+        class Distance:
+            COSINE = "Cosine"
+        class PayloadSchemaType:
+            KEYWORD = "keyword"
+        class VectorParams:
+            def __init__(self, size=256, distance="Cosine"):
+                self.size = size
+                self.distance = distance
+        class PointStruct:
+            def __init__(self, id, vector, payload):
+                self.id = id
+                self.vector = vector
+                self.payload = payload
+        class MatchValue:
+            def __init__(self, value):
+                self.value = value
+        class FieldCondition:
+            def __init__(self, key, match):
+                self.key = key
+                self.match = match
+        class Filter:
+            def __init__(self, must=None):
+                self.must = must or []
+        class FilterSelector:
+            def __init__(self, filter=None):
+                self.filter = filter
+    models = _ModelsFallback()
+
+
+class _InMemoryCollection:
+    def __init__(self, name: str):
+        self.name = name
+
+
+class _CollectionsResponse:
+    def __init__(self, collections: List[_InMemoryCollection]):
+        self.collections = collections
+
+
+class _ScoredPoint:
+    def __init__(self, id: str, payload: Dict[str, Any], score: float = 1.0):
+        self.id = id
+        self.payload = payload
+        self.score = score
+
+
+class _QueryResponse:
+    def __init__(self, points: List[_ScoredPoint]):
+        self.points = points
+
+
+class _InMemoryQdrantClient:
+    """Zero-dependency in-memory vector store matching QdrantClient API."""
+    def __init__(self, *args, **kwargs):
+        self._collections: Dict[str, Dict[str, Dict[str, Any]]] = {}
+
+    def get_collections(self):
+        return _CollectionsResponse([_InMemoryCollection(n) for n in self._collections])
+
+    def create_collection(self, collection_name: str, vectors_config=None):
+        if collection_name not in self._collections:
+            self._collections[collection_name] = {}
+
+    def create_payload_index(self, *args, **kwargs):
+        pass
+
+    def upsert(self, collection_name: str, points: List[Any]):
+        col = self._collections.setdefault(collection_name, {})
+        for pt in points:
+            col[str(pt.id)] = {"vector": list(pt.vector), "payload": dict(pt.payload or {})}
+
+    def _matches_filter(self, payload: Dict[str, Any], qfilter: Any) -> bool:
+        if not qfilter or not getattr(qfilter, "must", None):
+            return True
+        for cond in qfilter.must:
+            key = getattr(cond, "key", None)
+            match_obj = getattr(cond, "match", None)
+            match_val = getattr(match_obj, "value", None) if match_obj else None
+            if key and match_val is not None:
+                if str(payload.get(key, "")) != str(match_val):
+                    return False
+        return True
+
+    def query_points(self, collection_name: str, query: List[float], query_filter: Any = None, limit: int = 10):
+        col = self._collections.get(collection_name, {})
+        scored: List[_ScoredPoint] = []
+        for pid, data in col.items():
+            if not self._matches_filter(data["payload"], query_filter):
+                continue
+            v = data["vector"]
+            score = sum(a * b for a, b in zip(query, v)) if query and v else 1.0
+            scored.append(_ScoredPoint(pid, data["payload"], score))
+        scored.sort(key=lambda x: x.score, reverse=True)
+        return _QueryResponse(scored[:limit])
+
+    def scroll(self, collection_name: str, scroll_filter: Any = None, limit: int = 10):
+        col = self._collections.get(collection_name, {})
+        matched: List[_ScoredPoint] = []
+        for pid, data in col.items():
+            if self._matches_filter(data["payload"], scroll_filter):
+                matched.append(_ScoredPoint(pid, data["payload"], 1.0))
+                if len(matched) >= limit:
+                    break
+        return matched, None
+
+    def delete(self, collection_name: str, points_selector: Any = None):
+        col = self._collections.get(collection_name, {})
+        qfilter = getattr(points_selector, "filter", None) if points_selector else None
+        to_del = [pid for pid, data in col.items() if self._matches_filter(data["payload"], qfilter)]
+        for pid in to_del:
+            col.pop(pid, None)
+
 
 from .schemas import MemoryRecord, SUPPORTED_MEMORY_TYPES, UserPrivacySettings
 
@@ -38,7 +157,7 @@ def _embed_text(text: str, dim: int = VECTOR_DIMENSION) -> List[float]:
     if not text:
         return [0.0] * dim
 
-    vec = np.zeros(dim, dtype=np.float32)
+    vec = [0.0] * dim
     words = text.lower().strip().split()
     
     # Word unigrams and bigrams
@@ -57,18 +176,18 @@ def _embed_text(text: str, dim: int = VECTOR_DIMENSION) -> List[float]:
         h_tri = int(hashlib.md5(trigram.encode("utf-8")).hexdigest(), 16) % dim
         vec[h_tri] += 0.5
 
-    norm = np.linalg.norm(vec)
+    norm = math.sqrt(sum(x * x for x in vec))
     if norm > 0:
-        vec = vec / norm
-    return vec.tolist()
+        vec = [round(x / norm, 6) for x in vec]
+    return vec
 
 
 class QdrantMemoryStore:
-    def __init__(self, client: Optional[QdrantClient] = None):
+    def __init__(self, client: Optional[Any] = None):
         self.collection_name = COLLECTION_NAME
         if client:
             self.client = client
-        else:
+        elif QdrantClient is not None:
             qdrant_url = os.environ.get("QDRANT_URL", "").strip()
             qdrant_api_key = os.environ.get("QDRANT_API_KEY", "").strip() or None
             storage_path = os.environ.get("QDRANT_STORAGE_PATH", "").strip()
@@ -81,7 +200,6 @@ class QdrantMemoryStore:
                 logger.info(f"Initializing persistent local Qdrant at {storage_path}")
                 self.client = QdrantClient(path=storage_path)
             else:
-                # Default to local path inside data directory
                 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
                 default_path = os.path.join(base_dir, "data", "qdrant_db")
                 os.makedirs(default_path, exist_ok=True)
@@ -90,7 +208,13 @@ class QdrantMemoryStore:
                     logger.info(f"Initializing local Qdrant at {default_path}")
                 except Exception as lock_ex:
                     logger.warning(f"Local Qdrant storage locked ({lock_ex}); using in-memory instance")
-                    self.client = QdrantClient(":memory:")
+                    try:
+                        self.client = QdrantClient(":memory:")
+                    except Exception:
+                        self.client = _InMemoryQdrantClient()
+        else:
+            logger.info("qdrant-client not installed; running with high-performance in-memory vector store")
+            self.client = _InMemoryQdrantClient()
 
         self._ensure_collection()
 
