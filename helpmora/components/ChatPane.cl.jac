@@ -79,102 +79,133 @@ def:pub ChatPane(
             if sessionStorage.getItem("cm_private") == "1" { private_on = True; }
         } except Exception as _ex {}
         try {
-            if not window._cm_voice_bridge {
-                window.eval("""
-                    window._cm_voice_bridge = {
-                        isListening: false,
-                        status: '',
-                        rec: null,
-                        start: function(lang) {
-                            var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-                            if (!SR) {
-                                window._cm_voice_bridge.status = 'Microphone speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari, or click an Omi Voice preset.';
-                                return false;
+            window.eval("""
+                window._cm_voice_bridge = {
+                    isListening: false,
+                    userActive: false,
+                    status: '',
+                    rec: null,
+                    currentLang: 'en-US',
+                    accumulated: '',
+                    runInstance: function() {
+                        var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                        if (!SR) return false;
+                        try {
+                            if (window._cm_voice_bridge.rec) {
+                                try { window._cm_voice_bridge.rec.abort(); } catch(e) {}
                             }
-                            try {
-                                if (window._cm_voice_bridge.rec) {
-                                    try { window._cm_voice_bridge.rec.abort(); } catch(e) {}
-                                }
-                                var rec = new SR();
-                                window._cm_voice_bridge.rec = rec;
+                            var rec = new SR();
+                            window._cm_voice_bridge.rec = rec;
+                            rec.continuous = true;
+                            rec.interimResults = true;
+                            rec.maxAlternatives = 1;
+                            rec.lang = window._cm_voice_bridge.currentLang;
+
+                            rec.onstart = function() {
                                 window._cm_voice_bridge.isListening = true;
-                                window._cm_voice_bridge.status = 'Listening... Speak now into your microphone';
-                                rec.continuous = true;
-                                rec.interimResults = true;
-                                rec.maxAlternatives = 1;
+                                if (!window._cm_voice_bridge.status || window._cm_voice_bridge.status.indexOf('Hearing') === -1) {
+                                    window._cm_voice_bridge.status = 'Listening... Speak now into your microphone';
+                                    if (window._cm_on_voice_status) { window._cm_on_voice_status('Listening... Speak now into your microphone', true); }
+                                }
+                            };
 
-                                var speechLang = 'en-US';
-                                if (lang === 'hi') speechLang = 'hi-IN';
-                                else if (lang === 'es') speechLang = 'es-ES';
-                                else if (lang === 'zh') speechLang = 'zh-CN';
-                                else if (lang === 'ta') speechLang = 'ta-IN';
-                                else if (lang && lang.length === 2) speechLang = lang;
-                                rec.lang = speechLang;
+                            rec.onresult = function(event) {
+                                var interim = '';
+                                for (var i = event.resultIndex; i < event.results.length; i++) {
+                                    var item = event.results[i];
+                                    if (item.isFinal) {
+                                        window._cm_voice_bridge.accumulated += item[0].transcript + ' ';
+                                    } else {
+                                        interim += item[0].transcript;
+                                    }
+                                }
+                                var full = (window._cm_voice_bridge.accumulated + interim).trim();
+                                if (full) {
+                                    if (window._cm_on_voice) {
+                                        window._cm_on_voice(full);
+                                    }
+                                    var inputEl = document.querySelector('.cm-input');
+                                    if (inputEl) {
+                                        if (inputEl._valueTracker) {
+                                            inputEl._valueTracker.setValue('');
+                                        }
+                                        var nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+                                        nativeSetter.call(inputEl, full);
+                                        inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+                                        inputEl.dispatchEvent(new Event('change', { bubbles: true }));
+                                    }
+                                    window._cm_voice_bridge.status = 'Hearing: "' + full + '"';
+                                    if (window._cm_on_voice_status) { window._cm_on_voice_status('Hearing: "' + full + '"', true); }
+                                }
+                            };
 
-                                rec.onstart = function() {
-                                    window._cm_voice_bridge.isListening = true;
-                                    window._cm_voice_bridge.status = 'Listening... Speak now';
-                                    if (window._cm_on_voice_status) { window._cm_on_voice_status('Listening... Speak now', true); }
-                                };
-                                rec.onresult = function(event) {
-                                    var transcript = '';
-                                    for (var i = 0; i < event.results.length; i++) {
-                                        transcript += event.results[i][0].transcript;
-                                    }
-                                    if (transcript) {
-                                        if (window._cm_on_voice) {
-                                            window._cm_on_voice(transcript);
-                                        }
-                                        var inputEl = document.querySelector('.cm-input');
-                                        if (inputEl) {
-                                            if (inputEl._valueTracker) {
-                                                inputEl._valueTracker.setValue('');
-                                            }
-                                            var nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-                                            nativeSetter.call(inputEl, transcript);
-                                            inputEl.dispatchEvent(new Event('input', { bubbles: true }));
-                                            inputEl.dispatchEvent(new Event('change', { bubbles: true }));
-                                        }
-                                        window._cm_voice_bridge.status = 'Hearing: "' + transcript + '"';
-                                    }
-                                };
-                                rec.onerror = function(event) {
+                            rec.onerror = function(event) {
+                                var err = event.error || 'error';
+                                if (err === 'no-speech' || err === 'aborted') {
+                                    return;
+                                }
+                                if (err === 'not-allowed') {
+                                    window._cm_voice_bridge.userActive = false;
                                     window._cm_voice_bridge.isListening = false;
-                                    var err = event.error || 'error';
-                                    var msg = 'Voice recognition: ' + err;
-                                    if (err === 'not-allowed') {
-                                        msg = 'Microphone access blocked. Please grant microphone permission in your browser address bar.';
-                                    } else if (err === 'no-speech') {
-                                        msg = 'No speech detected. Speak clearly into your microphone.';
-                                    }
+                                    var msg = 'Microphone access blocked. Please grant microphone permission in your browser address bar.';
                                     window._cm_voice_bridge.status = msg;
                                     if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, false); }
-                                };
-                                rec.onend = function() {
+                                    return;
+                                }
+                            };
+
+                            rec.onend = function() {
+                                if (window._cm_voice_bridge.userActive) {
+                                    setTimeout(function() {
+                                        if (window._cm_voice_bridge.userActive) {
+                                            try { window._cm_voice_bridge.runInstance(); } catch(e) {}
+                                        }
+                                    }, 200);
+                                } else {
                                     window._cm_voice_bridge.isListening = false;
                                     if (window._cm_on_voice_status) { window._cm_on_voice_status('', false); }
-                                };
-                                rec.start();
-                                return true;
-                            } catch (err) {
-                                window._cm_voice_bridge.isListening = false;
-                                var msg = 'Microphone activation failed: ' + (err.message || err);
-                                window._cm_voice_bridge.status = msg;
-                                if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, false); }
-                                return false;
-                            }
-                        },
-                        stop: function() {
-                            window._cm_voice_bridge.isListening = false;
-                            if (window._cm_voice_bridge.rec) {
-                                try { window._cm_voice_bridge.rec.stop(); } catch(e) {}
-                                window._cm_voice_bridge.rec = null;
-                            }
-                            if (window._cm_on_voice_status) { window._cm_on_voice_status('', false); }
+                                }
+                            };
+
+                            rec.start();
+                            return true;
+                        } catch(err) {
+                            return false;
                         }
-                    };
-                """);
-            }
+                    },
+                    start: function(lang) {
+                        var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                        if (!SR) {
+                            var msg = 'Microphone speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari, or click an Omi Voice preset.';
+                            window._cm_voice_bridge.status = msg;
+                            if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, false); }
+                            return false;
+                        }
+                        var speechLang = 'en-US';
+                        if (lang === 'hi') speechLang = 'hi-IN';
+                        else if (lang === 'es') speechLang = 'es-ES';
+                        else if (lang === 'zh') speechLang = 'zh-CN';
+                        else if (lang === 'ta') speechLang = 'ta-IN';
+                        else if (lang && lang.length === 2) speechLang = lang;
+                        window._cm_voice_bridge.currentLang = speechLang;
+                        window._cm_voice_bridge.userActive = true;
+                        window._cm_voice_bridge.isListening = true;
+                        window._cm_voice_bridge.accumulated = '';
+                        window._cm_voice_bridge.status = 'Listening... Speak now into your microphone';
+                        if (window._cm_on_voice_status) { window._cm_on_voice_status('Listening... Speak now into your microphone', true); }
+                        return window._cm_voice_bridge.runInstance();
+                    },
+                    stop: function() {
+                        window._cm_voice_bridge.userActive = false;
+                        window._cm_voice_bridge.isListening = false;
+                        if (window._cm_voice_bridge.rec) {
+                            try { window._cm_voice_bridge.rec.stop(); } catch(e) {}
+                            window._cm_voice_bridge.rec = null;
+                        }
+                        if (window._cm_on_voice_status) { window._cm_on_voice_status('', false); }
+                    }
+                };
+            """);
             window._cm_on_voice = lambda txt: str {
                 input_val = txt;
                 voice_status = 'Hearing: "' + txt + '"';
