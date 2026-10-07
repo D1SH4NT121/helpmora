@@ -91,7 +91,7 @@ class _InMemoryQdrantClient:
     def create_payload_index(self, *args, **kwargs):
         pass
 
-    def upsert(self, collection_name: str, points: List[Any]):
+    def upsert(self, collection_name: str, points: List[Any], **kwargs):
         col = self._collections.setdefault(collection_name, {})
         for pt in points:
             col[str(pt.id)] = {"vector": list(pt.vector), "payload": dict(pt.payload or {})}
@@ -108,7 +108,7 @@ class _InMemoryQdrantClient:
                     return False
         return True
 
-    def query_points(self, collection_name: str, query: List[float], query_filter: Any = None, limit: int = 10):
+    def query_points(self, collection_name: str, query: List[float], query_filter: Any = None, limit: int = 10, **kwargs):
         col = self._collections.get(collection_name, {})
         scored: List[_ScoredPoint] = []
         for pid, data in col.items():
@@ -120,7 +120,7 @@ class _InMemoryQdrantClient:
         scored.sort(key=lambda x: x.score, reverse=True)
         return _QueryResponse(scored[:limit])
 
-    def scroll(self, collection_name: str, scroll_filter: Any = None, limit: int = 10):
+    def scroll(self, collection_name: str, scroll_filter: Any = None, limit: int = 10, **kwargs):
         col = self._collections.get(collection_name, {})
         matched: List[_ScoredPoint] = []
         for pid, data in col.items():
@@ -130,8 +130,13 @@ class _InMemoryQdrantClient:
                     break
         return matched, None
 
-    def delete(self, collection_name: str, points_selector: Any = None):
+    def delete(self, collection_name: str, points_selector: Any = None, **kwargs):
         col = self._collections.get(collection_name, {})
+        pts = getattr(points_selector, "points", None)
+        if pts:
+            for p in pts:
+                col.pop(str(p), None)
+            return
         qfilter = getattr(points_selector, "filter", None) if points_selector else None
         to_del = [pid for pid, data in col.items() if self._matches_filter(data["payload"], qfilter)]
         for pid in to_del:
@@ -182,8 +187,18 @@ def _embed_text(text: str, dim: int = VECTOR_DIMENSION) -> List[float]:
     return vec
 
 
+try:
+    from helpmora.integrations.config import load_env_safe
+except ImportError:
+    try:
+        from integrations.config import load_env_safe
+    except ImportError:
+        def load_env_safe(): pass
+
+
 class QdrantMemoryStore:
     def __init__(self, client: Optional[Any] = None):
+        load_env_safe()
         self.collection_name = COLLECTION_NAME
         if client:
             self.client = client
@@ -232,16 +247,16 @@ class QdrantMemoryStore:
                 )
                 logger.info(f"Created Qdrant collection: {self.collection_name}")
 
-                # Create payload indexes for frequent filters
-                for field_name in ["user_id", "case_id", "memory_type", "visibility", "created_at"]:
-                    try:
-                        self.client.create_payload_index(
-                            collection_name=self.collection_name,
-                            field_name=field_name,
-                            field_schema=models.PayloadSchemaType.KEYWORD,
-                        )
-                    except Exception as e:
-                        logger.warning(f"Failed to create index for {field_name}: {e}")
+            # Create payload indexes for frequent filters
+            for field_name in ["memory_id", "user_id", "case_id", "memory_type", "visibility", "created_at"]:
+                try:
+                    self.client.create_payload_index(
+                        collection_name=self.collection_name,
+                        field_name=field_name,
+                        field_schema=models.PayloadSchemaType.KEYWORD,
+                    )
+                except Exception:
+                    pass
         except Exception as ex:
             logger.error(f"Error initializing Qdrant collection: {ex}")
 
@@ -322,6 +337,7 @@ class QdrantMemoryStore:
             self.client.upsert(
                 collection_name=self.collection_name,
                 points=[point],
+                wait=True,
             )
             return record
         except Exception as ex:
@@ -419,6 +435,7 @@ class QdrantMemoryStore:
         if not user_id or not memory_id:
             return False
 
+        point_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, memory_id))
         filter_condition = models.Filter(
             must=[
                 models.FieldCondition(key="user_id", match=models.MatchValue(value=user_id)),
@@ -428,12 +445,21 @@ class QdrantMemoryStore:
         try:
             self.client.delete(
                 collection_name=self.collection_name,
-                points_selector=models.FilterSelector(filter=filter_condition),
+                points_selector=models.PointIdsList(points=[point_id]),
+                wait=True,
             )
             return True
-        except Exception as ex:
-            logger.error(f"Error deleting memory {memory_id}: {ex}")
-            return False
+        except Exception:
+            try:
+                self.client.delete(
+                    collection_name=self.collection_name,
+                    points_selector=models.FilterSelector(filter=filter_condition),
+                    wait=True,
+                )
+                return True
+            except Exception as ex:
+                logger.error(f"Error deleting memory {memory_id}: {ex}")
+                return False
 
     def delete_user_memories(self, user_id: str, case_id: Optional[str] = None) -> bool:
         """Deletes all memories or case-specific memories for a user."""
@@ -453,6 +479,7 @@ class QdrantMemoryStore:
             self.client.delete(
                 collection_name=self.collection_name,
                 points_selector=models.FilterSelector(filter=filter_condition),
+                wait=True,
             )
             return True
         except Exception as ex:

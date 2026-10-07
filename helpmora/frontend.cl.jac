@@ -224,7 +224,7 @@ def:pub ClientApp -> JsxElement {
                     {navTab("impact", "Impact")}
                 </nav>
                 <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
-                    <button className="cm-quick-exit" onClick={lambda _e: MouseEvent { quickExit(); }} title="Return to home page (or press Shift three times)">Quick exit</button>
+                    <button className="cm-back-btn" onClick={lambda _e: MouseEvent { goHome(); }} title="Go back to previous page">← Back</button>
                     <button
                         onClick={lambda _e: MouseEvent { togglePalette(); }}
                         title="Open command palette (⌘K)"
@@ -306,10 +306,7 @@ def:pub ClientApp -> JsxElement {
                 <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
                     <span>HELPmora · Agentic AI Navigator</span>
                     <span style={{"opacity": "0.5"}}>·</span>
-                    <span>{"Jac walkers · " + str(len(walker_events)) + " events this session"}</span>
-                </div>
-                <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
-                    <span>Powered by Jac · jac-scale · byllm</span>
+                    <span>{str(len(walker_events)) + " events this session"}</span>
                 </div>
             </footer>
             {palette_open and renderPalette()}

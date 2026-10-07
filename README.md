@@ -224,35 +224,46 @@ python -m venv .venv312
 pip install -r requirements.txt
 ```
 
-### Environment Configuration
+### Environment Configuration & Safe State Architecture
 
-Create a `.env` file in the root directory (based on `.env.example`):
+HELPmora features a centralized **Safe Configuration Loader** (`helpmora/integrations/config.py`) that monitors and reports typed status across all external services without leaking API keys or secrets:
+
+| State | Behavior & Operational Mode |
+| :--- | :--- |
+| **`CONFIGURED`** | Valid endpoints and keys provided. Full cloud sync and external APIs active. |
+| **`NOT_CONFIGURED`** | Default mode. Clean fallback to embedded zero-dependency deterministic engine. |
+| **`INVALID`** | Malformed URLs or key syntax detected with actionable diagnostic explanation. |
+| **`UNAVAILABLE`** | Credentials supplied but remote service/SDK is unreachable or uninstalled. |
+
+#### Environment Variables (`.env.example`):
 
 ```bash
-# Omi Webhook Configuration
-OMI_WEBHOOK_SECRET=your_omi_webhook_secret_here
+# NVIDIA NIM (Used by byllm for model chain in llm/stubs.jac - optional for core rules)
+NVIDIA_NIM_API_KEY=
 
-# Qdrant Vector Store Configuration
-# If left empty, HELPmora automatically uses local on-disk / in-memory storage!
-QDRANT_URL=
-QDRANT_API_KEY=
-QDRANT_COLLECTION=helpmora_memory
+# Omi Voice Integration
+OMI_WEBHOOK_SECRET=           # Optional webhook secret or signature token for incoming Omi voice events
+OMI_API_KEY=                  # Optional API token
+PUBLIC_BASE_URL=              # Optional public base URL for webhook callbacks (e.g., https://your-domain.ngrok-free.app)
 
-# Lyzr Agent API Configuration
-# If left empty, HELPmora automatically uses deterministic offline execution!
-LYZR_API_KEY=
-LYZR_ENVIRONMENT=production
+# Qdrant Persistent Semantic Memory
+QDRANT_URL=                   # Remote cluster URL (leave blank to use local persistent/in-memory storage)
+QDRANT_API_KEY=               # Remote cluster API key
+QDRANT_COLLECTION_NAME=helpmora_memory
+QDRANT_STORAGE_PATH=./data/qdrant_db
 
-# Policy Safety Invariants
-HELPMORA_USE_LLM_ELIGIBILITY=0
+# Lyzr Multi-Agent Orchestration
+LYZR_API_KEY=                 # Lyzr Agent API key (leave blank for local deterministic multi-agent execution)
+LYZR_ENVIRONMENT_ID=          # Lyzr environment ID
+LYZR_MANAGER_AGENT_ID=        # Lyzr manager agent ID
 ```
 
-> **Note:** HELPmora runs **100% locally and offline out-of-the-box**. No paid API keys are required to execute the engine, test the graph, or run the web interface.
+> **Zero-Credential Guarantee:** HELPmora runs **100% locally and deterministically out-of-the-box**. No hackathon credentials or paid API keys are required to execute the graph walkers, run deterministic scoring, verify cases, or launch the web application.
 
 ### Running Locally
 
 ```powershell
-# Launch via PowerShell
+# Launch via PowerShell (binds to 0.0.0.0:8000)
 .\run.ps1
 
 # Or launch via Command Prompt
@@ -260,11 +271,10 @@ run.bat
 ```
 
 Open your browser at:
-```
-http://localhost:8000/
-```
+- **Local:** `http://localhost:8000/`
+- **LAN / Network:** `http://<your-lan-ip>:8000/`
 
-Navigate to the **"Adaptive Assistant (Track 4)"** tab to experience the full voice-to-form and stepper flow.
+Navigate to the **"Adaptive Assistant (Track 4)"** tab to experience the full voice-to-form, stepper flow, and human consent gate.
 
 ---
 
@@ -273,13 +283,14 @@ Navigate to the **"Adaptive Assistant (Track 4)"** tab to experience the full vo
 All tests execute locally without external cloud dependencies:
 
 ```powershell
-$env:PYTHONPATH = ".;helpmora"
-
-# 1. Integration Suite (Omi, Qdrant, Lyzr, Verification Gate, Track 4) - 20 Tests
-.\.venv312\Scripts\python.exe -m unittest helpmora/tests/test_integrations.py
+# 1. Integration Suite (Omi, Qdrant, Lyzr, Verification Gate, Track 4, Safe Config) - 23 Tests
+.\.venv312\Scripts\python.exe helpmora/tests/test_integrations.py
 
 # 2. Reverse Gateway & Security Suite (Rate limiting, headers, payload caps) - 28 Tests
-.\.venv312\Scripts\python.exe -m unittest helpmora/tests/test_cmguard.py
+.\.venv312\Scripts\python.exe helpmora/tests/test_cmguard.py
+
+# 3. End-to-End HTTP & Graph Walker Test Suite - 69 Tests (100% Pass)
+.\.venv312\Scripts\python.exe helpmora/tests/e2e_http.py http://localhost:8000
 
 # 3. Schema & Seed Graph Smoke Test (Verifies 40 programs seed cleanly)
 .\.venv312\Scripts\python.exe -m jaclang test helpmora/tests/test_schema.jac

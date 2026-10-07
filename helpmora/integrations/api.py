@@ -8,11 +8,13 @@ from fastapi import APIRouter, Header, HTTPException, Query, Request, Response
 from pydantic import BaseModel, Field
 
 try:
+    from integrations.config import get_integration_config, IntegrationState
     from integrations.lyzr.client import get_lyzr_client
     from integrations.omi.adapter import normalize_omi_event, validate_omi_auth
     from integrations.qdrant.memory import get_memory_store
     from orchestration.workflow import _ACTIVE_RUNS, get_workflow_manager
 except ImportError:
+    from helpmora.integrations.config import get_integration_config, IntegrationState
     from helpmora.integrations.lyzr.client import get_lyzr_client
     from helpmora.integrations.omi.adapter import normalize_omi_event, validate_omi_auth
     from helpmora.integrations.qdrant.memory import get_memory_store
@@ -75,6 +77,7 @@ async def health_check():
     """Health check for external integrations without leaking secrets."""
     store = get_memory_store()
     lyzr = get_lyzr_client()
+    cfg = get_integration_config()
 
     qdrant_ok = False
     try:
@@ -83,13 +86,47 @@ async def health_check():
     except Exception:
         qdrant_ok = False
 
+    omi_info = cfg.get_omi_status()
+    qdrant_info = cfg.get_qdrant_status()
+    lyzr_info = cfg.get_lyzr_status()
+    nvidia_info = cfg.get_nvidia_status()
+    core_info = cfg.get_core_status()
+
     return {
         "status": "ok",
         "integrations": {
-            "omi": {"status": "ready", "adapter": "active"},
-            "qdrant": {"status": "ready" if qdrant_ok else "degraded", "collection": store.collection_name},
-            "lyzr": {"status": "ready", "cloud_enabled": lyzr.is_cloud_enabled()},
-            "helpmora_core": {"status": "ready", "resources": 40, "transitions": 26},
+            "omi": {
+                "status": "ready",
+                "state": omi_info["state"],
+                "adapter": "active",
+                "mode": omi_info.get("mode", "open_local_dev"),
+                "webhook_auth": omi_info.get("webhook_auth", False),
+            },
+            "qdrant": {
+                "status": "ready" if qdrant_ok else "degraded",
+                "state": qdrant_info["state"],
+                "collection": store.collection_name,
+                "mode": qdrant_info.get("mode", "local_embedded"),
+            },
+            "lyzr": {
+                "status": "ready",
+                "state": lyzr_info["state"],
+                "cloud_enabled": lyzr.is_cloud_enabled(),
+                "mode": lyzr_info.get("mode", "local_deterministic_orchestration"),
+            },
+            "nvidia_nim": {
+                "status": nvidia_info.get("status", "ready"),
+                "state": nvidia_info["state"],
+                "mode": nvidia_info.get("mode", "nvidia_nim"),
+                "models": nvidia_info.get("models", []),
+            },
+            "helpmora_core": {
+                "status": "ready",
+                "state": core_info["state"],
+                "resources": 40,
+                "transitions": 26,
+                "authority": "jac_deterministic_engine",
+            },
         }
     }
 

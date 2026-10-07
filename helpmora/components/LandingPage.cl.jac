@@ -99,10 +99,6 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                     <span style={{"fontSize": "12px", "color": "rgba(255,255,255,0.55)"}}>
                         {("engine live · " + str(platform["programs"]) + " programs") if platform else "engine starting…"}
                     </span>
-                    <div style={{"width": "1px", "height": "16px", "background": "rgba(255,255,255,0.1)", "margin": "0 6px"}}/>
-                    <span style={{"fontSize": "11px", "color": "rgba(255,255,255,0.62)"}}>
-                        Autonomous Civic Aid Router
-                    </span>
                     <button
                         onClick={lambda _e: MouseEvent { on_start(); }}
                         style={{
@@ -422,30 +418,5 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                     </div>
                 </div>
             </section>
-
-            <footer
-                style={{
-                    "marginTop": "auto",
-                    "padding": "20px 40px",
-                    "borderTop": "0.5px solid rgba(255,255,255,0.06)",
-                    "fontSize": "11px",
-                    "color": "rgba(255,255,255,0.62)",
-                    "display": "flex",
-                    "alignItems": "center",
-                    "justifyContent": "space-between",
-                    "position": "relative",
-                    "zIndex": "1",
-                    "backdropFilter": "blur(12px)"
-                }}
-            >
-                <span>
-                    Built on <span style={{"color": "rgba(255,229,0,0.7)", "fontWeight": "500"}}>Jac</span>
-                    · Powered by <span style={{"color": "rgba(0,255,136,0.7)", "fontWeight": "500"}}>NVIDIA NIM</span>
-                    · narration only
-                </span>
-                <span>
-                    Autonomous Civic Aid Router
-                </span>
-            </footer>
         </div>;
 }

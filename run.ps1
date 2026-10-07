@@ -1,4 +1,4 @@
-﻿$env:PYTHONUTF8 = "1"
+$env:PYTHONUTF8 = "1"
 $env:PYTHONIOENCODING = "utf-8"
 $env:HELPMORA_JWT_SECRET = "helpmora_local_secret_key_1234567890123456"
 
@@ -12,8 +12,8 @@ if (-not (Test-Path $VENV_PYTHON)) {
 
 Push-Location $HELPMORA_DIR
 try {
-    Write-Host "Starting HELPmora at http://localhost:8000 ..." -ForegroundColor Cyan
-    & $VENV_PYTHON -m jaclang start app.jac --no-dev --port 8000 --host 127.0.0.1
+    Write-Host "Starting HELPmora at http://localhost:8000 (and http://0.0.0.0:8000) ..." -ForegroundColor Cyan
+    & $VENV_PYTHON -m jaclang start app.jac --no-dev --port 8000 --host 0.0.0.0
 } finally {
     Pop-Location
 }

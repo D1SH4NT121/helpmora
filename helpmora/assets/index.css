@@ -959,7 +959,12 @@ html, body { overflow-x: hidden; }
 .cm-retry-row { margin-top: 8px; }
 .cm-retry { margin-left: 0 !important; }
 .gv-err { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-/* Quick exit: always visible, calm but findable */
+/* Back button: clean, professional navigation */
+.cm-back-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; background: rgba(255, 255, 255, 0.07); color: rgba(255, 255, 255, 0.85); border: 0.5px solid rgba(255, 255, 255, 0.16); white-space: nowrap; transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1); }
+.cm-back-btn:hover { background: rgba(255, 255, 255, 0.14); color: #FFFFFF; border-color: rgba(255, 255, 255, 0.3); transform: translateX(-1px); }
+.cm-back-btn:focus-visible { outline: 2px solid #FFE500; outline-offset: 2px; }
+
+/* Quick exit fallback */
 .cm-quick-exit { padding: 5px 11px; border-radius: 8px; font-size: 12px; font-weight: 650; cursor: pointer; background: rgba(255,107,107,0.12); color: #FF9B9B; border: 0.5px solid rgba(255,107,107,0.4); white-space: nowrap; }
 .cm-quick-exit:hover { background: rgba(255,107,107,0.22); color: #fff; }
 .cm-quick-exit:focus-visible { outline: 2px solid #FFE500; outline-offset: 2px; }

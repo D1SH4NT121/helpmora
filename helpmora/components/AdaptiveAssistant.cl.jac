@@ -49,12 +49,22 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
         ];
 
     def triggerVoiceInput {
-        voice_active = not voice_active;
         if voice_active {
-            agent_state = "listening";
-        } else {
+            try {
+                if window._cm_voice_bridge { window._cm_voice_bridge.stop(); }
+            } except Exception as _ex {}
+            voice_active = False;
             agent_state = "reasoning";
+            return;
         }
+
+        voice_active = True;
+        agent_state = "listening";
+        try {
+            if window._cm_voice_bridge {
+                window._cm_voice_bridge.start("en-US");
+            }
+        } except Exception as _ex {}
     }
 
     def confirmVoiceField {

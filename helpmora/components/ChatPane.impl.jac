@@ -652,7 +652,7 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
                     {[<span key={"f" + str(i)} className="cm-fact">{facts[i]}</span> for i in range(len(facts))]}
                     {prof["carried_category"] and <span className="cm-fact cm-fact-dim">carried from earlier</span>}
                 </div>}
-                {(d["privacy"] and d["privacy"]["private_turn"] and is_last) and <div className="cm-private-note">{("Sesión privada activada: cuando cierre esta pestaña, este navegador no guardará nada de esta conversación. «Quick exit» (arriba a la derecha, o pulse Mayús tres veces) sale al instante." if lang == "es" else "Private session is on: once you close this tab, this browser keeps nothing about this conversation. Quick exit (top right, or press Shift three times) leaves instantly.")}</div>}
+                {(d["privacy"] and d["privacy"]["private_turn"] and is_last) and <div className="cm-private-note">{("Sesión privada activada: cuando cierre esta pestaña, este navegador no guardará nada de esta conversación. «Volver» (arriba a la derecha) regresa al inicio." if lang == "es" else "Private session is on: once you close this tab, this browser keeps nothing about this conversation. «Back» (top right) returns home.")}</div>}
                 {esc["lead_line"] and <div className="cm-crisis">
                     <div className="cm-crisis-lead">{str(esc["lead_line"])}</div>
                     {esc["lead_line_en"] and <div className="cm-crisis-en" lang="en" dir="ltr">{"In English: " + str(esc["lead_line_en"])}</div>}
@@ -851,4 +851,215 @@ impl ChatPane.setPrivate(on: bool) -> None {
         }
     } except Exception as _ex {}
     private_on = on;
+}
+
+impl ChatPane.toggleVoice -> None {
+    try {
+        if is_listening {
+            if window._cm_voice_bridge {
+                window._cm_voice_bridge.stop();
+            }
+            is_listening = False;
+            voice_status = "";
+        } else {
+            target_lang = pref_lang if pref_lang and pref_lang != "auto" else "en";
+            if window._cm_voice_bridge {
+                started = window._cm_voice_bridge.start(target_lang);
+                is_listening = bool(window._cm_voice_bridge.isListening);
+                voice_status = str(window._cm_voice_bridge.status);
+                if not started {
+                    voice_modal_open = True;
+                }
+            } else {
+                voice_modal_open = True;
+            }
+        }
+    } except Exception as ex {
+        is_listening = False;
+        voice_status = "Voice error: " + str(ex);
+        voice_modal_open = True;
+    }
+}
+
+impl ChatPane.renderVoiceModal -> JsxElement {
+    if not voice_modal_open { return None; }
+    return
+        <div style={{
+            "position": "fixed",
+            "top": "0",
+            "left": "0",
+            "right": "0",
+            "bottom": "0",
+            "background": "rgba(0, 0, 0, 0.75)",
+            "backdropFilter": "blur(6px)",
+            "display": "flex",
+            "alignItems": "center",
+            "justifyContent": "center",
+            "zIndex": "1000",
+            "padding": "16px"
+        }}>
+            <div style={{
+                "background": "#141414",
+                "border": "1px solid rgba(255, 255, 255, 0.15)",
+                "borderRadius": "16px",
+                "maxWidth": "540px",
+                "width": "100%",
+                "padding": "24px",
+                "boxShadow": "0 20px 40px rgba(0,0,0,0.6)"
+            }}>
+                <div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "center", "marginBottom": "16px"}}>
+                    <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
+                        <span style={{"fontSize": "22px"}}>🎙️</span>
+                        <div>
+                            <div style={{"fontSize": "16px", "fontWeight": "700", "color": "#FFFFFF"}}>Voice Input & Omi Integration</div>
+                            <div style={{"fontSize": "12px", "color": "rgba(255, 255, 255, 0.6)"}}>Speak via microphone or load authentic Omi transcripts</div>
+                        </div>
+                    </div>
+                    <button
+                        onClick={lambda _e: MouseEvent { voice_modal_open = False; }}
+                        style={{"background": "none", "border": "none", "color": "rgba(255, 255, 255, 0.5)", "fontSize": "20px", "cursor": "pointer"}}
+                    >
+                        ✕
+                    </button>
+                </div>
+
+                <div style={{
+                    "background": "rgba(255, 255, 255, 0.04)",
+                    "borderRadius": "12px",
+                    "padding": "16px",
+                    "marginBottom": "18px",
+                    "border": "0.5px solid rgba(255, 255, 255, 0.08)",
+                    "textAlign": "center"
+                }}>
+                    <button
+                        onClick={lambda _e: MouseEvent { toggleVoice(); }}
+                        style={{
+                            "padding": "12px 24px",
+                            "borderRadius": "999px",
+                            "border": "none",
+                            "fontSize": "15px",
+                            "fontWeight": "600",
+                            "cursor": "pointer",
+                            "background": ("#FF4444" if is_listening else "#FFE500"),
+                            "color": "#0A0A0A",
+                            "boxShadow": ("0 0 20px rgba(255, 68, 68, 0.5)" if is_listening else "0 4px 12px rgba(255, 229, 0, 0.2)"),
+                            "marginBottom": "10px"
+                        }}
+                    >
+                        {("🔴 Stop Microphone" if is_listening else "🎙️ Start Microphone (Speak Now)")}
+                    </button>
+                    <div style={{"fontSize": "12px", "color": ("#FF8080" if is_listening else "rgba(255, 255, 255, 0.6)")}}>
+                        {(voice_status if voice_status else "Click to activate real-time speech-to-text dictation")}
+                    </div>
+                </div>
+
+                <div style={{"marginBottom": "12px"}}>
+                    <div style={{"fontSize": "12px", "fontWeight": "600", "color": "rgba(255, 255, 255, 0.7)", "marginBottom": "8px", "textTransform": "uppercase", "letterSpacing": "0.05em"}}>
+                        Omi Voice Scenarios (Click to test):
+                    </div>
+                    <div style={{"display": "flex", "flexDirection": "column", "gap": "8px"}}>
+                        <button
+                            onClick={lambda _e: MouseEvent {
+                                input_val = "I lost my job two months ago. I am behind on rent, I have two children, and my monthly income is eight thousand rupees.";
+                                voice_status = "Omi transcript loaded: Housing Hardship";
+                                voice_modal_open = False;
+                            }}
+                            style={{
+                                "textAlign": "left",
+                                "padding": "10px 12px",
+                                "borderRadius": "8px",
+                                "background": "rgba(255, 255, 255, 0.04)",
+                                "border": "0.5px solid rgba(255, 255, 255, 0.1)",
+                                "color": "#FFFFFF",
+                                "cursor": "pointer",
+                                "fontSize": "12px"
+                            }}
+                        >
+                            <strong style={{"color": "#FFE500"}}>🏠 Housing Hardship: </strong>
+                            {"\"I lost my job two months ago. I am behind on rent, I have two children, and my monthly income is eight thousand rupees.\""}
+                        </button>
+
+                        <button
+                            onClick={lambda _e: MouseEvent {
+                                input_val = "We have nowhere to stay tonight and need emergency shelter and food for my family.";
+                                voice_status = "Omi transcript loaded: Emergency Food & Shelter";
+                                voice_modal_open = False;
+                            }}
+                            style={{
+                                "textAlign": "left",
+                                "padding": "10px 12px",
+                                "borderRadius": "8px",
+                                "background": "rgba(255, 255, 255, 0.04)",
+                                "border": "0.5px solid rgba(255, 255, 255, 0.1)",
+                                "color": "#FFFFFF",
+                                "cursor": "pointer",
+                                "fontSize": "12px"
+                            }}
+                        >
+                            <strong style={{"color": "#00E08A"}}>🍲 Emergency Shelter: </strong>
+                            {"\"We have nowhere to stay tonight and need emergency shelter and food for my family.\""}
+                        </button>
+
+                        <button
+                            onClick={lambda _e: MouseEvent {
+                                input_val = "मुझे और मेरे परिवार को राशन और भोजन सहायता चाहिए, महीने की आय 6000 रुपये है।";
+                                voice_status = "Omi transcript loaded: Hindi Food Intake";
+                                voice_modal_open = False;
+                            }}
+                            style={{
+                                "textAlign": "left",
+                                "padding": "10px 12px",
+                                "borderRadius": "8px",
+                                "background": "rgba(255, 255, 255, 0.04)",
+                                "border": "0.5px solid rgba(255, 255, 255, 0.1)",
+                                "color": "#FFFFFF",
+                                "cursor": "pointer",
+                                "fontSize": "12px"
+                            }}
+                        >
+                            <strong style={{"color": "#5AA2FF"}}>🇮🇳 Hindi Voice Intake: </strong>
+                            {"\"मुझे और मेरे परिवार को राशन और भोजन सहायता चाहिए, महीने की आय 6000 रुपये है।\""}
+                        </button>
+
+                        <button
+                            onClick={lambda _e: MouseEvent {
+                                input_val = "My landlord is threatening to evict me illegally without court notice, and I need free legal representation.";
+                                voice_status = "Omi transcript loaded: Legal Aid";
+                                voice_modal_open = False;
+                            }}
+                            style={{
+                                "textAlign": "left",
+                                "padding": "10px 12px",
+                                "borderRadius": "8px",
+                                "background": "rgba(255, 255, 255, 0.04)",
+                                "border": "0.5px solid rgba(255, 255, 255, 0.1)",
+                                "color": "#FFFFFF",
+                                "cursor": "pointer",
+                                "fontSize": "12px"
+                            }}
+                        >
+                            <strong style={{"color": "#FFB344"}}>⚖️ Legal Aid: </strong>
+                            {"\"My landlord is threatening to evict me illegally without court notice, and I need free legal representation.\""}
+                        </button>
+                    </div>
+                </div>
+
+                <div style={{"display": "flex", "justifyContent": "flex-end"}}>
+                    <button
+                        onClick={lambda _e: MouseEvent { voice_modal_open = False; }}
+                        style={{
+                            "padding": "6px 14px",
+                            "borderRadius": "6px",
+                            "background": "rgba(255, 255, 255, 0.08)",
+                            "border": "none",
+                            "color": "#FFFFFF",
+                            "fontSize": "12px",
+                            "cursor": "pointer"
+                        }}
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>;
 }

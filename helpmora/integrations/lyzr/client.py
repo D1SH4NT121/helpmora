@@ -18,9 +18,18 @@ except ImportError:
     AgentAPI = None
     AgentConfig = None
 
+try:
+    from helpmora.integrations.config import load_env_safe
+except ImportError:
+    try:
+        from integrations.config import load_env_safe
+    except ImportError:
+        def load_env_safe(): pass
+
 
 class LyzrClientManager:
     def __init__(self):
+        load_env_safe()
         self.api_key = os.environ.get("LYZR_API_KEY", "").strip()
         self.environment_id = os.environ.get("LYZR_ENVIRONMENT_ID", "").strip()
         self.manager_agent_id = os.environ.get("LYZR_MANAGER_AGENT_ID", "").strip()

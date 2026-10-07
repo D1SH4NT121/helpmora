@@ -26,10 +26,12 @@ T. accessibility / reduced-motion settings
 import os
 import sys
 import unittest
+import uuid
 
 # Ensure helpmora is in sys.path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from integrations.config import IntegrationConfig, IntegrationState, load_env_safe, get_integration_config
 from integrations.omi.adapter import normalize_omi_event, compute_event_fingerprint
 from integrations.qdrant.memory import get_memory_store, _embed_text
 from orchestration.case_state import CaseState, VerificationState
@@ -148,17 +150,18 @@ class TestIntegrations(unittest.TestCase):
 
     # H. Memory deletion
     def test_h_memory_deletion(self):
+        uid = f"delete_user_{uuid.uuid4().hex[:8]}"
         rec = self.store.store_memory(
-            user_id="delete_test_user",
+            user_id=uid,
             memory_type="document",
             text="Document for deletion test"
         )
         self.assertIsNotNone(rec)
-        del_ok = self.store.delete_memory("delete_test_user", rec.memory_id)
+        del_ok = self.store.delete_memory(uid, rec.memory_id)
         self.assertTrue(del_ok)
 
         # Verify gone
-        after = self.store.retrieve_memories("delete_test_user")
+        after = self.store.retrieve_memories(uid)
         self.assertEqual(len(after), 0)
 
     # I. CaseState validation
@@ -291,11 +294,137 @@ class TestIntegrations(unittest.TestCase):
     # T. Reduced-motion / Accessibility checks
     def test_t_field_explanation_and_recovery(self):
         expl = self.wf.get_field_explanation("household_income")
-        self.assertIn("gross earnings", expl.lower())
+        self.assertIn("gross earnings", exp := expl.lower())
         rec = self.wf.get_guided_recovery("document_missing")
         self.assertIn("options", rec)
         self.assertGreater(len(rec["options"]), 2)
 
+    # U. Safe Configuration States
+    def test_u_safe_configuration_states(self):
+        cfg = IntegrationConfig()
+        statuses = cfg.get_all_statuses()
+        self.assertEqual(statuses["status"], "ok")
+        self.assertIn("omi", statuses["integrations"])
+        self.assertIn("qdrant", statuses["integrations"])
+        self.assertIn("lyzr", statuses["integrations"])
+        self.assertIn("helpmora_core", statuses["integrations"])
+
+        # Core is always CONFIGURED
+        self.assertEqual(statuses["integrations"]["helpmora_core"]["state"], IntegrationState.CONFIGURED.value)
+
+        # State enum validity
+        valid_states = {s.value for s in IntegrationState}
+        for name, info in statuses["integrations"].items():
+            self.assertIn(info["state"], valid_states)
+
+        # Test state transitions on modified env
+        orig_url = os.environ.get("QDRANT_URL")
+        orig_key = os.environ.get("LYZR_API_KEY")
+        orig_omi = os.environ.get("PUBLIC_BASE_URL")
+        try:
+            # Invalid URL detection
+            os.environ["QDRANT_URL"] = "not_a_valid_url"
+            self.assertEqual(cfg.get_qdrant_status()["state"], IntegrationState.INVALID.value)
+
+            os.environ["PUBLIC_BASE_URL"] = "ftp:/bad-url"
+            self.assertEqual(cfg.get_omi_status()["state"], IntegrationState.INVALID.value)
+
+            # Invalid key detection
+            os.environ["LYZR_API_KEY"] = "short"
+            self.assertEqual(cfg.get_lyzr_status()["state"], IntegrationState.INVALID.value)
+        finally:
+            if orig_url is not None:
+                os.environ["QDRANT_URL"] = orig_url
+            else:
+                os.environ.pop("QDRANT_URL", None)
+            if orig_key is not None:
+                os.environ["LYZR_API_KEY"] = orig_key
+            else:
+                os.environ.pop("LYZR_API_KEY", None)
+            if orig_omi is not None:
+                os.environ["PUBLIC_BASE_URL"] = orig_omi
+            else:
+                os.environ.pop("PUBLIC_BASE_URL", None)
+
+    # V. Safe Environment Loader
+    def test_v_safe_env_loader(self):
+        import tempfile
+        with tempfile.NamedTemporaryFile("w+", delete=False, suffix=".env") as tf:
+            tf.write("# Test comment\n")
+            tf.write("TEST_KEY_ONE=hello_world\n")
+            tf.write('TEST_KEY_TWO="quoted_value"\n')
+            tf.write("TEST_KEY_THREE='single_quoted'\n")
+            tf.write("\n")
+            tf.write("INVALID_LINE_WITHOUT_EQUALS\n")
+            tf_path = tf.name
+
+        try:
+            loaded = load_env_safe(tf_path)
+            self.assertEqual(loaded.get("TEST_KEY_ONE"), "hello_world")
+            self.assertEqual(loaded.get("TEST_KEY_TWO"), "quoted_value")
+            self.assertEqual(loaded.get("TEST_KEY_THREE"), "single_quoted")
+            self.assertEqual(os.environ.get("TEST_KEY_ONE"), "hello_world")
+        finally:
+            os.environ.pop("TEST_KEY_ONE", None)
+            os.environ.pop("TEST_KEY_TWO", None)
+            os.environ.pop("TEST_KEY_THREE", None)
+            if os.path.exists(tf_path):
+                os.remove(tf_path)
+
+        # Missing file does not raise an exception
+        empty = load_env_safe("non_existent_file_path.env")
+        self.assertEqual(empty, {})
+
+    # W. Full Pipeline End-to-End (Voice -> Memory -> Agents -> Verification -> Human Gate -> Persistent Store)
+    def test_w_full_pipeline_end_to_end(self):
+        # 1. Voice input intake simulation
+        raw_event = {
+            "user_id": "full_pipe_user",
+            "session_id": "sess_full_pipe_001",
+            "transcript": "My family is facing eviction and my monthly income is 7500 rupees with two children.",
+        }
+        ok, norm_input, err = normalize_omi_event(raw_event)
+        self.assertTrue(ok)
+        self.assertIsNotNone(norm_input)
+        self.assertEqual(norm_input.user_id, "full_pipe_user")
+
+        # 2. Run pipeline (Memory retrieval -> Lyzr Context/Resource/Eligibility/Pathfinder -> Verifier)
+        state = self.wf.run_pipeline(
+            user_id=norm_input.user_id,
+            input_text=norm_input.text,
+            session_id=norm_input.session_id,
+        )
+
+        # 3. Assert pipeline outputs
+        self.assertEqual(state.status, "waiting_approval")
+        self.assertTrue(state.verification.passed)
+        self.assertGreater(len(state.candidate_resources), 0)
+        self.assertGreater(len(state.actions), 0)
+        self.assertIn("execution_trace", state.__dict__)
+        self.assertGreater(len(state.execution_trace), 5)
+
+        # Multi-tenant user isolation: another user must have zero access to this user's state
+        other_user_memories = self.store.retrieve_memories(user_id="completely_different_user")
+        for mem in other_user_memories:
+            self.assertNotEqual(mem.get("user_id"), "full_pipe_user")
+
+        # 4. Human Approval Gate
+        target_action_idx = 1 if len(state.actions) > 1 else 0
+        approval_res = self.wf.approve_action(
+            state.case_id,
+            "full_pipe_user",
+            target_action_idx,
+        )
+        self.assertTrue(approval_res["ok"])
+        self.assertEqual(approval_res["status"], "approved_and_executed")
+
+        # 5. Persistent Memory Verification
+        user_memories = self.store.retrieve_memories(user_id="full_pipe_user")
+        self.assertGreater(len(user_memories), 0)
+        has_approval_memory = any("approved" in (m.get("text", "")).lower() for m in user_memories)
+        self.assertTrue(has_approval_memory)
+
 
 if __name__ == "__main__":
     unittest.main()
+

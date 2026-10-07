@@ -51,7 +51,10 @@ def:pub ChatPane(
         # Bot message id whose English original is expanded.
         en_open: str = "",
         # Private session: nothing stays in this browser after the tab closes.
-        private_on: bool = False;
+        private_on: bool = False,
+        is_listening: bool = False,
+        voice_status: str = "",
+        voice_modal_open: bool = False;
 
     can with entry {
         seed = [{
@@ -74,6 +77,91 @@ def:pub ChatPane(
             saved = localStorage.getItem("cm_lang");
             if saved { pref_lang = saved; }
             if sessionStorage.getItem("cm_private") == "1" { private_on = True; }
+        } except Exception as _ex {}
+        try {
+            if not window._cm_voice_bridge {
+                window.eval("""
+                    window._cm_voice_bridge = {
+                        isListening: false,
+                        status: '',
+                        rec: null,
+                        start: function(lang) {
+                            var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                            if (!SR) {
+                                window._cm_voice_bridge.status = 'Microphone speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari, or click an Omi Voice preset.';
+                                return false;
+                            }
+                            try {
+                                if (window._cm_voice_bridge.rec) {
+                                    try { window._cm_voice_bridge.rec.abort(); } catch(e) {}
+                                }
+                                var rec = new SR();
+                                window._cm_voice_bridge.rec = rec;
+                                window._cm_voice_bridge.isListening = true;
+                                window._cm_voice_bridge.status = 'Listening... Speak now into your microphone';
+                                rec.continuous = true;
+                                rec.interimResults = true;
+                                rec.maxAlternatives = 1;
+
+                                var speechLang = 'en-US';
+                                if (lang === 'hi') speechLang = 'hi-IN';
+                                else if (lang === 'es') speechLang = 'es-ES';
+                                else if (lang === 'zh') speechLang = 'zh-CN';
+                                else if (lang === 'ta') speechLang = 'ta-IN';
+                                else if (lang && lang.length === 2) speechLang = lang;
+                                rec.lang = speechLang;
+
+                                rec.onstart = function() {
+                                    window._cm_voice_bridge.isListening = true;
+                                    window._cm_voice_bridge.status = 'Listening... Speak now';
+                                };
+                                rec.onresult = function(event) {
+                                    var transcript = '';
+                                    for (var i = 0; i < event.results.length; i++) {
+                                        transcript += event.results[i][0].transcript;
+                                    }
+                                    if (transcript) {
+                                        var inputEl = document.querySelector('.cm-input');
+                                        if (inputEl) {
+                                            var nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+                                            nativeSetter.call(inputEl, transcript);
+                                            inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+                                        }
+                                        window._cm_voice_bridge.status = 'Hearing: "' + transcript + '"';
+                                    }
+                                };
+                                rec.onerror = function(event) {
+                                    window._cm_voice_bridge.isListening = false;
+                                    var err = event.error || 'error';
+                                    var msg = 'Voice recognition: ' + err;
+                                    if (err === 'not-allowed') {
+                                        msg = 'Microphone access blocked. Please grant microphone permission in your browser address bar.';
+                                    } else if (err === 'no-speech') {
+                                        msg = 'No speech detected. Speak clearly into your microphone.';
+                                    }
+                                    window._cm_voice_bridge.status = msg;
+                                };
+                                rec.onend = function() {
+                                    window._cm_voice_bridge.isListening = false;
+                                };
+                                rec.start();
+                                return true;
+                            } catch (err) {
+                                window._cm_voice_bridge.isListening = false;
+                                window._cm_voice_bridge.status = 'Microphone activation failed: ' + (err.message || err);
+                                return false;
+                            }
+                        },
+                        stop: function() {
+                            window._cm_voice_bridge.isListening = false;
+                            if (window._cm_voice_bridge.rec) {
+                                try { window._cm_voice_bridge.rec.stop(); } catch(e) {}
+                                window._cm_voice_bridge.rec = null;
+                            }
+                        }
+                    };
+                """);
+            }
         } except Exception as _ex {}
     }
 
@@ -127,9 +215,12 @@ def:pub ChatPane(
     def renderChip(label: str, payload: str, answering: str) -> JsxElement;
     def renderProfilePanel -> JsxElement;
     def renderPipeline -> JsxElement;
+    def toggleVoice -> None;
+    def renderVoiceModal -> JsxElement;
 
     return
         <div className="cm-chat-grid">
+            {renderVoiceModal()}
             <div className="cm-panel cm-chat-col">
                 <div className="cm-chat-head">
                     <div style={{"flex": "1", "minWidth": "0"}}>
@@ -149,6 +240,35 @@ def:pub ChatPane(
                         <div className="cm-typing" role="status"><span aria-hidden="true"/><span aria-hidden="true"/><span aria-hidden="true"/><span className="cm-sr-only">Working on your answer…</span></div>
                     </div>}
                 </div>
+                {(is_listening or voice_status) and <div style={{
+                    "padding": "7px 14px",
+                    "background": ("rgba(255, 68, 68, 0.14)" if is_listening else "rgba(255, 229, 0, 0.08)"),
+                    "borderTop": ("0.5px solid rgba(255, 68, 68, 0.3)" if is_listening else "0.5px solid rgba(255, 229, 0, 0.2)"),
+                    "fontSize": "12px",
+                    "display": "flex",
+                    "justifyContent": "space-between",
+                    "alignItems": "center",
+                    "color": ("#FF8080" if is_listening else "#FFE500")
+                }}>
+                    <span>
+                        {(is_listening and <span className="cm-dot-live" style={{"background": "#FF4444", "display": "inline-block", "marginRight": "8px"}}/>)}
+                        {voice_status}
+                    </span>
+                    <div style={{"display": "flex", "gap": "6px"}}>
+                        {is_listening and <button
+                            onClick={lambda _e: MouseEvent { toggleVoice(); }}
+                            style={{"background": "#FF4444", "color": "#000", "border": "none", "borderRadius": "4px", "padding": "2px 8px", "fontSize": "11px", "fontWeight": "600", "cursor": "pointer"}}
+                        >
+                            Done
+                        </button>}
+                        <button
+                            onClick={lambda _e: MouseEvent { voice_status = ""; }}
+                            style={{"background": "none", "color": "rgba(255, 255, 255, 0.5)", "border": "none", "fontSize": "11px", "cursor": "pointer"}}
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </div>}
                 <div className="cm-composer">
                     <input
                         aria-label="Your message"
@@ -163,19 +283,31 @@ def:pub ChatPane(
                         className="cm-input"
                     />
                     <button
-                        onClick={lambda _e: MouseEvent {
-                            if not input_val {
-                                input_val = "I lost my job two months ago. I am behind on rent, I have two children, and my monthly income is eight thousand rupees.";
-                            }
-                            sendMessage(input_val);
-                        }}
+                        onClick={lambda _e: MouseEvent { toggleVoice(); }}
                         disabled={is_loading}
-                        className="cm-ghost-btn"
-                        style={{"marginRight": "6px", "padding": "6px 10px", "fontSize": "13px"}}
-                        aria-label="Voice input (Omi)"
-                        title="Voice Input (Omi Integration)"
+                        className={"cm-ghost-btn" + (" cm-voice-btn-active" if is_listening else "")}
+                        style={{
+                            "marginRight": "4px",
+                            "padding": "6px 11px",
+                            "fontSize": "13px",
+                            "background": ("rgba(255, 68, 68, 0.22)" if is_listening else "rgba(255, 255, 255, 0.04)"),
+                            "color": ("#FF4444" if is_listening else "rgba(255, 255, 255, 0.75)"),
+                            "border": ("0.5px solid #FF4444" if is_listening else "0.5px solid rgba(255, 255, 255, 0.12)"),
+                            "fontWeight": ("600" if is_listening else "400")
+                        }}
+                        aria-label={("Stop recording" if is_listening else "Voice input (Omi)")}
+                        title={("Stop Listening" if is_listening else "Voice Input (Click to speak via Microphone)")}
                     >
-                        🎙️ Voice
+                        {("🔴 Stop" if is_listening else "🎙️ Voice")}
+                    </button>
+                    <button
+                        onClick={lambda _e: MouseEvent { voice_modal_open = not voice_modal_open; }}
+                        className="cm-ghost-btn"
+                        style={{"marginRight": "6px", "padding": "6px 8px", "fontSize": "12px"}}
+                        aria-label="Omi voice presets"
+                        title="Omi Voice Presets & Scenarios"
+                    >
+                        ⚡ Omi
                     </button>
                     <button
                         onClick={lambda _e: MouseEvent { sendMessage(); }}

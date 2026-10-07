@@ -31,6 +31,14 @@ class VerificationState:
     evidence_ids: List[str] = field(default_factory=list)
     checks: List[Dict[str, Any]] = field(default_factory=list)
 
+    @property
+    def passed(self) -> bool:
+        return self.status == "passed"
+
+    @property
+    def failed(self) -> bool:
+        return self.status == "failed"
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "status": self.status,
