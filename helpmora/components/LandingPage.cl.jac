@@ -183,7 +183,7 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                     "margin": "0 auto 22px",
                     "fontWeight": "400"
                 }}>
-                    A rules engine on a graph that routes people in crisis — single mothers, immigrant families, elderly tenants — to the housing, food, healthcare and legal aid they qualify for, and shows exactly why. Seven Jac walkers run it; AI only translates and summarizes after the answer is on screen. Answers in 51 languages from machine-drafted text (not yet checked by native speakers), machine translation for 34 more, and an interpreter card for 26 that machines can't translate yet.
+                    A voice-first Social Welfare & Legal Aid Navigator for India that turns a person’s story into an explainable path to support. Omi captures the conversation, Qdrant remembers the case, and Lyzr coordinates the journey — while HELPmora’s deterministic policy engine evaluates eligibility and its Pathfinder finds practical alternatives when the direct route is blocked.
                 </p>
 
                 <div style={{"display": "flex", "justifyContent": "center", "alignItems": "center", "gap": "16px", "marginBottom": "36px", "flexWrap": "wrap"}}>
