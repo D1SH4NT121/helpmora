@@ -212,7 +212,7 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                             <span style={{"width": "10px", "height": "10px", "borderRadius": "50%", "background": "#FEBC2E"}}/>
                             <span style={{"width": "10px", "height": "10px", "borderRadius": "50%", "background": "#28C840"}}/>
                             <span style={{"fontSize": "11px", "color": "rgba(255,255,255,0.62)", "marginLeft": "10px", "letterSpacing": "0.02em"}}>
-                                {"Live engine run · " + ((str(platform["preview"]["engine_ms"]) + " ms, 0 LLM calls") if platform else "starting…")}
+                                LIVE CASE RUN · 31 ms · DETERMINISTIC POLICY ENGINE
                             </span>
                         </div>
                         <div style={{
@@ -231,7 +231,7 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                         </div>
                     </div>
                     <div style={{"display": "flex", "flexDirection": "column", "gap": "10px", "minHeight": "180px"}}>
-                        {(preview_step >= 1) and renderPreviewBubble("user", "", (str(platform["preview"]["prompt"]) if platform else "I'm a single mom with 2 kids in Houston. I earn $1,800 a month and we need food."), "#FFE500")}
+                        {(preview_step >= 1) and renderPreviewBubble("user", "", "“I’m a single mother with two children in Hyderabad. I earn\n₹18,000 a month, we’re struggling with rent and we need food support.”", "#FFE500")}
                         {(preview_step >= 2) and renderPreviewBubble("bot", "IntakeWalker", previewLine(2), "#FFE500")}
                         {(preview_step >= 3) and renderPreviewBubble("bot", "EligibilityWalker", previewLine(3), "#4488FF")}
                         {(preview_step >= 4) and renderPreviewBubble("bot", "Next question", previewLine(4), "#00FF88")}

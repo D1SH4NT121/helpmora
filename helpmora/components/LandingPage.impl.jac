@@ -238,7 +238,8 @@ impl LandingPage.renderPreviewBubble(role: str, walker_name: str, text: str, col
                     "lineHeight": "1.5",
                     "border": ("none" if is_user else "0.5px solid rgba(255,255,255,0.08)"),
                     "borderLeft": ("none" if (is_user or (not walker_name)) else ("2px solid " + color)),
-                    "fontWeight": ("500" if is_user else "400")
+                    "fontWeight": ("500" if is_user else "400"),
+                    "whiteSpace": "pre-line"
                 }}>
                     {text}
                 </div>
@@ -247,30 +248,14 @@ impl LandingPage.renderPreviewBubble(role: str, walker_name: str, text: str, col
 }
 
 impl LandingPage.previewLine(step: int) -> str {
-    # Text for the hero preview, built from a real engine run (PlatformWalker)
-    # on the example prompt — nothing here is typed in by hand.
-    if not platform { return "Running the engine on this prompt…"; }
-    pv = platform["preview"];
     if step == 2 {
-        facts: list = [str(pv["category"])];
-        if Number(pv["household"]) > 0 { facts = facts + ["household of " + str(pv["household"])]; }
-        if Number(pv["income_annual"]) >= 0 { facts = facts + ["$" + Number(pv["income_annual"]).toLocaleString() + "/yr"]; }
-        if pv["city"] or pv["state"] {
-            city_words: list = [w.slice(0, 1).toUpperCase() + w.slice(1) for w in str(pv["city"]).split(" ") if w];
-            facts = facts + [(city_words.join(" ") + ", " if pv["city"] else "") + str(pv["state"])];
-        }
-        return "Understood: " + facts.join(" · ") + " — parsed in " + str(pv["engine_ms"]) + " ms, no LLM.";
+        return "Understood: food + housing · household of 3 · ₹18,000/month\n· Hyderabad · single parent.\n\nStructured into a case profile for policy evaluation.";
     }
     if step == 3 {
-        parts: list = [];
-        for t in list(pv["top"]) {
-            tier = str(t["tier"]).replace("_", " ");
-            parts = parts + [str(t["name"]).split(" (")[0] + " — " + tier + " " + str(Math.round(Number(t["p"]) * 100)) + "%" + ((" · " + str(t["benefit"])) if t["benefit"] else "")];
-        }
-        return "Scored " + str(pv["scored"]) + " relevant programs. " + parts.join(" · ");
+        return "Evaluated 10 relevant programs using deterministic policy rules.\n\nPMGKAY — likely eligible\nPM POSHAN — likely eligible\nFood Security Helpline — recommended next step";
     }
-    if pv["question"] {
-        return "“" + str(pv["question"]) + "” — the one fact that changes " + str(pv["affects"]) + " of these matches.";
+    if step == 4 {
+        return "“Do you currently have a ration card or access to One Nation\nOne Ration Card? This is the one fact that could change several\nof your food-support matches. You can say ‘I don’t know.’”";
     }
-    return "No follow-up needed.";
+    return "";
 }

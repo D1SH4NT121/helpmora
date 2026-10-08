@@ -17,7 +17,7 @@ import from engine.i18n { routed_languages, language_catalog }
 import from engine.messages { message_languages }
 import from engine.policy { policy_sources, POLICY_VERSION }
 
-glob PREVIEW_PROMPT: str = "I'm a single mom with 2 kids in Houston. I earn $1,800 a month and we need food.";
+glob PREVIEW_PROMPT: str = "“I’m a single mother with two children in Hyderabad. I earn ₹18,000 a month, we’re struggling with rent and we need food support.”";
 glob CATALOG: list = [];
 
 """Catalog from data/resources.json (the same file SeedWalker loads)."""
