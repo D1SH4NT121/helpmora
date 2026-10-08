@@ -1,4 +1,4 @@
-﻿"""HELPmora Logo — "The Guided Thread"
+"""HELPmora Logo — "The Guided Thread"
 
 Single source of truth component for the HELPmora logo, wordmark, and motion system.
 Preserves the exact master path geometry, node coordinates, brand colors, 6-phase
@@ -21,12 +21,15 @@ def:pub HELPmoraLogo(
     can with entry {
         if not animated {
             is_animating = False;
+        } else {
+            setTimeout(lambda { is_animating = False; }, 4200);
         }
     }
 
     def replay {
-        is_animating = True;
         anim_key = anim_key + 1;
+        is_animating = True;
+        setTimeout(lambda { is_animating = False; }, 4200);
     }
 
     thread_grad_id = instance_id + "_threadGrad_" + str(anim_key);
@@ -41,16 +44,19 @@ def:pub HELPmoraLogo(
 
     return
         <div
-            className={"hm-logo-container " + class_name}
+            key={instance_id + "_" + str(anim_key)}
+            className={"hm-logo-container " + anim_class + " " + state_class + " " + class_name}
             onClick={lambda _e: MouseEvent { replay(); }}
             title="HELPmora — From your problem to your next step (click to replay animation)"
             style={{
                 "display": "inline-flex",
                 "alignItems": "center",
+                "cursor": "pointer",
                 "gap": str(max(6, int(size * 0.22))) + "px"
             }}
         >
             <svg
+                key={instance_id + "_svg_" + str(anim_key)}
                 viewBox="0 0 200 200"
                 width={str(size) + "px"}
                 height={str(size) + "px"}
