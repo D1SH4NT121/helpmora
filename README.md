@@ -126,7 +126,7 @@ A directed acyclic graph (DAG) of 6 specialized autonomous agents coordinates ca
                                                  |
                                                  v
 +---------------------------------------------------------------------------------------------------+
-|                       TRACK 4: ADAPTIVE ASSISTANT (USER INTERACTION)                              |
+|                              ADAPTIVE ASSISTANT (USER INTERACTION)                                |
 |   - 5-Stage Stepper: Context -> Discovery -> Documents -> Escape Paths -> Submission              |
 |   - Voice-to-Form Auto-Fill: Real-time confidence badges, transcript field extraction             |
 |   - "Ask HELPmora": Plain-language statutory term explanations (EWS, LIG, Ration rules)           |
@@ -155,7 +155,7 @@ A directed acyclic graph (DAG) of 6 specialized autonomous agents coordinates ca
 
 ---
 
-## Track 4: The Adaptive Assistant
+## The Adaptive Assistant
 
 HELPmora's **Adaptive Assistant** is specifically engineered for inclusive, accessible, and high-trust civic navigation. It features:
 
@@ -274,7 +274,7 @@ Open your browser at:
 - **Local:** `http://localhost:8000/`
 - **LAN / Network:** `http://<your-lan-ip>:8000/`
 
-Navigate to the **"Adaptive Assistant (Track 4)"** tab to experience the full voice-to-form, stepper flow, and human consent gate.
+Navigate to the **"Adaptive Assistant"** tab to experience the full voice-to-form, stepper flow, and human consent gate.
 
 ---
 
@@ -283,7 +283,7 @@ Navigate to the **"Adaptive Assistant (Track 4)"** tab to experience the full vo
 All tests execute locally without external cloud dependencies:
 
 ```powershell
-# 1. Integration Suite (Omi, Qdrant, Lyzr, Verification Gate, Track 4, Safe Config) - 23 Tests
+# 1. Integration Suite (Omi, Qdrant, Lyzr, Verification Gate, Adaptive Assistant, Safe Config) - 23 Tests
 .\.venv312\Scripts\python.exe helpmora/tests/test_integrations.py
 
 # 2. Reverse Gateway & Security Suite (Rate limiting, headers, payload caps) - 28 Tests
@@ -321,7 +321,7 @@ HELPmora/
 │   ├── cmguard/                  # Reverse security gateway & rate limiters
 │   ├── components/               # Client-side UI components (React / Jac)
 │   │   ├── ActionPlan.cl.jac     # Step-by-step checklist & document guide
-│   │   ├── AdaptiveAssistant.cl.jac # Track 4 Stepper, Voice-to-Form & Consent Gate
+│   │   ├── AdaptiveAssistant.cl.jac # Adaptive Stepper, Voice-to-Form & Consent Gate
 │   │   ├── ChatPane.cl.jac       # Conversational intake & voice button
 │   │   ├── GraphViz.cl.jac       # Interactive decision graph visualization
 │   │   ├── HELPmoraLogo.cl.jac   # Animated Guided Thread logo
