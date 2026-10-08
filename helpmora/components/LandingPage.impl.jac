@@ -249,13 +249,13 @@ impl LandingPage.renderPreviewBubble(role: str, walker_name: str, text: str, col
 
 impl LandingPage.previewLine(step: int) -> str {
     if step == 2 {
-        return "Understood: food + housing · household of 3 · ₹18,000/month\n· Hyderabad · single parent.\n\nStructured into a case profile for policy evaluation.";
+        return "Understood: food + housing · household of 3 · ₹18,000/month · Hyderabad · single parent. Structured into a case profile for policy evaluation.";
     }
     if step == 3 {
-        return "Evaluated 10 relevant programs using deterministic policy rules.\n\nPMGKAY — likely eligible\nPM POSHAN — likely eligible\nFood Security Helpline — recommended next step";
+        return "Evaluated 10 relevant programs using deterministic policy rules: PMGKAY — likely eligible · PM POSHAN — likely eligible · Food Security Helpline — recommended next step";
     }
     if step == 4 {
-        return "“Do you currently have a ration card or access to One Nation\nOne Ration Card? This is the one fact that could change several\nof your food-support matches. You can say ‘I don’t know.’”";
+        return "“Do you currently have a ration card or access to One Nation One Ration Card? This is the one fact that could change several of your food-support matches. You can say ‘I don’t know.’”";
     }
     return "";
 }
