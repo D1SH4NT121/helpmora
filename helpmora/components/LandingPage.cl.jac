@@ -302,10 +302,10 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                         "letterSpacing": "-0.025em",
                         "margin": "0 0 8px"
                     }}>
-                        Nine walkers, one traced pipeline.
+                        One deterministic core. One traceable path to action.
                     </h2>
                     <p style={{"fontSize": "14px", "color": "rgba(255,255,255,0.5)", "margin": "0", "maxWidth": "560px", "marginLeft": "auto", "marginRight": "auto"}}>
-                        Each walker owns one concern and writes its result to the graph. Escalation, Memory (outcome learning) and Critique run alongside these five.
+                        HELPmora turns a person’s story into structured case facts, evaluates policy deterministically, finds alternative routes when needed, and guides the user to a verified next step. Memory, safety, and AI orchestration support the journey without replacing the policy engine.
                     </p>
                 </div>
 
@@ -327,11 +327,11 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                         "position": "relative",
                         "zIndex": "1"
                     }}>
-                        {renderWalkerCard(1, "Intake",      "Identifies the language and need in 75 languages with evidence spans; an LLM only if nothing routes (3.5 s cap)", "#FFE500", "-3deg")}
-                        {renderWalkerCard(2, "Eligibility", "Scores every program with effective-dated 2026 rules, an explainable score and rough approval odds; writes eligible_for edges", "#4488FF", "2deg")}
-                        {renderWalkerCard(3, "Navigation",  "Orders the plan by Smith's rule, merges shared documents, persists ApplicationNodes",   "#00FF88", "-2deg")}
-                        {renderWalkerCard(4, "Pathfinder",  "Yen k-shortest expected-cost routes over leads_to edges",      "#FFB344", "3deg")}
-                        {renderWalkerCard(5, "Narrator",    "The one LLM call: a summary in the user's language, after the answer is on screen", "#FF88AA", "-2deg")}
+                        {renderWalkerCard(1, "Intake",      "Turns a real-life story into structured case facts — need, income, household, location, language, and urgency.", "#FFE500", "-3deg")}
+                        {renderWalkerCard(2, "Eligibility", "Evaluates 40 curated programs with deterministic policy rules and produces an explainable eligibility result.", "#4488FF", "2deg")}
+                        {renderWalkerCard(3, "Navigation",  "Turns the result into an actionable plan — required documents, submission channels, and clear next steps.",   "#00FF88", "-2deg")}
+                        {renderWalkerCard(4, "Pathfinder",  "When the direct route is blocked, traverses 26 curated graph transitions to find a viable alternative path.",      "#FFB344", "3deg")}
+                        {renderWalkerCard(5, "Escalation",  "Routes urgent cases through verified crisis pathways and helplines without relying on LLM-generated emergency information.", "#FF88AA", "-2deg")}
                     </div>
                 </div>
             </section>
