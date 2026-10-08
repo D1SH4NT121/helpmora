@@ -29,7 +29,8 @@ glob CHIPS: dict = {
     "housing": ["chip.housing.0", "chip.housing.1", "chip.housing.2"],
     "food": ["chip.food.0", "chip.food.1", "chip.food.2"],
     "healthcare": ["chip.healthcare.0", "chip.healthcare.1", "chip.healthcare.2"],
-    "legal": ["chip.legal.0", "chip.legal.1", "chip.legal.2"]
+    "legal": ["chip.legal.0", "chip.legal.1", "chip.legal.2"],
+    "education": ["chip.education.0", "chip.education.1", "chip.education.2"]
 };
 
 """Short program name for chip text: the name before any parenthesis

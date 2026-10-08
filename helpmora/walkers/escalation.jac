@@ -19,7 +19,8 @@ glob LEADS: dict = {
     "food": ("National Food Security Helpline (NFSA)", "1967", "ration card grievance, nearest fair price shop and food allocation", "food grain entitlement and ration assistance"),
     "housing": ("Emergency Response Support System", "112", "immediate emergency shelter and disaster rehabilitation coordination", "emergency shelter and police assistance"),
     "healthcare": ("Ayushman Bharat / PM-JAY Call Centre", "14443", "empaneled hospital search, golden card eligibility and treatment queries", "free health treatment and hospital search"),
-    "legal": ("NALSA Legal Aid Helpline", "15100", "free civil and criminal legal aid from district legal services authorities", "free legal aid across India")
+    "legal": ("NALSA Legal Aid Helpline", "15100", "free civil and criminal legal aid from district legal services authorities", "free legal aid across India"),
+    "education": ("PM Vidyalaxmi / National Scholarship Helpline", "1800-180-1111", "education loan assistance, interest subsidy queries and national scholarship applications", "education loans and scholarships")
 };
 
 walker EscalationWalker {

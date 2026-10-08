@@ -206,7 +206,10 @@ glob PROGRAMS: dict = {
     "cfpb-rule":             {"income": {"basis": "none"}, "status": ""},
     "expungement-rule":      {"income": {"basis": "fpl", "pct": 200, "typical": True, "note": "varies by clinic"}, "status": ""},
     "aba-fla-rule":          {"income": {"basis": "fpl", "pct": 250, "typical": True, "note": "each state sets the limit"}, "status": ""},
-    "law-clinic-rule":       {"income": {"basis": "fpl", "pct": 200, "typical": True, "note": "varies by clinic"}, "status": ""}
+    "law-clinic-rule":       {"income": {"basis": "fpl", "pct": 200, "typical": True, "note": "varies by clinic"}, "status": ""},
+    "pm-vidyalaxmi-rule":    {"income": {"basis": "none", "note": "Interest subsidy for family income under ₹8 Lakh, collateral-free up to ₹10 Lakh"}, "status": ""},
+    "nsp-scholarship-rule":  {"income": {"basis": "none", "note": "Under ₹2.5 Lakh for post-matric / up to ₹4.5 Lakh for college merit scholarships"}, "status": ""},
+    "cgfsel-rule":           {"income": {"basis": "none", "note": "No income limit; collateral-free education loans up to ₹7.5 Lakh"}, "status": ""}
 };
 
 """Today's date for effective-dated rules (HELPMORA_POLICY_DATE=YYYY-MM-DD overrides, for tests)."""
@@ -268,7 +271,7 @@ def income_limit(rule_id: str, profile: dict, flat_fallback: int = 0) -> dict {
     pol = PROGRAMS.get(str(rule_id));
     if not pol {
         if flat_fallback > 0 {
-            return {"limit": flat_fallback, "label": "the program's " + "$" + f"{flat_fallback:,}" + " limit", "per_person": 0, "assumed_household": False, "source": "catalog", "note": "", "typical": True, "blocked": ""};
+            return {"limit": flat_fallback, "label": "the program's " + "₹" + f"{flat_fallback:,}" + " limit", "per_person": 0, "assumed_household": False, "source": "catalog", "note": "", "typical": True, "blocked": ""};
         }
         return {};
     }

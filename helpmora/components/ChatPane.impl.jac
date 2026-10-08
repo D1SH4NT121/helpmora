@@ -381,9 +381,9 @@ impl ChatPane.quickOptions(key: str, es: bool) -> list {
         opts = [["Sí" if es else "Yes", "sí" if es else "yes"], ["No", "no"]];
     } elif key == "need" {
         if es {
-            opts = [["Comida", "necesito comida"], ["Vivienda", "necesito ayuda con vivienda"], ["Salud", "necesito un médico"], ["Ayuda legal", "necesito un abogado"]];
+            opts = [["Comida", "necesito comida"], ["Vivienda", "necesito ayuda con vivienda"], ["Salud", "necesito un médico"], ["Ayuda legal", "necesito un abogado"], ["Educación y préstamos", "necesito un préstamo para estudiar"]];
         } else {
-            opts = [["Food", "I need food"], ["Housing", "I need help with housing"], ["Health care", "I need a doctor"], ["Legal help", "I need a lawyer"]];
+            opts = [["Food", "I need food"], ["Housing", "I need help with housing"], ["Health care", "I need a doctor"], ["Legal help", "I need a lawyer"], ["Education & Study Loan", "I need a study loan"]];
         }
     } elif key == "income" {
         if es {
@@ -431,7 +431,7 @@ impl ChatPane.renderQuickReplies(q: Any, lang: str, labels: list, q_text: str, a
 
 impl ChatPane.renderMatchCard(m: Any, idx: int, j: int, ui: Any) -> JsxElement {
     ts = tierStyle(str(m["tier"]), ui);
-    cat_key = {"food": "opt.food", "housing": "opt.housing", "healthcare": "opt.health", "legal": "opt.legal"}[str(m["category"])];
+    cat_key = {"food": "opt.food", "housing": "opt.housing", "healthcare": "opt.health", "legal": "opt.legal", "education": "opt.education"}.get(str(m["category"]), "opt.education");
     card_key = str(idx) + ":" + str(j);
     is_open = open_key == card_key;
     pct = Math.round(Number(m["p_eligible"]) * 100);
@@ -610,7 +610,7 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
     if not prof["small_talk"] {
         if prof["category"] { facts = facts + [str(prof["category"]) + " · " + str(prof["urgency"]).replace("_", " ")]; }
         if prof["secondary"] and len(prof["secondary"]) > 0 { facts = facts + ["also " + ", ".join(list(prof["secondary"]))]; }
-        if Number(prof["income_annual"]) >= 0 { facts = facts + ["$" + Number(prof["income_annual"]).toLocaleString() + "/yr"]; }
+        if Number(prof["income_annual"]) >= 0 { facts = facts + ["₹" + Number(prof["income_annual"]).toLocaleString() + "/yr"]; }
         if Number(prof["household_size"]) > 0 { facts = facts + ["household " + str(prof["household_size"])]; }
         if Number(prof["age"]) > 0 { facts = facts + ["age " + str(prof["age"])]; }
         if prof["city"] or prof["state"] { facts = facts + [(str(prof["city"]) + ", " if prof["city"] else "") + str(prof["state"])]; }

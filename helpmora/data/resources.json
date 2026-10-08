@@ -2007,6 +2007,155 @@
         "submission_method": "online",
         "estimated_minutes": 20
       }
+    },
+    {
+      "agency_name": "PM-Vidyalaxmi Scheme (Central Sector Interest Subsidy & Collateral-Free Education Loan)",
+      "category": "education",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1800-180-1111",
+      "contact_email": "support-vidyalaxmi@gov.in",
+      "address": "Department of Higher Education, Ministry of Education, Shastri Bhawan, New Delhi 110001",
+      "online_url": "https://pmvidyalaxmi.co.in",
+      "description": "Unified government education loan scheme offering collateral-free, guarantor-free education loans up to Rs 10 Lakh for students pursuing higher studies in top 860 HEIs in India. Provides full interest subsidy (CSIS) during moratorium for annual family income under Rs 4.5 Lakh, and 3% interest subvention for annual family income under Rs 8 Lakh.",
+      "eligibility": {
+        "rule_id": "pm-vidyalaxmi-rule",
+        "income_limit_annual": 800000,
+        "residency_requirement": "state",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 16,
+        "age_max": 0,
+        "exceptions": "Full Central Sector Interest Subsidy (CSIS) for family income up to Rs 4,50,000; 3% interest subvention for family income up to Rs 8,00,000; loans up to Rs 7.5 Lakh get 75% credit guarantee.",
+        "criteria_summary": "Indian citizen student admitted to recognized higher education institution, family annual income under Rs 8,00,000, no collateral or third-party guarantee required.",
+        "targets": []
+      },
+      "form": {
+        "form_id": "pm-vidyalaxmi-app",
+        "form_name": "Common Educational Loan Application Form (CELAF)",
+        "url": "https://pmvidyalaxmi.co.in",
+        "required_documents": [
+          "Aadhaar Card of student and parent co-borrower",
+          "Admission Letter / Offer Letter from College / University",
+          "Fee Structure schedule from Educational Institution",
+          "Income Certificate / IT Return / Form 16",
+          "Marksheets (10th, 12th, or Degree graduation)"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "online",
+        "estimated_minutes": 30
+      }
+    },
+    {
+      "agency_name": "National Scholarship Portal (NSP - Higher Education & Post-Matric Scholarships)",
+      "category": "education",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "0120-6619540",
+      "contact_email": "helpdesk@nsp.gov.in",
+      "address": "National Informatics Centre (NIC), A-Block, CGO Complex, Lodhi Road, New Delhi 110003",
+      "online_url": "https://scholarships.gov.in",
+      "description": "Central and state government single-window portal for higher education scholarships, tuition waivers, and merit-cum-means financial assistance for undergraduate, postgraduate, and professional students from low-income, SC/ST, OBC, and minority backgrounds.",
+      "eligibility": {
+        "rule_id": "nsp-scholarship-rule",
+        "income_limit_annual": 250000,
+        "residency_requirement": "state",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 15,
+        "age_max": 0,
+        "exceptions": "Income limit up to Rs 4,50,000 for Central Sector Scheme of Scholarships for College and University Students; Rs 2,50,000 for Post-Matric schemes.",
+        "criteria_summary": "Enrolled in recognized school, college or university, annual family income under Rs 2,50,000 (up to Rs 4,50,000 for university merit scholarship schemes).",
+        "targets": []
+      },
+      "form": {
+        "form_id": "nsp-application-form",
+        "form_name": "NSP One-Time Registration & Scholarship Application",
+        "url": "https://scholarships.gov.in",
+        "required_documents": [
+          "Aadhaar Card (Aadhaar authentication mandatory)",
+          "Bonafide Student Certificate from College / University",
+          "Income Certificate from Competent Revenue Authority",
+          "Previous Academic Year Marksheet",
+          "Bank Account Passbook (Aadhaar seeded DBT account)"
+        ],
+        "deadline_type": "annual",
+        "submission_method": "online",
+        "estimated_minutes": 35
+      }
+    },
+    {
+      "agency_name": "Credit Guarantee Fund Scheme for Education Loans (CGFSEL - Collateral-Free Study Loans)",
+      "category": "education",
+      "capacity": "open",
+      "languages_supported": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "mr",
+        "ta",
+        "gu",
+        "ur",
+        "kn",
+        "ml",
+        "pa"
+      ],
+      "contact_phone": "1800-22-2211",
+      "contact_email": "info@ncgtc.in",
+      "address": "National Credit Guarantee Trustee Company (NCGTC), Swavalamban Bhavan, BKC, Bandra (E), Mumbai 400051",
+      "online_url": "https://www.ncgtc.in",
+      "description": "Government of India credit guarantee scheme enabling commercial banks to provide education loans up to Rs 7.5 Lakh without collateral security or third-party guarantee for students pursuing higher and technical education.",
+      "eligibility": {
+        "rule_id": "cgfsel-rule",
+        "income_limit_annual": 0,
+        "residency_requirement": "state",
+        "min_family_size": 1,
+        "citizenship_required": true,
+        "age_min": 16,
+        "age_max": 0,
+        "exceptions": "No income ceiling for loan guarantee; covers all students admitted through entrance test or merit selection in recognized professional courses.",
+        "criteria_summary": "Indian citizen student admitted to recognized higher education course, education loan up to Rs 7.5 Lakh without any collateral.",
+        "targets": []
+      },
+      "form": {
+        "form_id": "cgfsel-bank-app",
+        "form_name": "Bank Model Education Loan Application (IBA Scheme)",
+        "url": "https://www.ncgtc.in",
+        "required_documents": [
+          "Aadhaar and PAN Card of Student and Parent",
+          "Proof of Admission to Professional / Technical / Higher Course",
+          "Schedule of Expenses / College Fee structure",
+          "Academic Marksheets"
+        ],
+        "deadline_type": "rolling",
+        "submission_method": "in_person",
+        "estimated_minutes": 40
+      }
     }
   ]
 }

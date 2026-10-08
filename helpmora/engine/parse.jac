@@ -93,10 +93,22 @@ glob CATEGORY_LEXICON: dict = {
         ("arrestad[oa]", 2.5), ("c[aá]rcel", 2.0), ("antecedentes", 2.0), ("salario no pagado", 2.5),
         ("illegal(?:ly)?", 1.5), ("my rights", 2.0), ("sue", 1.5), ("custody", 2.0),
         ("protective order", 2.5), ("expunge\\w*", 2.5), ("abogad[oa]", 2.5),
-        ("corte", 2.0), ("tribunal", 2.0), ("deportaci[oó]n", 2.5),
-        ("debt collectors?", 2.5), ("collection agenc(?:y|ies)", 2.5), ("collectors?", 1.5), ("loan", 1.0), ("scam\\w*", 2.0),
+        ("debt collectors?", 2.5), ("collection agenc(?:y|ies)", 2.5), ("collectors?", 1.5),
+        ("predatory loan", 2.0), ("loan shark", 2.5), ("loan harassment", 2.5), ("scam\\w*", 2.0),
         ("fraud", 2.0), ("credit report", 2.0), ("cobrador", 2.0), ("estafa", 2.0),
         ("inmigraci[oó]n", 2.0), ("asilo", 2.0), ("derechos", 1.5)
+    ],
+    "education": [
+        ("study loan", 3.0), ("education loan", 3.0), ("student loan", 3.0), ("college loan", 3.0),
+        ("school fee(?:s)?", 2.5), ("college fee(?:s)?", 2.5), ("tuition(?: fee(?:s)?)?", 2.5),
+        ("scholarships?", 3.0), ("higher education", 2.5), ("pm vidyalaxmi", 3.5),
+        ("vidyalaxmi", 3.5), ("vidya lakshmi", 3.5), ("nsp", 2.5),
+        ("national scholarship", 3.0), ("student aid", 2.5), ("study", 1.5),
+        ("student", 1.5), ("college", 1.5), ("university", 1.5), ("school", 1.2),
+        ("coaching", 1.5), ("degree", 1.5), ("admission", 1.5),
+        ("padhai", 2.5), ("shiksha", 2.5), ("chhatravritti", 3.0),
+        ("padhai ke liye (?:loan|paise|madad)", 3.0), ("padhai loan", 3.0),
+        ("loan for study", 3.0), ("loan for college", 3.0), ("loan for education", 3.0)
     ]
 };
 
@@ -400,7 +412,7 @@ def detect_language(text: str) -> tuple {
 
 """Score each need category from weighted keyword evidence."""
 def score_categories(low: str, evidence: list, text: str) -> dict {
-    scores: dict = {"food": 0.0, "housing": 0.0, "healthcare": 0.0, "legal": 0.0};
+    scores: dict = {"food": 0.0, "housing": 0.0, "healthcare": 0.0, "legal": 0.0, "education": 0.0};
     for (cat, lex) in CATEGORY_LEXICON.items() {
         for (pat, w) in lex {
             for m in re.finditer("\\b" + pat + "\\b", low) {
