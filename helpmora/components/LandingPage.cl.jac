@@ -45,7 +45,7 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
     def renderPersonaPill(label: str, color: str) -> JsxElement;
     def renderStatTile(value: str, label: str, sub: str, accent: str, sub2: str = "") -> JsxElement;
     def renderWalkerCard(idx: int, name: str, role: str, color: str, tilt: str) -> JsxElement;
-    def renderTrackBadge(label: str, accent: str) -> JsxElement;
+    def renderTrackBadge(label: str, accent: str, desc: str = "") -> JsxElement;
     def renderPreviewBubble(role: str, walker_name: str, text: str, color: str) -> JsxElement;
     def previewLine(step: int) -> str;
 
@@ -409,12 +409,12 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                         "fontWeight": "600",
                         "marginBottom": "16px"
                     }}>
-                        Competing in
+                        Why HELPmora stands out
                     </div>
                     <div style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}>
-                        {renderTrackBadge("Agentic AI",          "#FFE500")}
-                        {renderTrackBadge("Consumer Healthcare", "#00FF88")}
-                        {renderTrackBadge("Social Impact",       "#FF88AA")}
+                        {renderTrackBadge("Accessibility-First", "#FFE500", "Voice-first support for high-friction welfare systems")}
+                        {renderTrackBadge("Multi-Agent, Human-Guided", "#00FF88", "Omi + Lyzr coordinate the journey, not the final decision")}
+                        {renderTrackBadge("Persistent & Explainable", "#FF88AA", "Qdrant remembers the case; deterministic policy logic shows why")}
                     </div>
                 </div>
             </section>

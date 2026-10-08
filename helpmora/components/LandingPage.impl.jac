@@ -157,21 +157,17 @@ impl LandingPage.renderWalkerCard(idx: int, name: str, role: str, color: str, ti
         </div>;
 }
 
-impl LandingPage.renderTrackBadge(label: str, accent: str) -> JsxElement {
+impl LandingPage.renderTrackBadge(label: str, accent: str, desc: str = "") -> JsxElement {
     return
         <div
             key={label}
             style={{
-                "padding": "11px 16px",
+                "padding": "12px 16px",
                 "background": "linear-gradient(135deg, " + accent + "18 0%, " + accent + "08 100%)",
                 "border": "0.5px solid " + accent + "55",
-                "color": accent,
                 "borderRadius": "12px",
-                "fontSize": "13px",
-                "fontWeight": "600",
-                "letterSpacing": "0.005em",
                 "display": "flex",
-                "alignItems": "center",
+                "alignItems": "flex-start",
                 "gap": "10px",
                 "boxShadow": "inset 0 1px 0 rgba(255,255,255,0.05), 0 6px 14px -8px " + accent + "40"
             }}
@@ -181,9 +177,27 @@ impl LandingPage.renderTrackBadge(label: str, accent: str) -> JsxElement {
                 "height": "6px",
                 "borderRadius": "50%",
                 "background": accent,
-                "boxShadow": "0 0 6px " + accent
+                "boxShadow": "0 0 6px " + accent,
+                "marginTop": "6px",
+                "flexShrink": "0"
             }}/>
-            {label}
+            <div style={{"display": "flex", "flexDirection": "column", "gap": "3px"}}>
+                <div style={{
+                    "color": accent,
+                    "fontSize": "13px",
+                    "fontWeight": "600",
+                    "letterSpacing": "0.005em"
+                }}>
+                    {label}
+                </div>
+                {desc and <div style={{
+                    "fontSize": "11.5px",
+                    "color": "rgba(255,255,255,0.65)",
+                    "lineHeight": "1.4"
+                }}>
+                    {desc}
+                </div>}
+            </div>
         </div>;
 }
 
