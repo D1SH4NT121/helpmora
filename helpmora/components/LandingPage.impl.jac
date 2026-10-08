@@ -215,17 +215,35 @@ impl LandingPage.renderPreviewBubble(role: str, walker_name: str, text: str, col
                 "justifyContent": ("flex-end" if is_user else "flex-start")
             }}
         >
-            {(not is_user) and <div
-                className="cm-avatar"
-                style={{
-                    "width": "24px",
-                    "height": "24px",
-                    "backgroundColor": color,
-                    "borderColor": color,
-                    "boxShadow": "0 4px 10px -2px " + color + "60",
-                    "marginTop": "1px"
-                }}
-            />}
+            {(not is_user) and <div style={{
+                "width": "24px",
+                "height": "24px",
+                "borderRadius": "50%",
+                "background": color,
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "flexShrink": "0",
+                "marginTop": "1px",
+                "boxShadow": "0 4px 10px -2px " + color + "60",
+                "overflow": "hidden"
+            }}>
+                <svg viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.5 23 C5.5 18 8 16.8 12 16.8 C16 16.8 18.5 18 18.5 23 Z" fill="#0A0A0A"/>
+                    <rect x="10.8" y="14.5" width="2.4" height="2.5" fill="#E2A676"/>
+                    <circle cx="12" cy="11" r="5" fill="#F8C291"/>
+                    <circle cx="7" cy="11" r="0.9" fill="#F8C291"/>
+                    <circle cx="17" cy="11" r="0.9" fill="#F8C291"/>
+                    <path d="M6.5 10 C6.5 6 9 4 12 4 C15 4 17.5 6 17.5 10 C16.5 7.5 14.5 6.5 12 7 C9.5 6.5 7.5 7.5 6.5 10 Z" fill="#1E272E"/>
+                    <circle cx="10" cy="10.8" r="0.9" fill="#1E272E"/>
+                    <circle cx="14" cy="10.8" r="0.9" fill="#1E272E"/>
+                    <circle cx="9.7" cy="10.5" r="0.3" fill="#FFFFFF"/>
+                    <circle cx="13.7" cy="10.5" r="0.3" fill="#FFFFFF"/>
+                    <circle cx="8.8" cy="12" r="0.8" fill="#E55039" opacity="0.45"/>
+                    <circle cx="15.2" cy="12" r="0.8" fill="#E55039" opacity="0.45"/>
+                    <path d="M10.3 12.8 C10.8 13.8 13.2 13.8 13.7 12.8" stroke="#1E272E" strokeWidth="0.75" strokeLinecap="round" fill="none"/>
+                </svg>
+            </div>}
             <div style={{"maxWidth": "82%"}}>
                 {((not is_user) and walker_name) and <div style={{
                     "fontSize": "9px",
