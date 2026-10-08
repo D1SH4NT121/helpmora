@@ -191,8 +191,8 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                         Enter the Navigator  →
                     </button>
                     <div style={{"fontSize": "12px", "color": "rgba(255,255,255,0.62)", "textAlign": "left", "lineHeight": "1.5"}}>
-                        <div style={{"color": "rgba(255,255,255,0.65)"}}>No signup — an anonymous account lives in this browser</div>
-                        <div>{"40 national programs · 2026 federal income rules · local offices from HUD & HRSA open data"}</div>
+                        <div style={{"color": "rgba(255,255,255,0.65)"}}>No signup — start anonymously. Your case stays private by default, with memory used to keep your journey continuous.</div>
+                        <div>{"40 curated Indian welfare & legal-aid programs · household-aware, deterministic policy evaluation · guided next steps through government portals, CSCs & district offices"}</div>
                     </div>
                 </div>
 
