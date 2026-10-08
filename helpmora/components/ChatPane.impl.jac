@@ -80,6 +80,16 @@ impl ChatPane.sendMessage(text_override: str = "", answering: str = "", display:
     if not effective.strip() { return; }
     user_text = effective;
     input_val = "";
+
+    # Stop voice recording immediately on message send so it never leaks into next message
+    try {
+        if window._cm_voice_bridge {
+            window._cm_voice_bridge.stop();
+        }
+    } except Exception as _ve {}
+    is_listening = False;
+    voice_status = "";
+
     ans = answering if answering else pending_question;
     # A tapped chip shows its (translated) label but sends the English
     # payload; the case language is pinned so the reply stays in it.

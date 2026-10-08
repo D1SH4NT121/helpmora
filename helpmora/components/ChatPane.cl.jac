@@ -110,19 +110,15 @@ def:pub ChatPane(
                             };
 
                             rec.onresult = function(event) {
-                                var instanceFinal = '';
-                                var instanceInterim = '';
+                                if (!window._cm_voice_bridge.userActive) return;
+                                var transcript = '';
                                 for (var i = 0; i < event.results.length; i++) {
-                                    var item = event.results[i];
-                                    if (item.isFinal) {
-                                        instanceFinal += item[0].transcript + ' ';
-                                    } else {
-                                        instanceInterim += item[0].transcript;
-                                    }
+                                    transcript += event.results[i][0].transcript + ' ';
                                 }
                                 var base = window._cm_voice_bridge.baseText || '';
-                                var full = (base + ' ' + instanceFinal + ' ' + instanceInterim).replace(/\\s+/g, ' ').trim();
-                                if (full) {
+                                var full = (base ? (base + ' ') : '') + transcript;
+                                full = full.replace(/\\s+/g, ' ').trim();
+                                if (full && window._cm_voice_bridge.userActive) {
                                     if (window._cm_on_voice) {
                                         window._cm_on_voice(full);
                                     }
@@ -173,10 +169,6 @@ def:pub ChatPane(
                             };
 
                             rec.onend = function() {
-                                var inputEl = document.querySelector('.cm-input');
-                                if (inputEl && inputEl.value) {
-                                    window._cm_voice_bridge.baseText = inputEl.value;
-                                }
                                 if (window._cm_voice_bridge.userActive) {
                                     setTimeout(function() {
                                         if (window._cm_voice_bridge.userActive) {
@@ -185,6 +177,7 @@ def:pub ChatPane(
                                     }, 150);
                                 } else {
                                     window._cm_voice_bridge.isListening = false;
+                                    window._cm_voice_bridge.baseText = '';
                                     if (window._cm_on_voice_status) { window._cm_on_voice_status('', false); }
                                 }
                             };
@@ -204,7 +197,7 @@ def:pub ChatPane(
                             return false;
                         }
                         var langMap = {
-                            'en': 'en-US',
+                            'en': 'en-IN',
                             'hi': 'hi-IN',
                             'es': 'es-US',
                             'zh': 'zh-CN',
@@ -222,7 +215,7 @@ def:pub ChatPane(
                             'ja': 'ja-JP',
                             'ko': 'ko-KR'
                         };
-                        var speechLang = (lang && langMap[lang]) ? langMap[lang] : ((lang && lang.indexOf('-') > 0) ? lang : 'en-US');
+                        var speechLang = (lang && langMap[lang]) ? langMap[lang] : ((lang && lang.indexOf('-') > 0) ? lang : 'en-IN');
                         window._cm_voice_bridge.currentLang = speechLang;
                         window._cm_voice_bridge.userActive = true;
                         window._cm_voice_bridge.isListening = true;
@@ -230,28 +223,15 @@ def:pub ChatPane(
                         window._cm_voice_bridge.baseText = (inputEl && inputEl.value) ? inputEl.value : '';
                         window._cm_voice_bridge.status = 'Listening (' + speechLang + ')... Speak now';
                         if (window._cm_on_voice_status) { window._cm_on_voice_status('Listening (' + speechLang + ')... Speak now', true); }
-
-                        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                            navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
-                                stream.getTracks().forEach(function(t) { t.stop(); });
-                                window._cm_voice_bridge.runInstance();
-                            }).catch(function(err) {
-                                window._cm_voice_bridge.userActive = false;
-                                window._cm_voice_bridge.isListening = false;
-                                var msg = 'Microphone permission blocked. Please allow microphone access in your browser address bar.';
-                                window._cm_voice_bridge.status = msg;
-                                if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, false); }
-                            });
-                            return true;
-                        } else {
-                            return window._cm_voice_bridge.runInstance();
-                        }
+                        return window._cm_voice_bridge.runInstance();
                     },
                     stop: function() {
                         window._cm_voice_bridge.userActive = false;
                         window._cm_voice_bridge.isListening = false;
+                        window._cm_voice_bridge.baseText = '';
+                        window._cm_voice_bridge.status = '';
                         if (window._cm_voice_bridge.rec) {
-                            try { window._cm_voice_bridge.rec.stop(); } catch(e) {}
+                            try { window._cm_voice_bridge.rec.abort(); } catch(e) {}
                             window._cm_voice_bridge.rec = null;
                         }
                         if (window._cm_on_voice_status) { window._cm_on_voice_status('', false); }
@@ -366,7 +346,13 @@ def:pub ChatPane(
                             Done
                         </button>}
                         <button
-                            onClick={lambda _e: MouseEvent { voice_status = ""; }}
+                            onClick={lambda _e: MouseEvent {
+                                try {
+                                    if window._cm_voice_bridge { window._cm_voice_bridge.stop(); }
+                                } except Exception as _ve {}
+                                is_listening = False;
+                                voice_status = "";
+                            }}
                             style={{"background": "none", "color": "rgba(255, 255, 255, 0.5)", "border": "none", "fontSize": "11px", "cursor": "pointer"}}
                         >
                             ✕
