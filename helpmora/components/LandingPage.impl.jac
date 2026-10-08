@@ -21,7 +21,7 @@ impl LandingPage.renderPersonaPill(label: str, color: str) -> JsxElement {
         </div>;
 }
 
-impl LandingPage.renderStatTile(value: str, label: str, sub: str, accent: str) -> JsxElement {
+impl LandingPage.renderStatTile(value: str, label: str, sub: str, accent: str, sub2: str = "") -> JsxElement {
     return
         <div
             key={label}
@@ -74,7 +74,8 @@ impl LandingPage.renderStatTile(value: str, label: str, sub: str, accent: str) -
                 "position": "relative",
                 "zIndex": "1"
             }}>
-                {sub}
+                <div>{sub}</div>
+                {sub2 and <div style={{"marginTop": "3px", "color": "rgba(255,255,255,0.48)"}}>{sub2}</div>}
             </div>
         </div>;
 }

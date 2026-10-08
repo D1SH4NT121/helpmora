@@ -43,7 +43,7 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
     }
 
     def renderPersonaPill(label: str, color: str) -> JsxElement;
-    def renderStatTile(value: str, label: str, sub: str, accent: str) -> JsxElement;
+    def renderStatTile(value: str, label: str, sub: str, accent: str, sub2: str = "") -> JsxElement;
     def renderWalkerCard(idx: int, name: str, role: str, color: str, tilt: str) -> JsxElement;
     def renderTrackBadge(label: str, accent: str) -> JsxElement;
     def renderPreviewBubble(role: str, walker_name: str, text: str, color: str) -> JsxElement;
@@ -259,10 +259,10 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                     "gridTemplateColumns": "repeat(4, 1fr)",
                     "gap": "14px"
                 }}>
-                    {renderStatTile((str(platform["programs"]) if platform else "40"), "Programs scored per turn", "Federal + national programs · 2026 poverty & HUD limits by household size", "#FFE500")}
-                    {renderStatTile((str(platform["languages_native"]) if (platform and platform["languages_native"]) else "51"), "Languages answered natively", ("Whole answer composed from reviewed templates · " + (str(platform["languages_routed"]) if platform else "75") + " routed without an LLM"), "#00FF88")}
-                    {renderStatTile(((str(platform["stats"]["engine_ms_p50"]) + " ms") if (platform and Number(platform["stats"]["turns"]) > 0) else "< 1 s"), "Median engine time per turn", ((str(platform["stats"]["turns"]) + " live turns since last restart") if (platform and Number(platform["stats"]["turns"]) > 0) else "Answer on screen before any LLM call"), "#4488FF")}
-                    {renderStatTile("1", "LLM call per turn", "Async narration with a facts guard — never on the critical path", "#FF88AA")}
+                    {renderStatTile((str(platform["programs"]) if platform else "40"), "Programs evaluated", "Housing · Food · Healthcare · Legal Aid", "#FFE500", "Deterministic, household-aware policy engine")}
+                    {renderStatTile((str(platform["languages_native"]) if (platform and platform["languages_native"]) else "51"), "Languages supported", "Conversational intake across supported languages", "#00FF88", "Built for people, not paperwork")}
+                    {renderStatTile(((str(platform["stats"]["engine_ms_p50"]) + " ms") if (platform and Number(platform["stats"]["turns"]) > 0) else "< 1 s"), "Decision latency", "Deterministic policy evaluation", "#4488FF", "Answers before AI explanation")}
+                    {renderStatTile("1", "LLM call per turn", "Async explanation with a facts guard", "#FF88AA", "AI assists — policy logic decides")}
                 </div>
             </section>
 
