@@ -151,6 +151,7 @@ def:pub ClientApp -> JsxElement {
 
     async def initAuth -> str;
     def visitorCreds -> list;
+    def resetVisitorCreds -> list;
     def quickExit -> None;
     def pushWalkerEvent(events: list) -> None;
     def navTab(tab_id: str, label: str) -> JsxElement;

@@ -20,11 +20,22 @@ impl ClientApp.visitorCreds -> list {
     return [uid, pw];
 }
 
+impl ClientApp.resetVisitorCreds -> list {
+    priv = False;
+    try { priv = sessionStorage.getItem("cm_private") == "1"; } except Exception as _ex {}
+    store = sessionStorage if priv else localStorage;
+    uid = "visitor_" + Math.random().toString(36).substring(2, 10);
+    pw = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+    store.setItem(VISITOR_KEY, uid);
+    store.setItem(VISITOR_SECRET_KEY, pw);
+    localStorage.removeItem("jac_token");
+    return [uid, pw];
+}
+
 impl ClientApp.initAuth -> str {
-    # Auth bootstrap that survives container rebuilds on free HF Spaces:
-    # 1) drop a stale token (the users DB is wiped on redeploy) by probing
-    #    /user/me; 2) signup is idempotent (409 if the visitor exists), then
-    #    login; 3) seed this visitor's graph.
+    # Auth bootstrap that survives container rebuilds & DB resets:
+    # 1) probe /user/me; 2) if invalid or walker fails with stale root anchor, auto-reset;
+    # 3) seed this visitor's graph and fetch platform catalog.
     creds = visitorCreds();
     is_authed = False;
     if jacIsLoggedIn() {
@@ -45,13 +56,17 @@ impl ClientApp.initAuth -> str {
     }
     if jacIsLoggedIn() {
         user_id = creds[0];
-        # Seeding failed through a flaky proxy once and left a visitor with no
-        # programs; IntakeWalker now re-seeds an empty catalog itself.
+        # Probe PlatformWalker: if it fails with stale user_root_id from prior DB, auto-recover!
+        pw = await jacSpawn("PlatformWalker", "", {}).catch(lambda e: Any -> dict { return {"reports": [], "error": str(e)}; });
+        if (not pw["reports"]) or (len(pw["reports"]) == 0) {
+            creds = resetVisitorCreds();
+            try { await jacSignup(creds[0], creds[1]); } except Exception as _ex {}
+            try { await jacLogin(creds[0], creds[1]); } except Exception as _ex {}
+            user_id = creds[0];
+            pw = await jacSpawn("PlatformWalker", "", {}).catch(lambda e: Any -> dict { return {"reports": []}; });
+        }
         await jacSpawn("SeedWalker", "", {"user_id": creds[0]}).catch(lambda e: Any -> dict { return {"reports": [], "spawn_error": str(e)}; });
         is_authed = True;
-        # jacSpawn + .catch: a rejected walker call must never break auth
-        # (client-side `except` can't match the runtime's exception class).
-        pw = await jacSpawn("PlatformWalker", "", {}).catch(lambda e: Any -> dict { return {"reports": []}; });
         if pw["reports"] and len(pw["reports"]) > 0 { platform = pw["reports"][len(pw["reports"]) - 1]; }
         return creds[0];
     }
