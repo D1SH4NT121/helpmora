@@ -157,7 +157,7 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                     "letterSpacing": "0.01em"
                 }}>
                     <span style={{"width": "5px", "height": "5px", "borderRadius": "50%", "background": "#00FF88", "display": "inline-block", "boxShadow": "0 0 6px #00FF88"}}/>
-                    Jac walkers · deterministic eligibility engine · one LLM call, off the critical path
+                    Omi Voice · Qdrant Memory · Lyzr Agents · Deterministic Policy Decisions
                 </div>
 
                 <h1 style={{
