@@ -376,16 +376,16 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
                         "lineHeight": "1.25",
                         "marginBottom": "18px"
                     }}>
-                        "I'm a single mother with two kids and we just lost our apartment. I don't know what to do, and English is hard for me."
+                        “My husband is in hospital and we can’t afford the treatment. I don’t know whether we qualify for any government health support or what we should do first.”
                     </div>
                     <div style={{"fontSize": "12px", "color": "rgba(255,255,255,0.5)", "marginBottom": "20px", "fontStyle": "italic"}}>
                         — example situation · paste it into the Navigator to see the real answer
                     </div>
                     <div style={{"display": "flex", "flexWrap": "wrap", "gap": "8px"}}>
-                        {renderPersonaPill("Single mother · 2 kids · $1800/mo", "#FFE500")}
-                        {renderPersonaPill("Undocumented family · healthcare", "#4488FF")}
-                        {renderPersonaPill("Elderly tenant · fighting eviction", "#FF88AA")}
-                        {renderPersonaPill("Veteran · housing instability", "#00FF88")}
+                        {renderPersonaPill("Family medical crisis · low income · healthcare", "#FFE500")}
+                        {renderPersonaPill("Hospital treatment · urgent assistance", "#4488FF")}
+                        {renderPersonaPill("High medical costs · government support", "#FF88AA")}
+                        {renderPersonaPill("Need help understanding eligibility · Hindi preferred", "#00FF88")}
                     </div>
                 </div>
 
