@@ -62,7 +62,7 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
         agent_state = "listening";
         try {
             if window._cm_voice_bridge {
-                window._cm_voice_bridge.start("en-US");
+                window._cm_voice_bridge.start("en-IN");
             }
         } except Exception as _ex {}
     }

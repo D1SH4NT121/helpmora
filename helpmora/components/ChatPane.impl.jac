@@ -877,17 +877,11 @@ impl ChatPane.toggleVoice -> None {
                 started = window._cm_voice_bridge.start(target_lang);
                 is_listening = bool(window._cm_voice_bridge.isListening);
                 voice_status = str(window._cm_voice_bridge.status);
-                if not started {
-                    voice_modal_open = True;
-                }
-            } else {
-                voice_modal_open = True;
             }
         }
     } except Exception as ex {
         is_listening = False;
         voice_status = "Voice error: " + str(ex);
-        voice_modal_open = True;
     }
 }
 

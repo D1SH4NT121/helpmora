@@ -85,55 +85,83 @@ def:pub ChatPane(
                     userActive: false,
                     status: '',
                     rec: null,
-                    currentLang: 'en-US',
+                    currentLang: 'en-IN',
                     baseText: '',
+                    accumulatedText: '',
+                    _rafId: null,
+
                     runInstance: function() {
                         var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
                         if (!SR) return false;
                         try {
                             if (window._cm_voice_bridge.rec) {
-                                try { window._cm_voice_bridge.rec.abort(); } catch(e) {}
+                                try {
+                                    window._cm_voice_bridge.rec.onstart = null;
+                                    window._cm_voice_bridge.rec.onresult = null;
+                                    window._cm_voice_bridge.rec.onerror = null;
+                                    window._cm_voice_bridge.rec.onend = null;
+                                    window._cm_voice_bridge.rec.abort();
+                                } catch(e) {}
                             }
                             var rec = new SR();
                             window._cm_voice_bridge.rec = rec;
                             rec.continuous = true;
                             rec.interimResults = true;
                             rec.maxAlternatives = 1;
-                            rec.lang = window._cm_voice_bridge.currentLang;
+                            rec.lang = window._cm_voice_bridge.currentLang || 'en-IN';
 
                             rec.onstart = function() {
                                 window._cm_voice_bridge.isListening = true;
-                                if (!window._cm_voice_bridge.status || window._cm_voice_bridge.status.indexOf('Hearing') === -1) {
-                                    window._cm_voice_bridge.status = 'Listening... Speak now into your microphone';
-                                    if (window._cm_on_voice_status) { window._cm_on_voice_status('Listening... Speak now into your microphone', true); }
-                                }
+                                var langLabel = window._cm_voice_bridge.currentLang || 'en-IN';
+                                var msg = '🔴 Listening live (' + langLabel + ')... Speak now';
+                                window._cm_voice_bridge.status = msg;
+                                if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, true); }
                             };
 
                             rec.onresult = function(event) {
                                 if (!window._cm_voice_bridge.userActive) return;
-                                var transcript = '';
-                                for (var i = 0; i < event.results.length; i++) {
-                                    transcript += event.results[i][0].transcript + ' ';
+                                var interim = '';
+                                var finals = '';
+                                for (var i = event.resultIndex; i < event.results.length; ++i) {
+                                    var chunk = event.results[i][0].transcript;
+                                    if (event.results[i].isFinal) {
+                                        finals += chunk + ' ';
+                                    } else {
+                                        interim += chunk;
+                                    }
+                                }
+                                if (finals) {
+                                    window._cm_voice_bridge.accumulatedText += finals;
                                 }
                                 var base = window._cm_voice_bridge.baseText || '';
-                                var full = (base ? (base + ' ') : '') + transcript;
-                                full = full.replace(/\\s+/g, ' ').trim();
-                                if (full && window._cm_voice_bridge.userActive) {
-                                    if (window._cm_on_voice) {
-                                        window._cm_on_voice(full);
-                                    }
+                                var full = (base ? (base + ' ') : '') + window._cm_voice_bridge.accumulatedText + interim;
+                                full = full.replace(/\s+/g, ' ').trim();
+
+                                if (full) {
+                                    // Instantly update DOM input element with zero delay
                                     var inputEl = document.querySelector('.cm-input');
                                     if (inputEl) {
-                                        if (inputEl._valueTracker) {
-                                            inputEl._valueTracker.setValue('');
-                                        }
                                         var nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-                                        nativeSetter.call(inputEl, full);
-                                        inputEl.dispatchEvent(new Event('input', { bubbles: true }));
-                                        inputEl.dispatchEvent(new Event('change', { bubbles: true }));
+                                        if (nativeSetter) {
+                                            nativeSetter.call(inputEl, full);
+                                        } else {
+                                            inputEl.value = full;
+                                        }
                                     }
-                                    window._cm_voice_bridge.status = 'Hearing: "' + full + '"';
-                                    if (window._cm_on_voice_status) { window._cm_on_voice_status('Hearing: "' + full + '"', true); }
+
+                                    // Real-time animation frame sync to React state
+                                    if (!window._cm_voice_bridge._rafId) {
+                                        window._cm_voice_bridge._rafId = requestAnimationFrame(function() {
+                                            window._cm_voice_bridge._rafId = null;
+                                            if (window._cm_on_voice) {
+                                                window._cm_on_voice(full);
+                                            }
+                                        });
+                                    }
+
+                                    var statusText = 'Hearing live: "' + full + '"';
+                                    window._cm_voice_bridge.status = statusText;
+                                    if (window._cm_on_voice_status) { window._cm_on_voice_status(statusText, true); }
                                 }
                             };
 
@@ -151,9 +179,13 @@ def:pub ChatPane(
                                     return;
                                 }
                                 if (err === 'network') {
-                                    var msg = 'Speech network warning: speech service unreachable. Speak clearly or use Omi presets.';
-                                    window._cm_voice_bridge.status = msg;
-                                    if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, true); }
+                                    if (window._cm_voice_bridge.userActive) {
+                                        setTimeout(function() {
+                                            if (window._cm_voice_bridge.userActive) {
+                                                try { window._cm_voice_bridge.runInstance(); } catch(e) {}
+                                            }
+                                        }, 40);
+                                    }
                                     return;
                                 }
                                 if (err === 'audio-capture') {
@@ -170,14 +202,19 @@ def:pub ChatPane(
 
                             rec.onend = function() {
                                 if (window._cm_voice_bridge.userActive) {
-                                    setTimeout(function() {
-                                        if (window._cm_voice_bridge.userActive) {
-                                            try { window._cm_voice_bridge.runInstance(); } catch(e) {}
-                                        }
-                                    }, 150);
+                                    try {
+                                        window._cm_voice_bridge.rec.start();
+                                    } catch(e) {
+                                        setTimeout(function() {
+                                            if (window._cm_voice_bridge.userActive) {
+                                                try { window._cm_voice_bridge.runInstance(); } catch(e2) {}
+                                            }
+                                        }, 15);
+                                    }
                                 } else {
                                     window._cm_voice_bridge.isListening = false;
                                     window._cm_voice_bridge.baseText = '';
+                                    window._cm_voice_bridge.accumulatedText = '';
                                     if (window._cm_on_voice_status) { window._cm_on_voice_status('', false); }
                                 }
                             };
@@ -188,10 +225,11 @@ def:pub ChatPane(
                             return false;
                         }
                     },
+
                     start: function(lang) {
                         var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
                         if (!SR) {
-                            var msg = 'Microphone speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari, or click an Omi Voice preset.';
+                            var msg = 'Microphone speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.';
                             window._cm_voice_bridge.status = msg;
                             if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, false); }
                             return false;
@@ -199,14 +237,27 @@ def:pub ChatPane(
                         var langMap = {
                             'en': 'en-IN',
                             'hi': 'hi-IN',
+                            'hi-Latn': 'hi-IN',
+                            'bn': 'bn-IN',
+                            'te': 'te-IN',
+                            'mr': 'mr-IN',
+                            'ta': 'ta-IN',
+                            'ta-Latn': 'ta-IN',
+                            'gu': 'gu-IN',
+                            'kn': 'kn-IN',
+                            'ml': 'ml-IN',
+                            'pa': 'pa-IN',
+                            'ur': 'ur-IN',
+                            'or': 'or-IN',
+                            'as': 'as-IN',
+                            'bho': 'bho-IN',
+                            'mai': 'hi-IN',
+                            'sa': 'sa-IN',
+                            'ne': 'ne-NP',
+                            'kok': 'kok-IN',
+                            'sd': 'sd-IN',
                             'es': 'es-US',
                             'zh': 'zh-CN',
-                            'ta': 'ta-IN',
-                            'te': 'te-IN',
-                            'bn': 'bn-IN',
-                            'mr': 'mr-IN',
-                            'gu': 'gu-IN',
-                            'ur': 'ur-IN',
                             'ar': 'ar-SA',
                             'fr': 'fr-FR',
                             'de': 'de-DE',
@@ -219,28 +270,41 @@ def:pub ChatPane(
                         window._cm_voice_bridge.currentLang = speechLang;
                         window._cm_voice_bridge.userActive = true;
                         window._cm_voice_bridge.isListening = true;
+                        window._cm_voice_bridge.accumulatedText = '';
                         var inputEl = document.querySelector('.cm-input');
                         window._cm_voice_bridge.baseText = (inputEl && inputEl.value) ? inputEl.value : '';
-                        window._cm_voice_bridge.status = 'Listening (' + speechLang + ')... Speak now';
-                        if (window._cm_on_voice_status) { window._cm_on_voice_status('Listening (' + speechLang + ')... Speak now', true); }
+                        window._cm_voice_bridge.status = '🔴 Listening live (' + speechLang + ')... Speak now';
+                        if (window._cm_on_voice_status) {
+                            window._cm_on_voice_status('🔴 Listening live (' + speechLang + ')... Speak now', true);
+                        }
                         return window._cm_voice_bridge.runInstance();
                     },
+
                     stop: function() {
                         window._cm_voice_bridge.userActive = false;
                         window._cm_voice_bridge.isListening = false;
                         window._cm_voice_bridge.baseText = '';
+                        window._cm_voice_bridge.accumulatedText = '';
                         window._cm_voice_bridge.status = '';
+                        if (window._cm_voice_bridge._rafId) {
+                            cancelAnimationFrame(window._cm_voice_bridge._rafId);
+                            window._cm_voice_bridge._rafId = null;
+                        }
                         if (window._cm_voice_bridge.rec) {
                             try { window._cm_voice_bridge.rec.abort(); } catch(e) {}
                             window._cm_voice_bridge.rec = null;
                         }
                         if (window._cm_on_voice_status) { window._cm_on_voice_status('', false); }
+                        var inputEl = document.querySelector('.cm-input');
+                        if (inputEl) {
+                            try { inputEl.focus(); } catch(e) {}
+                        }
                     }
                 };
             """);
             window._cm_on_voice = lambda txt: str {
                 input_val = txt;
-                voice_status = 'Hearing: "' + txt + '"';
+                voice_status = 'Hearing live: "' + txt + '"';
             };
             window._cm_on_voice_status = lambda st: str, listening: bool {
                 voice_status = st;
@@ -388,7 +452,7 @@ def:pub ChatPane(
                         aria-label={("Stop recording" if is_listening else "Voice input (Omi)")}
                         title={("Stop Listening" if is_listening else "Voice Input (Click to speak via Microphone)")}
                     >
-                        {("🔴 Stop" if is_listening else "🎙️ Voice")}
+                        {("🔴 Listening…" if is_listening else "🎙️ Voice")}
                     </button>
                     <button
                         onClick={lambda _e: MouseEvent { voice_modal_open = not voice_modal_open; }}
