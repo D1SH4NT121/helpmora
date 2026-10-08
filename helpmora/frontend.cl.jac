@@ -217,7 +217,7 @@ def:pub ClientApp -> JsxElement {
                     }}
                 >
                     {navTab("chat", "Chat")}
-                    {navTab("adaptive", "Adaptive (Track 4)")}
+                    {navTab("adaptive", "Adaptive")}
                     {navTab("graph", "Graph")}
                     {navTab("plan", "Action Plan")}
                     {navTab("telemetry", "Telemetry")}

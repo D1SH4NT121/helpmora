@@ -45,7 +45,7 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
             {"badge": "ELIGIBILITY", "title": "Deterministic Policy Engine", "status": "completed", "detail": "Evaluated against 2026 EWS income limit (₹3,00,000)"},
             {"badge": "PATHFINDER", "title": "Pathfinder Agent (26 Paths)", "status": "completed", "detail": "Alternative bridge via SUH shelter prepared"},
             {"badge": "VERIFIER", "title": "Verification Gate", "status": "completed", "detail": "Statutory rules and document proofs passed"},
-            {"badge": "WORKFLOW", "title": "Track 4 Adaptive Assistant", "status": "active", "detail": "Waiting for explicit human approval to proceed"}
+            {"badge": "WORKFLOW", "title": "Adaptive Assistant", "status": "active", "detail": "Waiting for explicit human approval to proceed"}
         ];
 
     def triggerVoiceInput {
@@ -282,7 +282,7 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                     "padding": "24px"
                 }}>
                     <h3 style={{"fontSize": "15px", "fontWeight": "600", "margin": "0 0 16px 0", "color": "#FFFFFF", "display": "flex", "alignItems": "center", "gap": "8px"}}>
-                        <span>Track 4: Guided Welfare Workflow</span>
+                        <span>Guided Welfare Workflow</span>
                     </h3>
 
                     <div style={{"display": "flex", "flexDirection": "column", "gap": "8px", "marginBottom": "20px"}}>
