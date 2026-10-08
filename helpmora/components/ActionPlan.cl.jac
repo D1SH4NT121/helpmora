@@ -28,7 +28,7 @@ def:pub ActionPlan(user_id: str, walker_events: list = []) -> JsxElement {
         }
     }
 
-    can with entry {
+    can with [walker_events] entry {
         loadPlan();
     }
 

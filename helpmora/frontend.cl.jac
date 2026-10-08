@@ -275,18 +275,30 @@ def:pub ClientApp -> JsxElement {
                     "flex": "1"
                 }}
             >
-                {active_tab == "chat" and <ChatPane
-                    user_id={user_id}
-                    auth_ready={auth_ready}
-                    on_walker_event={pushWalkerEvent}
-                    walker_events={walker_events}
-                    platform={platform}
-                />}
-                {active_tab == "adaptive" and <AdaptiveAssistant user_id={user_id} on_walker_event={pushWalkerEvent}/>}
-                {active_tab == "graph" and <GraphViz walker_events={walker_events} user_id={user_id}/>}
-                {active_tab == "plan" and <ActionPlan user_id={user_id} walker_events={walker_events}/>}
-                {active_tab == "telemetry" and <TelemetryPanel walker_events={walker_events} user_id={user_id}/>}
-                {active_tab == "impact" and <ImpactReport/>}
+                <div style={{"display": ("block" if active_tab == "chat" else "none")}}>
+                    <ChatPane
+                        user_id={user_id}
+                        auth_ready={auth_ready}
+                        on_walker_event={pushWalkerEvent}
+                        walker_events={walker_events}
+                        platform={platform}
+                    />
+                </div>
+                <div style={{"display": ("block" if active_tab == "adaptive" else "none")}}>
+                    <AdaptiveAssistant user_id={user_id} on_walker_event={pushWalkerEvent}/>
+                </div>
+                <div style={{"display": ("block" if active_tab == "graph" else "none")}}>
+                    <GraphViz walker_events={walker_events} user_id={user_id}/>
+                </div>
+                <div style={{"display": ("block" if active_tab == "plan" else "none")}}>
+                    <ActionPlan user_id={user_id} walker_events={walker_events}/>
+                </div>
+                <div style={{"display": ("block" if active_tab == "telemetry" else "none")}}>
+                    <TelemetryPanel walker_events={walker_events} user_id={user_id}/>
+                </div>
+                <div style={{"display": ("block" if active_tab == "impact" else "none")}}>
+                    <ImpactReport/>
+                </div>
             </main>
             <footer
                 className="cm-appfooter"
