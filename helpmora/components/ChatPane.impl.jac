@@ -387,9 +387,9 @@ impl ChatPane.quickOptions(key: str, es: bool) -> list {
         }
     } elif key == "income" {
         if es {
-            opts = [["Menos de $1,000/mes", "unos $800 al mes"], ["$1,000–2,000/mes", "unos $1,500 al mes"], ["$2,000–3,000/mes", "unos $2,500 al mes"], ["Más de $3,000/mes", "unos $3,500 al mes"], ["Sin ingresos", "no tengo ingresos"]];
+            opts = [["Menos de ₹10,000/mes", "unos 8000 rupias al mes"], ["₹10,000–25,000/mes", "unos 18000 rupias al mes"], ["₹25,000–50,000/mes", "unos 35000 rupias al mes"], ["Más de ₹50,000/mes", "unos 60000 rupias al mes"], ["Sin ingresos", "no tengo ingresos"]];
         } else {
-            opts = [["Under $1,000/mo", "about $800 a month"], ["$1,000–2,000/mo", "about $1,500 a month"], ["$2,000–3,000/mo", "about $2,500 a month"], ["Over $3,000/mo", "about $3,500 a month"], ["No income", "no income"]];
+            opts = [["Under ₹10,000/mo", "about 8000 rupees a month"], ["₹10,000–25,000/mo", "about 18000 rupees a month"], ["₹25,000–50,000/mo", "about 35000 rupees a month"], ["Over ₹50,000/mo", "about 60000 rupees a month"], ["No income", "no income"]];
         }
     } elif key == "household" {
         if es {
@@ -399,9 +399,9 @@ impl ChatPane.quickOptions(key: str, es: bool) -> list {
         }
     } elif key == "citizenship" {
         if es {
-            opts = [["Ciudadano/a", "soy ciudadano"], ["Residente permanente", "soy residente permanente"], ["Refugiado/a o asilado/a", "soy refugiado"], ["Sin papeles", "estoy sin papeles"]];
+            opts = [["Ciudadano/a indio/a", "soy ciudadano indio"], ["Tarjeta Aadhaar", "tengo tarjeta aadhaar"], ["Tarjeta de ración", "tengo tarjeta de racionamiento"], ["Sin documentos", "no tengo documentos"]];
         } else {
-            opts = [["U.S. citizen", "I'm a US citizen"], ["Green card", "I have a green card"], ["Refugee / asylee", "I'm a refugee"], ["No status", "I'm undocumented"]];
+            opts = [["Indian citizen", "I am an Indian citizen"], ["Aadhaar card", "I have an Aadhaar card"], ["Ration card", "I have a ration card"], ["No documents", "I don't have documents yet"]];
         }
     }
     return opts;

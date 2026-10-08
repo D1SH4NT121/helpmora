@@ -107,8 +107,8 @@ glob FLAG_LEXICON: dict = {
     "senior": ["senior", "elderly", "retired", "retiree", "social security (?:retirement|pension)", "jubilad[oa]", "ancian[oa]", "tercera edad"],
     # Service, not the word: "Salvation Army", "served in a restaurant" and a
     # job on a military base are not military service.
-    "veteran": ["veterans?", "veteran[oa]s?", "ex-military", "served (?:my|our) country",
-                "(?:served|serving|was|were|been|enlisted|joined|discharged|retired|got out)(?: \\w+)? (?:in|from|with)? ?(?:the )?(?:u\\.?s\\.? )?(?:army|navy|marines?|marine corps|air force|coast guard|national guard|military)",
+    "veteran": ["veterans?", "veteran[oa]s?", "ex-servicem[ae]n", "ex-military", "fauji", "served (?:my|our) country",
+                "(?:served|serving|was|were|been|enlisted|joined|discharged|retired|got out)(?: \\w+)? (?:in|from|with)? ?(?:the )?(?:indian |u\\.?s\\.? )?(?:armed forces|army|navy|marines?|marine corps|air force|coast guard|national guard|military)",
                 "(?:army|navy|marine|marines|air force|coast guard|national guard|military) (?:vet|veteran|service|retiree)",
                 "dd-?214", "deployed to", "serv[ií] en (?:el |la )?(?:ej[eé]rcito|marina|fuerza a[eé]rea|infanter[ií]a|guardia nacional)", "(?:fui|era) (?:soldado|militar)", "militar retirad[oa]"],
     "disabled": ["disabilit(?:y|ies)", "disabled", "ssi", "ssdi", "wheelchair", "blind", "deaf", "discapacidad", "discapacitad[oa]"],
@@ -328,8 +328,8 @@ glob BARE_AMOUNT_RE: str = "(?<![\\d,.$/:-])(\\d{1,3}(?:,\\d{3})+|\\d{1,6})(?:\\
 # Bounded digit runs and an anchored start keep this linear: the unbounded
 # form retried every position inside a digit run, and 10,000 digits took
 # 3.5 s (outside review; tests/check_input_limits.jac pins the budget).
-glob MONEY_RE: str = "\\$\\s?(\\d[\\d,]{0,14}(?:\\.\\d{1,2})?)\\s*(k)?|(?<![\\d,.])(\\d[\\d,]{0,14}(?:\\.\\d{1,2})?)\\s*(k)?\\s*(?:dollars?|d[oó]lares|usd|bucks)";
-glob PERIOD_RE: str = "^\\s*(?:/|a|an|per|every|each|al|por|cada|a la|al a[nñ]o)?\\s*(month|mo|monthly|year|yr|yearly|annually|annual|week|wk|weekly|hour|hr|hourly|mes|mensual(?:es)?|a[nñ]o|anual(?:es)?|semana|semanal(?:es)?|hora|mahin[ae])\\b";
+glob MONEY_RE: str = "[\\$₹]\\s?(\\d[\\d,]{0,14}(?:\\.\\d{1,2})?)\\s*(k)?|(?<![\\d,.])(\\d[\\d,]{0,14}(?:\\.\\d{1,2})?)\\s*(k)?\\s*(?:dollars?|d[oó]lares|usd|bucks|rupees?|rs\\.?|inr)";
+glob PERIOD_RE: str = "^\\s*(?:/|a|an|per|every|each|al|por|cada|a la|al a[nñ]o)?\\s*(month|mo|monthly|year|yr|yearly|annually|annual|week|wk|weekly|hour|hr|hourly|mes|mensual(?:es)?|a[nñ]o|anual(?:es)?|semana|semanal(?:es)?|hora|mahin[ae]|mahina|mahine)\\b";
 
 # ---------- helpers ----------
 
@@ -630,14 +630,14 @@ def parse_citizenship(low: str, evidence: list, text: str) -> str {
         (r"\b(?:undocumented|no papers|without papers|no documents|illegal immigrant|not a (?:us )?citizen|out of status|indocumentad[oa]s?|sin papeles|sin documentos)\b", "non_citizen"),
         (r"\b(?:seeking asylum|asylum seeker|solicitando asilo|pidiendo asilo)\b", "non_citizen"),
         (r"\b(?:refugee|asylee|granted asylum|parolee|humanitarian parole|refugiad[oa]|asilad[oa]|asilo aprobado)\b", "humanitarian"),
-        (r"\b(?:green card|permanent resident|lpr|residente permanente|tarjeta verde)\b", "eligible_immigrant"),
+        (r"\b(?:aadhaar|aadhar|aadhaar card|aadhar card|ration card|bpl card|antyodaya|green card|permanent resident|lpr|residente permanente|tarjeta verde)\b", "eligible_immigrant"),
         (r"\b(?:daca|dreamer|visa holder|on a visa|work visa|tps)\b", "non_citizen"),
         # A temporary visa, stated by the speaker (external check: real posts
         # name the visa: "on the Visa Waiver Program", "my H4 status expired").
         # "Her visa is up" or "he'll get deported" is someone else's status.
         (r"\b(?:i'?m|i am|i was|we'?re|we are|we were|i have|i hold|i got|i came|we came|my|our)\b(?:(?!\w+'s\b)[^.!?]){0,30}\b(?:(?:h-?1b|h-?4|f-?1|j-?1|k-?1|b-?[12]|l-?1|o-?1|tn|student|tourist|work|visitor|fianc[eé]e?|spouse)\s+(?:visa|status)|visa waiver|visa|work permit|ead card|i-94)\b", "non_citizen"),
-        (r"\b(?:i|we) (?:hold|have|got|received) (?:us |u\.s\. |american )?citizenship\b", "citizen"),
-        (r"\b(?:us citizen|u\.s\. citizen|american citizen|citizen|born here|ciudadan[oa])\b", "citizen")
+        (r"\b(?:i|we) (?:hold|have|got|received) (?:indian |us |u\.s\. |american )?citizenship\b", "citizen"),
+        (r"\b(?:indian citizen|indian national|bharatiya|us citizen|u\.s\. citizen|american citizen|citizen|born here|ciudadan[oa])\b", "citizen")
     ];
     for (pat, status) in rules {
         m = re.search(pat, low);

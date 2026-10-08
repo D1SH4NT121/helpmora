@@ -98,13 +98,13 @@ def target_hit(t: str, low_msg: str, flags: list) -> bool {
 glob QUESTIONS: dict = {
     "en": {
         "need": "What do you need help with most right now?",
-        "income": "About how much does your household earn per month (before taxes)?",
+        "income": "About how much does your household earn per month (in ₹)?",
         "household": "How many people live in your household, including you?",
         "age": "How old are you?",
-        "citizenship": "Are you a U.S. citizen or permanent resident? (It's okay to say you're not — many programs don't ask.)",
-        "location": "What state or city do you live in?",
+        "citizenship": "Are you an Indian citizen or resident with valid ID (Aadhaar / Ration Card)?",
+        "location": "Which state or city in India do you live in?",
         "homeless": "Do you have a safe place to sleep tonight?",
-        "veteran": "Have you served in the U.S. military?",
+        "veteran": "Have you or a family member served in the Indian Armed Forces (Ex-servicemen)?",
         "disability": "Do you or someone in your household have a disability?",
         "dv": "Are you safe at home right now?",
         "young_child": "Is anyone in your household pregnant, or do you have a child under 5?",
@@ -113,13 +113,13 @@ glob QUESTIONS: dict = {
     },
     "es": {
         "need": "¿Con qué necesita ayuda más ahora mismo?",
-        "income": "¿Cuánto gana su hogar al mes, más o menos (antes de impuestos)?",
+        "income": "¿Cuánto gana su hogar al mes, más o menos (en ₹)?",
         "household": "¿Cuántas personas viven en su hogar, contándose usted?",
         "age": "¿Cuántos años tiene?",
-        "citizenship": "¿Es ciudadano/a o residente permanente de EE. UU.? (Está bien decir que no — muchos programas no lo piden.)",
+        "citizenship": "¿Es ciudadano/a indio/a o residente con identificación válida (Aadhaar / Ration Card)?",
         "location": "¿En qué estado o ciudad vive?",
         "homeless": "¿Tiene un lugar seguro donde dormir esta noche?",
-        "veteran": "¿Ha servido en las fuerzas armadas de EE. UU.?",
+        "veteran": "¿Ha servido usted o un familiar en las Fuerzas Armadas?",
         "disability": "¿Usted o alguien en su hogar tiene una discapacidad?",
         "dv": "¿Está segura/o en su casa ahora mismo?",
         "young_child": "¿Hay alguien embarazada en su hogar o tiene un niño menor de 5 años?",
@@ -182,10 +182,10 @@ def cf_text(key: str, lang: str, a: str = "", b: str = "") -> str {
         return ("calificaría si el ingreso anual del hogar fuera de " + a + " o menos (está " + b + " por encima)") if es else ("you'd qualify if yearly household income were " + a + " or less (you're " + b + " over)");
     }
     if key == "citizenship_waiver" {
-        return "un estatus migratorio elegible (residencia permanente, refugio o asilo) califica" if es else "an eligible immigration status (green card, refugee or asylee) qualifies";
+        return "un estatus elegible (residencia o documento válido como Aadhaar/Ración) califica" if es else "valid resident documentation (Aadhaar, ration card, or domicile) qualifies";
     }
     if key == "citizenship" {
-        return "este programa requiere ciudadanía estadounidense" if es else "this program requires U.S. citizenship";
+        return "este programa requiere ciudadanía india o documento de identidad" if es else "this program requires Indian citizenship or valid ID (Aadhaar / Ration Card)";
     }
     if key == "age" {
         return ("está abierto a " + a) if es else ("it's open to " + a);

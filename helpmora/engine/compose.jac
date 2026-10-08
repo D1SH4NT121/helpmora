@@ -35,9 +35,7 @@ glob COUNT_WORDS: dict = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, 
                           "uno": 1, "una": 1, "dos": 2, "tres": 3, "cuatro": 4, "cinco": 5, "seis": 6, "siete": 7, "ocho": 8, "nueve": 9, "diez": 10};
 glob YES_RE: str = "^\\s*(?:yes|yeah|yep|yup|sure|correct|right|i am|i do|i have|we do|we are|s[ií]|claro|as[ií] es|tengo|soy)\\b";
 glob NO_RE: str = "^\\s*(?:no|nope|nah|not really|i'?m not|i don'?t|we don'?t|none|ninguno|no tengo|no soy)\\b";
-# Words a bare income answer may carry besides the number: hedges, currency
-# and pay periods ("about $2,000 a month", "unos 1500 al mes", "大概两千块").
-glob ANSWER_FILLER: str = "\\b(?:about|around|approximately|approx|roughly|maybe|almost|nearly|just|only|like|over|under|per|a|an|each|every|i|we|make|earn|get|it'?s|is|months?|monthly|mo|years?|yearly|annual|annually|weeks?|weekly|hours?|hourly|hrs?|dollars?|usd|bucks|k|cerca|de|unos|unas|como|m[aá]s|o|menos|aproximadamente|al|por|mes|mensual|a[nñ]o|semana|hora|d[oó]lares|gano|ganamos|ganho|m[eê]s|reais)\\b|大概|大约|大約|左右|差不多|美元|美金|块钱|塊錢|块|塊|元|每个月|每個月|每月|一个月|一個月|月|每年|年|每小时|每小時|小时|小時|每周|每週|周|週|星期";
+glob ANSWER_FILLER: str = "\\b(?:about|around|approximately|approx|roughly|maybe|almost|nearly|just|only|like|over|under|per|a|an|each|every|i|we|make|earn|get|it'?s|is|months?|monthly|mo|years?|yearly|annual|annually|weeks?|weekly|hours?|hourly|hrs?|dollars?|usd|bucks|rupees?|rs\\.?|inr|k|cerca|de|unos|unas|como|m[aá]s|o|menos|aproximadamente|al|por|mes|mensual|a[nñ]o|semana|hora|d[oó]lares|gano|ganamos|ganho|m[eê]s|reais)\\b|[₹\\$]|大概|大约|大約|左右|差不多|美元|美金|块钱|塊錢|块|塊|元|每个月|每個月|每月|一个月|एक महीना|महीने|महीना|एक महीने|एक माह|माह|एक साल|साल|वार्षिक|प्रति माह|一個月|月|每年|年|每小时|每小時|小时|小時|每周|每週|周|週|星期";
 
 """Fold a new parse into the case carried over from earlier turns.
 
@@ -171,8 +169,9 @@ def answer_income(text: str) -> int {
     if amount < 0 { return -1; }
     if re.search("\\b(?:hour|hr|hora)s?\\b|小时|小時", t) { return amount * 2080; }
     if re.search("\\b(?:week|wk|semana)s?\\b|周|週|星期", t) { return amount * 52; }
-    if re.search("\\b(?:year|yr|a[nñ]o|annual|anual)s?\\b|年", t) { return amount; }
-    return amount * 12 if amount < 5000 else amount;
+    if re.search("\\b(?:year|yr|a[nñ]o|annual|anual|sal|saal)s?\\b|年|वार्षिक", t) { return amount; }
+    if re.search("\\b(?:month|mo|mes|mensual|mahina|mahine)s?\\b|月|महीने|महीना|माह", t) { return amount * 12; }
+    return amount * 12 if amount < 100000 else amount;
 }
 
 """Language the reply is composed in: the user's when a catalog covers it."""

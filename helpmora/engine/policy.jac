@@ -360,44 +360,41 @@ def status_rule(rule_id: str, profile: dict) -> dict {
     flags = list(profile.get("flags", []));
     kids = "children" in flags or "pregnant" in flags;
     if not st {
-        return {"status": "unknown", "detail": "Citizens, green-card holders and some other statuses qualify", "change_note": ""};
+        return {"status": "unknown", "detail": "Indian citizens, Aadhaar/Ration card holders and residents qualify", "change_note": ""};
     }
     if st == "citizen" {
-        return {"status": "met", "detail": "U.S. citizen", "change_note": ""};
+        return {"status": "met", "detail": "Indian citizen", "change_note": ""};
     }
     if kind == "hud" {
         if st in ["eligible_immigrant", "humanitarian"] {
-            return {"status": "met", "detail": "Green card, refugee and asylee status qualify for HUD programs", "change_note": ""};
+            return {"status": "met", "detail": "Aadhaar, ration card and resident documentation qualify for housing programs", "change_note": ""};
         }
-        return {"status": "unmet", "detail": "Needs an eligible immigration status; mixed-status families get prorated help", "change_note": ""};
+        return {"status": "unmet", "detail": "Needs valid resident identification; BPL / EWS families receive priority assistance", "change_note": ""};
     }
     if kind == "lsc" {
         if st in ["eligible_immigrant", "humanitarian"] or "dv" in flags {
-            return {"status": "met", "detail": "LSC-funded offices can serve green-card holders, refugees, asylees and survivors of domestic violence", "change_note": ""};
+            return {"status": "met", "detail": "Legal services authorities (NALSA/DLSA) assist resident cardholders and survivors of domestic violence", "change_note": ""};
         }
-        return {"status": "unmet", "detail": "LSC-funded offices generally can't represent people without an eligible status (survivors of violence excepted)", "change_note": ""};
+        return {"status": "unmet", "detail": "Legal aid requires valid identification or eligibility under Section 12 Legal Services Authorities Act", "change_note": ""};
     }
-    wait_note = " (adults may face a 5-year wait after getting the green card" + ("; children are exempt" if kind == "snap" else "") + ")";
+    wait_note = " (requires valid Aadhaar or Ration Card link" + ("; children are covered" if kind == "snap" else "") + ")";
     if kind == "snap" {
         if st == "eligible_immigrant" {
-            return {"status": "met", "detail": "Green-card holders qualify" + wait_note, "change_note": ""};
+            return {"status": "met", "detail": "Ration card and Aadhaar holders qualify" + wait_note, "change_note": ""};
         }
         if st == "humanitarian" {
-            return {"status": "unmet", "detail": "Since July 4, 2025 (P.L. 119-21 §10108) refugees, asylees and parolees are no longer eligible for SNAP; after getting a green card they are again, with no 5-year wait", "change_note": ""};
+            return {"status": "met", "detail": "Resident beneficiaries with provisional registration qualify for subsidized food grain under NFSA", "change_note": ""};
         }
-        return {"status": "unmet", "detail": "SNAP requires citizenship or a green card" + ("; U.S.-citizen children in the household can still get it" if kids else ""), "change_note": ""};
+        return {"status": "unmet", "detail": "NFSA requires Indian citizenship or valid Ration Card / Aadhaar" + ("; dependent children in the household can still get school nutrition" if kids else ""), "change_note": ""};
     }
     if kind == "medicaid" {
         if st == "eligible_immigrant" {
-            return {"status": "met", "detail": "Green-card holders qualify" + wait_note, "change_note": ""};
+            return {"status": "met", "detail": "Aadhaar / Ration card holders qualify for Ayushman Bharat (PM-JAY)" + wait_note, "change_note": ""};
         }
         if st == "humanitarian" {
-            if today < OBBBA_MEDICAID_DATE {
-                return {"status": "met", "detail": "Refugees and asylees qualify until September 30, 2026", "change_note": "From October 1, 2026 (P.L. 119-21 §71109) federally funded Medicaid/CHIP ends for refugees, asylees and parolees who don't have a green card"};
-            }
-            return {"status": "unmet", "detail": "Since October 1, 2026 (P.L. 119-21 §71109) refugees, asylees and parolees without a green card can't get federally funded Medicaid/CHIP; some states cover them with state funds", "change_note": ""};
+            return {"status": "met", "detail": "Provisional resident beneficiaries qualify for public hospital care under Ayushman Bharat", "change_note": ""};
         }
-        return {"status": "unmet", "detail": "Only emergency Medicaid is available without an eligible status" + ("; U.S.-citizen children can still enroll" if kids else ""), "change_note": ""};
+        return {"status": "unmet", "detail": "Ayushman Bharat / government healthcare requires valid identity proof (Aadhaar / Ration Card)" + ("; children can access public health center treatment" if kids else ""), "change_note": ""};
     }
     return {};
 }
