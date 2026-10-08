@@ -240,9 +240,9 @@ impl ChatPane.renderInterpreter(card: Any, open_default: bool) -> JsxElement {
         <details className="cm-interp" open={open_default}>
             <summary>{"🗣 Interpreter card · " + str(card["language"]) + (" · " + str(card["endonym"]) if str(card["endonym"]) != str(card["language"]) else "")}</summary>
             <div className="cm-interp-body">
-                <div className="cm-interp-show">Show this at any benefits office, clinic or court:</div>
+                <div className="cm-interp-show">Show this at any government office, CSC, hospital, or seva kendra:</div>
                 <div className="cm-interp-line">{str(card["en"])}</div>
-                <div className="cm-interp-line cm-interp-es">{str(card["es"])}</div>
+                <div className="cm-interp-line cm-interp-es">{str(card["hi"] if card["hi"] else card["es"])}</div>
                 <div className="cm-muted cm-interp-tip">{str(card["tip"])}</div>
                 <div className="cm-crit-src">{str(card["basis"])}</div>
             </div>
@@ -273,7 +273,7 @@ impl ChatPane.renderLangPicker -> JsxElement {
 impl ChatPane.renderLocal(loc: Any) -> JsxElement {
     if not loc { return <div/>; }
     if loc["status"] == "pending" {
-        return <div className="cm-block cm-local cm-muted">Looking up offices near you in HUD and HRSA open data…</div>;
+        return <div className="cm-block cm-local cm-muted">Looking up offices near you in District & CSC open directory…</div>;
     }
     if loc["status"] != "ok" { return <div/>; }
     d = loc["data"];
@@ -282,7 +282,7 @@ impl ChatPane.renderLocal(loc: Any) -> JsxElement {
         <div className="cm-block cm-local">
             <div className="cm-block-title">
                 <span>{"Near you · " + str(d["place"])}</span>
-                <span className="cm-muted">{"federal open data · " + (("cached" if d["cached"] else str(Math.round(Number(d["latency_ms"]))) + " ms"))}</span>
+                <span className="cm-muted">{"District & CSC directory · " + (("cached" if d["cached"] else str(Math.round(Number(d["latency_ms"]))) + " ms"))}</span>
             </div>
             {[
                 <div key={"lo" + str(i)} className="cm-local-row">

@@ -1300,54 +1300,60 @@ def need_focus(low: str, start: int, end: int) -> bool {
 #                       answer in `fallback` + a card asking for a free interpreter
 # [code, English name, endonym, note, fallback]
 glob IMMIGRANT_LANGUAGES: list = [
-    ["en", "English", "English", "", ""], ["es", "Spanish", "Español", "all regional varieties", ""],
-    ["zh", "Chinese (Mandarin)", "中文（普通话）", "Simplified & Traditional", ""], ["yue", "Cantonese", "粵語", "incl. Taishanese speakers", ""],
-    ["tl", "Tagalog / Filipino", "Tagalog", "", ""], ["ceb", "Cebuano (Bisaya)", "Binisaya", "", ""], ["ilo", "Ilocano", "Ilokano", "", ""],
-    ["vi", "Vietnamese", "Tiếng Việt", "", ""], ["ar", "Arabic", "العربية", "Levantine, Egyptian, Iraqi, Maghrebi, Sudanese", ""],
-    ["fr", "French", "Français", "incl. West & Central African French", ""], ["ht", "Haitian Creole", "Kreyòl ayisyen", "", ""],
-    ["ko", "Korean", "한국어", "", ""], ["ru", "Russian", "Русский", "", ""], ["uk", "Ukrainian", "Українська", "", ""],
-    ["pt", "Portuguese", "Português", "Brazilian & European", ""], ["kea", "Cape Verdean Creole", "Kriolu", "", ""],
-    ["de", "German", "Deutsch", "", ""], ["it", "Italian", "Italiano", "", ""], ["pl", "Polish", "Polski", "", ""],
-    ["hi", "Hindi", "हिन्दी", "", ""], ["hi-Latn", "Hindi / Urdu (romanized)", "Hinglish", "", ""], ["ur", "Urdu", "اردو", "", ""],
-    ["pa", "Punjabi", "ਪੰਜਾਬੀ", "Gurmukhi script", ""], ["bn", "Bengali", "বাংলা", "incl. Sylheti speakers", ""],
-    ["gu", "Gujarati", "ગુજરાતી", "", ""], ["te", "Telugu", "తెలుగు", "", ""], ["ta", "Tamil", "தமிழ்", "", ""],
-    ["ta-Latn", "Tamil (romanized)", "Tanglish", "", ""], ["ml", "Malayalam", "മലയാളം", "", ""], ["kn", "Kannada", "ಕನ್ನಡ", "", ""],
-    ["mr", "Marathi", "मराठी", "", ""], ["ne", "Nepali", "नेपाली", "incl. Bhutanese refugees", ""], ["si", "Sinhala", "සිංහල", "", ""],
-    ["fa", "Persian (Farsi / Dari)", "فارسی / دری", "Iranian & Afghan", ""], ["ps", "Pashto", "پښتو", "", ""],
-    ["ckb", "Kurdish (Sorani)", "کوردی", "", ""], ["kmr", "Kurdish (Kurmanji)", "Kurmancî", "", ""],
-    ["tr", "Turkish", "Türkçe", "", ""], ["he", "Hebrew", "עברית", "", ""], ["yi", "Yiddish", "ייִדיש", "", ""],
-    ["el", "Greek", "Ελληνικά", "", ""], ["hy", "Armenian", "Հայերեն", "Eastern & Western", ""], ["ka", "Georgian", "ქართული", "", ""],
-    ["ro", "Romanian / Moldovan", "Română", "", ""], ["sq", "Albanian", "Shqip", "", ""], ["sh", "Bosnian / Croatian / Serbian", "BCS / Српски", "Latin & Cyrillic", ""],
-    ["bg", "Bulgarian", "Български", "", ""], ["mk", "Macedonian", "Македонски", "", ""], ["be", "Belarusian", "Беларуская", "", ""],
-    ["cs", "Czech", "Čeština", "", ""], ["sk", "Slovak", "Slovenčina", "", ""], ["hu", "Hungarian", "Magyar", "", ""],
-    ["lt", "Lithuanian", "Lietuvių", "", ""], ["lv", "Latvian", "Latviešu", "", ""], ["nl", "Dutch", "Nederlands", "", ""],
-    ["kk", "Kazakh", "Қазақша", "", ""], ["uz", "Uzbek", "Oʻzbekcha", "", ""], ["ky", "Kyrgyz", "Кыргызча", "", ""], ["tg", "Tajik", "Тоҷикӣ", "", ""],
-    ["mn", "Mongolian", "Монгол", "", ""], ["ja", "Japanese", "日本語", "", ""], ["th", "Thai", "ไทย", "", ""],
-    ["lo", "Lao", "ລາວ", "", ""], ["km", "Khmer", "ខ្មែរ", "", ""], ["my", "Burmese", "မြန်မာ", "", ""],
-    ["ksw", "Karen (S'gaw)", "ကညီ", "Burmese refugees", ""], ["cnh", "Chin (Hakha)", "Laiholh", "Burmese refugees", "en"],
-    ["kac", "Kachin (Jingpho)", "Jinghpaw", "", "en"], ["hmn", "Hmong", "Hmoob", "White & Green Hmong", ""],
-    ["id", "Indonesian", "Bahasa Indonesia", "", ""], ["ms", "Malay", "Bahasa Melayu", "", ""],
-    ["am", "Amharic", "አማርኛ", "", ""], ["ti", "Tigrinya", "ትግርኛ", "Eritrean & Ethiopian", ""], ["om", "Oromo", "Afaan Oromoo", "", ""],
-    ["so", "Somali", "Soomaali", "", ""], ["sw", "Swahili", "Kiswahili", "", ""], ["rw", "Kinyarwanda / Kirundi", "Ikinyarwanda", "", ""],
-    ["ln", "Lingala", "Lingála", "", ""], ["yo", "Yoruba", "Yorùbá", "", ""], ["ig", "Igbo", "Igbo", "", ""],
-    ["ha", "Hausa", "Hausa", "", ""], ["ak", "Twi (Akan)", "Twi", "", ""], ["ee", "Ewe", "Eʋegbe", "", "en"],
-    ["wo", "Wolof", "Wolof", "", ""], ["ff", "Fula (Pulaar)", "Pulaar", "", ""], ["bm", "Bambara / Mandinka", "Bamanankan", "", "fr"],
-    ["din", "Dinka", "Thuɔŋjäŋ", "South Sudanese", "en"], ["nus", "Nuer", "Thok Naath", "South Sudanese", "en"],
-    ["sm", "Samoan", "Gagana Sāmoa", "", ""], ["to", "Tongan", "Lea faka-Tonga", "", ""], ["mh", "Marshallese", "Kajin M̧ajeļ", "COFA community", "en"],
-    ["chk", "Chuukese", "Chuuk", "COFA community", "en"], ["ch", "Chamorro", "Chamoru", "", "en"],
-    ["jam", "Jamaican Patois", "Patwa", "", ""], ["qu", "Quechua", "Runa Simi", "", "es"],
-    ["mam", "Mam", "Qyol Mam", "Guatemala — top-10 immigration-court language", "es"], ["quc", "K'iche'", "K'iche'", "Guatemala", "es"],
-    ["kjb", "Q'anjob'al", "Q'anjob'al", "Guatemala", "es"], ["kek", "Q'eqchi'", "Q'eqchi'", "Guatemala, Belize", "es"],
-    ["cak", "Kaqchikel", "Kaqchikel", "Guatemala", "es"], ["knj", "Akateko", "Akateko", "Guatemala", "es"], ["cac", "Chuj", "Chuj", "Guatemala", "es"],
-    ["ixl", "Ixil", "Ixil", "Guatemala", "es"], ["mix", "Mixtec", "Tu'un Savi", "Mexico", "es"], ["zap", "Zapotec", "Diidxazá", "Mexico", "es"],
-    ["trs", "Triqui", "Triqui", "Mexico", "es"], ["nah", "Nahuatl", "Nāhuatl", "Mexico", "es"], ["tsz", "Purépecha", "P'urhépecha", "Mexico", "es"],
-    ["tzh", "Tseltal / Tsotsil", "Bats'il k'op", "Chiapas", "es"], ["cab", "Garifuna", "Garifuna", "Honduras, Belize", "es"],
-    ["myn", "Mayan language (unspecified)", "Maya", "pick yours below", "es"]
+    # --- Indian National, Scheduled & Major Regional Languages ---
+    ["en", "English", "English", "", ""],
+    ["hi", "Hindi", "हिन्दी", "", ""],
+    ["hi-Latn", "Hindi / Hinglish (romanized)", "Hinglish", "", ""],
+    ["bn", "Bengali", "বাংলা", "", ""],
+    ["te", "Telugu", "తెలుగు", "", ""],
+    ["mr", "Marathi", "मराठी", "", ""],
+    ["ta", "Tamil", "தமிழ்", "", ""],
+    ["ta-Latn", "Tamil / Tanglish (romanized)", "Tanglish", "", ""],
+    ["ur", "Urdu", "اردو", "", ""],
+    ["gu", "Gujarati", "ગુજરાતી", "", ""],
+    ["kn", "Kannada", "ಕನ್ನಡ", "", ""],
+    ["ml", "Malayalam", "മലയാളം", "", ""],
+    ["or", "Odia", "ଓଡ଼ିଆ", "", ""],
+    ["pa", "Punjabi", "ਪੰਜਾਬੀ", "Gurmukhi script", ""],
+    ["as", "Assamese", "অসমীয়া", "", ""],
+    ["mai", "Maithili", "मैथिली", "", ""],
+    ["bho", "Bhojpuri", "भोजपुरी", "", ""],
+    ["sa", "Sanskrit", "संस्कृतम्", "", ""],
+    ["ne", "Nepali", "नेपाली", "", ""],
+    ["kok", "Konkani", "कोंकणी", "", ""],
+    ["sd", "Sindhi", "سنڌي / सिन्धी", "", ""],
+    ["doi", "Dogri", "डोगरी", "", ""],
+    ["ks", "Kashmiri", "كٲشُر / कश्मीरी", "", ""],
+    ["sat", "Santali", "ᱥᱟᱱᱛᱟᱲᱤ", "", ""],
+    ["brx", "Bodo", "बोडो", "", ""],
+    ["mni", "Manipuri (Meitei)", "মৈতৈলোন্", "", ""],
+
+    # --- Major Global & International Languages ---
+    ["es", "Spanish", "Español", "", ""],
+    ["fr", "French", "Français", "", ""],
+    ["ar", "Arabic", "العربية", "", ""],
+    ["de", "German", "Deutsch", "", ""],
+    ["ru", "Russian", "Русский", "", ""],
+    ["pt", "Portuguese", "Português", "", ""],
+    ["zh", "Chinese (Mandarin)", "中文（普通话）", "Simplified & Traditional", ""],
+    ["yue", "Cantonese", "粵語", "", ""],
+    ["ja", "Japanese", "日本語", "", ""],
+    ["ko", "Korean", "한국어", "", ""],
+    ["vi", "Vietnamese", "Tiếng Việt", "", ""],
+    ["tr", "Turkish", "Türkçe", "", ""],
+    ["it", "Italian", "Italiano", "", ""],
+    ["id", "Indonesian", "Bahasa Indonesia", "", ""],
+    ["ms", "Malay", "Bahasa Melayu", "", ""],
+    ["th", "Thai", "ไทย", "", ""],
+    ["fa", "Persian (Farsi / Dari)", "فارسی", "", ""],
+    ["nl", "Dutch", "Nederlands", "", ""],
+    ["pl", "Polish", "Polski", "", ""],
+    ["uk", "Ukrainian", "Українська", "", ""]
 ];
 # Languages whose full answer NVIDIA Riva Translate v2 translates (English → 36).
 glob RIVA_CODES: dict = {"cs": "cs", "da": "da", "de": "de", "el": "el", "es": "es-us", "fi": "fi", "fr": "fr", "hu": "hu", "it": "it", "lt": "lt", "lv": "lv", "nl": "nl", "no": "no", "pl": "pl", "pt": "pt-br", "ro": "ro", "ru": "ru", "sk": "sk", "sv": "sv", "zh": "zh-cn", "yue": "zh-tw", "ja": "ja", "hi": "hi", "ko": "ko", "et": "et", "sl": "sl", "bg": "bg", "uk": "uk", "sh": "hr", "ar": "ar", "vi": "vi", "tr": "tr", "id": "id", "th": "th"};
 # Mostly spoken languages without reliable machine translation today.
-glob INTERPRETER_CODES: list = ["mam", "quc", "kjb", "kek", "cak", "knj", "cac", "ixl", "mix", "zap", "trs", "nah", "tsz", "tzh", "cab", "myn", "qu", "din", "nus", "chk", "mh", "ch", "cnh", "kac", "bm", "ee"];
+glob INTERPRETER_CODES: list = [];
 
 """Registry row + support tier for a language code."""
 def language_info(code: str) -> dict {
@@ -1377,16 +1383,17 @@ def language_catalog -> list {
     return [language_info(str(r[0])) for r in IMMIGRANT_LANGUAGES];
 }
 
-"""Interpreter request card, deterministic, in English and the fallback language."""
+"""Interpreter request card, deterministic, in English and Hindi."""
 def interpreter_card(code: str) -> dict {
     info = language_info(code);
     name = str(info["name"]).replace(" (unspecified)", "");
     card: dict = {
         "language": name, "endonym": str(info["endonym"]),
-        "en": "I speak " + name + ". Please get me a free " + name + " interpreter.",
-        "es": "Hablo " + name + ". Por favor, necesito un intérprete de " + name + " gratuito.",
-        "basis": "Title VI of the Civil Rights Act bars national-origin discrimination in federally funded programs, and courts have held that includes language (Lau v. Nichols, 1974). SNAP offices must have bilingual staff or interpreters where many households speak your language (7 CFR 272.4(b)); health programs must offer free interpreters (ACA §1557). The 2025 order naming English the official language (EO 14224) did not change these laws.",
-        "tip": "Call 211 and ask for a " + name + " interpreter — they connect you to local help through an interpreter line."
+        "en": "I speak " + name + ". Please provide language assistance or an interpreter in " + name + ".",
+        "hi": "मैं " + name + " बोलता/बोलती हूँ। कृपया मुझे " + name + " में सहायता या अनुवादक प्रदान करें।",
+        "es": "मैं " + name + " बोलता/बोलती हूँ। कृपया मुझे " + name + " में सहायता या अनुवादक प्रदान करें।",
+        "basis": "Article 350 of the Constitution of India provides every citizen the right to submit a representation in any language used in the Union or State. Under Digital India, Bhashini, and Common Service Centre (CSC) service charters, citizens are entitled to public service navigation and grievance redressal in their preferred recognized Indian language.",
+        "tip": "Call national citizen helpline 112 (Emergency), 181 (Women's Helpline), 14416 (Tele-MANAS), or visit your nearest Gram Panchayat CSC / Jan Seva Kendra for localized assistance."
     };
     return card;
 }

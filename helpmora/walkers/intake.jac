@@ -254,7 +254,7 @@ walker IntakeWalker {
             "narrate_language": narrate_lang,
             "language_name": [str(info["name"]), str(info["endonym"])] if lang_code else language_name("en"),
             "language_info": info,
-            "interpreter": interpreter_card(lang_code) if (lang_code and lang_code not in ["en", "es"]) else {},
+            "interpreter": interpreter_card(lang_code) if (lang_code and lang_code not in ["en", "hi", "hi-Latn"]) else {},
             "profile": public_profile,
             "evidence": highlights,
             "category_scores": parsed["category_scores"],
