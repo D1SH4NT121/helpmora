@@ -31,9 +31,11 @@ import from engine.facts_i18n { facts_i18n, place_i18n }
 # with word boundaries, so "legal" never fires inside "illegally".
 glob CATEGORY_LEXICON: dict = {
     "food": [
-        ("food", 2.0), ("hungry", 2.0), ("hunger", 2.0), ("starving", 2.5),
+        ("food", 2.0), ("foods?", 2.0), ("hungry", 2.0), ("hunger", 2.0), ("starving", 2.5),
         ("eat", 1.0), ("eaten", 2.0), ("meals?", 1.5), ("grocer(?:y|ies)", 1.5),
         ("snap", 2.5), ("wic", 2.0), ("food stamps", 2.5), ("pantry", 2.0),
+        ("ration", 2.0), ("rations?", 2.0), ("ration card", 2.5), ("nfsa", 2.5),
+        ("khana", 2.0), ("rashan", 2.5), ("bhojan", 2.0),
         ("comida", 2.0), ("comer", 1.5), ("comido", 2.0), ("hambre", 2.5),
         ("alimentos?", 2.0), ("despensa", 2.0), ("cupones", 1.5),
         ("cook", 1.5), ("cooking", 1.5), ("cocinar", 1.5),
@@ -42,7 +44,12 @@ glob CATEGORY_LEXICON: dict = {
         ("grocery store", 2.0), ("get to the store", 2.0), ("pa[ñn]ales", 1.5), ("leche de f[oó]rmula", 2.0)
     ],
     "housing": [
-        ("rent", 1.5), ("evict(?:ed|ion|ing)?", 2.5), ("landlord", 1.5),
+        ("rents?", 2.0), ("rental", 2.0), ("renting", 2.0), ("house rents?", 2.5),
+        ("room rents?", 2.0), ("paying rent", 2.0), ("pay rent", 2.0), ("behind on rent", 2.5),
+        ("need a house", 2.5), ("want a house", 2.5), ("house to live", 2.5), ("house help", 2.0),
+        ("pmay(?:-[ug])?", 2.5), ("kiraya", 2.5), ("makaan", 2.5), ("ghar", 2.0), ("kamra", 2.0),
+        ("chawl", 2.0), ("basti", 2.0), ("jhuggi", 2.0), ("slum", 2.0),
+        ("evict(?:ed|ion|ing)?", 2.5), ("landlord", 1.5),
         ("homeless", 2.5), ("shelter", 2.0), ("housing", 2.5), ("apartment", 1.0),
         ("section 8", 2.5), ("mortgage", 1.5), ("foreclos\\w*", 2.0),
         ("place to (?:stay|live|sleep)", 2.0), ("sleeping in (?:my|our|the) car", 2.5),
@@ -67,8 +74,9 @@ glob CATEGORY_LEXICON: dict = {
         ("perd(?:imos|[ií])\\s+(?:mi|nuestra|la)\\s+(?:casa|vivienda|apartamento)", 2.5), ("incendio\\s+(?:en|de)\\s+(?:mi|nuestra|la)\\s+(?:casa|vivienda)", 2.5), ("damnificad[oa]s?", 2.0)
     ],
     "healthcare": [
-        ("doctor", 2.0), ("medicaid", 2.5), ("medicine", 2.0), ("medication", 2.0),
-        ("prescriptions?", 2.0), ("hospital", 2.0), ("clinic", 2.0), ("dental", 2.0),
+        ("doctor", 2.0), ("medicaid", 2.5), ("medicine", 2.0), ("medicines?", 2.0), ("medication", 2.0),
+        ("medical", 2.0), ("prescriptions?", 2.0), ("hospital", 2.0), ("clinic", 2.0), ("dental", 2.0),
+        ("ayushman(?: bharat)?", 3.0), ("pm-?jay", 3.0), ("dawai", 2.0), ("ilaj", 2.5), ("aspataal", 2.0),
         ("dentist", 2.0), ("therapy", 1.5), ("mental health", 2.5), ("sick", 1.5),
         ("health insurance", 2.5), ("insulin", 2.5), ("depress\\w*", 1.5),
         ("m[eé]dico", 2.0), ("salud", 2.0), ("medicinas?", 2.0), ("cl[ií]nica", 2.0),
@@ -80,7 +88,8 @@ glob CATEGORY_LEXICON: dict = {
     ],
     "legal": [
         ("lawyer", 2.5), ("attorney", 2.5), ("legal (?:aid|help|advice)", 2.5),
-        ("court", 2.0), ("deport\\w*", 2.5), ("immigration", 2.0), ("asylum", 2.0),
+        ("court", 2.0), ("advocate", 2.5), ("vakil", 2.5), ("dlsa", 2.5), ("nalsa", 2.5), ("kanoon", 2.0),
+        ("deport\\w*", 2.5), ("immigration", 2.0), ("asylum", 2.0),
         ("changed the locks", 2.5), ("locked (?:me |us )?out", 2.5), ("lockout", 2.5), ("cambi[oó] (?:la|las) cerradura", 2.5),
         ("mou?ld", 2.0), ("roach(?:es)?", 2.0), ("bed ?bugs", 2.0), ("repairs?", 1.5), ("won'?t fix", 2.0), ("refuses? to fix", 2.0), ("arreglar", 1.5),
         ("collections", 2.5), ("medical debt", 2.5),
