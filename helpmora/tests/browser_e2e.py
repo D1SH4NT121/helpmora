@@ -137,7 +137,11 @@ def open_chat(tab, url):
         tab.call("Page.enable")
         tab.call("Page.navigate", url=url)
     tab.until("!!document.querySelector('button')")
-    tab.js("(()=>{const b=[...document.querySelectorAll('button,a')].find(e=>/Enter the Navigator/i.test(e.textContent)); b&&b.click()})()")
+    for _ in range(20):
+        if tab.js("!!document.querySelector('.cm-input')"):
+            break
+        tab.js("(()=>{const b=[...document.querySelectorAll('button,a')].find(e=>/Enter the Navigator/i.test(e.textContent)); b&&b.click()})()")
+        time.sleep(0.5)
     return tab.until("(!!document.querySelector('.cm-back-btn') || !!document.querySelector('.cm-quick-exit')) && !!document.querySelector('.cm-input')")
 
 
@@ -369,7 +373,12 @@ def main(app: str) -> int:
                                        and t["url"].startswith(app)), None), 30)
         inner = Tab(frame)
         open_chat_in_frame(inner)
-        tab.click_at(*center_of(inner, ".cm-input"))  # focus the frame
+        try:
+            inner.js("window.focus(); document.querySelector('.cm-input')?.focus()")
+        except Exception:
+            pass
+        input_pos = center_of(inner, ".cm-input") or (300, 200)
+        tab.click_at(*input_pos)  # focus the frame
         time.sleep(5.5)  # let the click's user activation lapse
         before_pages = {t["id"] for t in targets() if t["type"] == "page"}
         shift_three_times(tab)
@@ -386,8 +395,12 @@ def main(app: str) -> int:
 
 def open_chat_in_frame(inner):
     inner.until("!!document.querySelector('button')")
-    inner.js("(()=>{const b=[...document.querySelectorAll('button,a')].find(e=>/Enter the Navigator/i.test(e.textContent)); b&&b.click()})()")
-    return inner.until("!!document.querySelector('.cm-back-btn') || !!document.querySelector('.cm-quick-exit') || !!document.querySelector('.cm-input')")
+    for _ in range(20):
+        if inner.js("!!document.querySelector('.cm-input')"):
+            break
+        inner.js("(()=>{const b=[...document.querySelectorAll('button,a')].find(e=>/Enter the Navigator/i.test(e.textContent)); b&&b.click()})()")
+        time.sleep(0.5)
+    return inner.until("!!document.querySelector('.cm-input')")
 
 
 def report():

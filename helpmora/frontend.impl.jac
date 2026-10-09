@@ -56,17 +56,9 @@ impl ClientApp.initAuth -> str {
     }
     if jacIsLoggedIn() {
         user_id = creds[0];
-        # Probe PlatformWalker: if it fails with stale user_root_id from prior DB, auto-recover!
-        pw = await jacSpawn("PlatformWalker", "", {}).catch(lambda e: Any -> dict { return {"reports": [], "error": str(e)}; });
-        if (not pw["reports"]) or (len(pw["reports"]) == 0) {
-            creds = resetVisitorCreds();
-            try { await jacSignup(creds[0], creds[1]); } except Exception as _ex {}
-            try { await jacLogin(creds[0], creds[1]); } except Exception as _ex {}
-            user_id = creds[0];
-            pw = await jacSpawn("PlatformWalker", "", {}).catch(lambda e: Any -> dict { return {"reports": []}; });
-        }
         await jacSpawn("SeedWalker", "", {"user_id": creds[0]}).catch(lambda e: Any -> dict { return {"reports": [], "spawn_error": str(e)}; });
         is_authed = True;
+        pw = await jacSpawn("PlatformWalker", "", {}).catch(lambda e: Any -> dict { return {"reports": []}; });
         if pw["reports"] and len(pw["reports"]) > 0 { platform = pw["reports"][len(pw["reports"]) - 1]; }
         return creds[0];
     }
@@ -79,15 +71,6 @@ impl ClientApp.startApp -> None {
     # yet, ChatPane's sendMessage waits for it — don't block the UI here.
     show_landing = False;
     active_tab = "chat";
-    try {
-        sessionStorage.setItem("cm_navigated", "1");
-        sessionStorage.setItem("cm_tab", "chat");
-        try {
-            window.history.replaceState(None, "", "#chat");
-        } except Exception as _ex {
-            window.location.hash = "chat";
-        }
-    } except Exception as _ex {}
 }
 
 impl ClientApp.goHome -> None {

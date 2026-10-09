@@ -69,31 +69,11 @@ def:pub ClientApp -> JsxElement {
     def renderPalette -> JsxElement;
 
     can with entry {
-        # Restore navigation state across page reloads (F5) so refresh does not reset to landing page
-        try {
-            h = window.location.hash.replace("#", "");
-            if h in ["chat", "adaptive", "graph", "plan", "telemetry", "impact"] {
-                show_landing = False;
-                active_tab = h;
-                sessionStorage.setItem("cm_navigated", "1");
-                sessionStorage.setItem("cm_tab", h);
-            } elif sessionStorage.getItem("cm_navigated") == "1" {
-                show_landing = False;
-                st = sessionStorage.getItem("cm_tab");
-                if st in ["chat", "adaptive", "graph", "plan", "telemetry", "impact"] {
-                    active_tab = str(st);
-                    try {
-                        window.history.replaceState(None, "", "#" + str(st));
-                    } except Exception as _ex {
-                        window.location.hash = str(st);
-                    }
-                }
-            }
-        } except Exception as _ex {}
-
-        # Always run initAuth: it also migrates browsers still holding the
+        # Run initAuth once on mount: it migrates browsers still holding the
         # old shared demo token onto their own visitor account.
-        auth_ready = initAuth();
+        if not auth_ready {
+            auth_ready = initAuth();
+        }
         # Global Cmd/Ctrl+K listener wired at the document level so the
         # palette is reachable from any tab without per-component plumbing.
         try {
