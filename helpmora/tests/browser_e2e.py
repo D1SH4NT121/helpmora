@@ -253,7 +253,7 @@ def main(app: str) -> int:
         tab.call("Fetch.disable")
         answered = tab.until(f"document.querySelectorAll('.cm-thread .cm-row').length>={rows + 2} && !document.querySelector('.cm-typing')", 45)
         reloads = [e for e in tab.events[mark:] if e.get("method") == "Page.frameNavigated" and not e["params"]["frame"].get("parentId")]
-        check("0a the sign-in was held while the message went out", chat and held)
+        check("0a the sign-in was held while the message went out", chat and held, f"chat={bool(chat)} held={len(held) if held else 0}")
         check("0b the page did not reload", not reloads, len(reloads))
         check("0c the message was answered once the sign-in finished", answered and "I need food" in (tab.js("document.querySelector('.cm-thread').textContent") or ""))
         tab.close()

@@ -13,7 +13,7 @@ no mocks.
 """
 
 sv import from walkers.impact { ImpactWalker }
-import from "@jac/runtime" { jacSpawn }
+import from "@jac/runtime" { jacSpawn, jacIsLoggedIn }
 
 def:pub ImpactReport -> JsxElement {
     has summary: Any = None,

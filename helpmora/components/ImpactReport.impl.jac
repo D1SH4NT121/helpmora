@@ -1,6 +1,10 @@
 """Impl helpers + ImpactWalker spawn for ImpactReport."""
 
 impl ImpactReport.loadImpact -> None {
+    if not jacIsLoggedIn() {
+        loading = False;
+        return;
+    }
     loading = True;
     err = "";
     # jacSpawn + .catch: a client-side `except` can't catch the runtime's

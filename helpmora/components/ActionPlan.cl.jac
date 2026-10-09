@@ -2,7 +2,7 @@
 Data sourced entirely from real MemoryWalker calls — no fake steps.
 """
 sv import from walkers.memory { MemoryWalker }
-import from "@jac/runtime" { jacSpawn }
+import from "@jac/runtime" { jacSpawn, jacIsLoggedIn }
 
 def:pub ActionPlan(user_id: str, walker_events: list = []) -> JsxElement {
     has steps: list = [],

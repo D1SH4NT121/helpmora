@@ -243,6 +243,10 @@ impl TelemetryPanel.loadReflections -> None {
     # read-only graph traversal — no LLM calls. We swallow errors silently
     # since the rest of the Telemetry tab is still meaningful without
     # the self-reflection rollup.
+    if not user_id or not jacIsLoggedIn() {
+        reflections_loading = False;
+        return;
+    }
     reflections_loading = True;
     res = await jacSpawn("ReflectionReadWalker", "", {"user_id": user_id, "max_insights": 8}).catch(lambda e: Any -> dict { return {"reports": [], "spawn_error": str(e)}; });
     try {

@@ -19,7 +19,7 @@ Replay walks the graph in the order the walkers touched it.
 """
 
 sv import from walkers.graph_snapshot { GraphSnapshotWalker }
-import from "@jac/runtime" { jacSpawn }
+import from "@jac/runtime" { jacSpawn, jacIsLoggedIn }
 
 # Geometry (px). Cards have fixed heights so connector endpoints are known
 # without measuring the DOM.

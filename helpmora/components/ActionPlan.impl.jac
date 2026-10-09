@@ -281,6 +281,10 @@ impl ActionPlan.renderStep(s: Any, i: int) -> JsxElement {
 }
 
 impl ActionPlan.loadPlan -> None {
+    if not user_id or not jacIsLoggedIn() {
+        loading = False;
+        return;
+    }
     loading = True;
     res = await jacSpawn("MemoryWalker", "", {"user_id": user_id, "mode": "read_session"}).catch(lambda e: Any -> dict { return {"reports": [], "spawn_error": str(e)}; });
     try {
