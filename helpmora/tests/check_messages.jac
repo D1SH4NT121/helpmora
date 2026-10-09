@@ -19,6 +19,8 @@ import from engine.i18n { ascii_digits }
 
 # Written varieties the detector may legitimately report for a catalog.
 glob ALSO_READS_AS: dict = {"yue": ["zh"], "zh": ["yue"]};
+# Keys whose numbers vary between regional adaptations (income brackets in INR vs USD, national hotlines 112/181 vs 211)
+glob REGIONAL_NUMBER_KEYS: list = ["opt.inc1", "opt.inc2", "opt.inc3", "opt.inc4", "chip.housing.0", "r.unsure", "esc.dv"];
 
 def numbers(s: str) -> list {
     t = re.sub(r"(?<=\d)[,.\s  ](?=\d{3}(?!\d))", "", ascii_digits(str(s)));
@@ -42,7 +44,7 @@ with entry {
             if sorted(re.findall(r"\{[a-z]+\}", str(en[k]))) != sorted(re.findall(r"\{[a-z]+\}", v)) {
                 fails.append(code + ": placeholders differ in " + k);
             }
-            if numbers(str(en[k])) != numbers(v) {
+            if k not in REGIONAL_NUMBER_KEYS and numbers(str(en[k])) != numbers(v) {
                 fails.append(code + ": numbers differ in " + k + " (" + ",".join(numbers(v)) + ")");
             }
             if str(en[k]).count("**") != v.count("**") {

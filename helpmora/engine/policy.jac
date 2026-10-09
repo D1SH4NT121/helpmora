@@ -382,20 +382,23 @@ def status_rule(rule_id: str, profile: dict) -> dict {
     }
     wait_note = " (requires valid Aadhaar or Ration Card link" + ("; children are covered" if kind == "snap" else "") + ")";
     if kind == "snap" {
-        if st == "eligible_immigrant" {
+        if st in ["eligible_immigrant", "citizen"] {
             return {"status": "met", "detail": "Ration card and Aadhaar holders qualify" + wait_note, "change_note": ""};
         }
         if st == "humanitarian" {
-            return {"status": "met", "detail": "Resident beneficiaries with provisional registration qualify for subsidized food grain under NFSA", "change_note": ""};
+            return {"status": "unmet", "detail": "Since July 4, 2025 (P.L. 119-21 §10108) refugees, asylees and parolees are no longer eligible for SNAP; after getting a green card they are again, with no 5-year wait", "change_note": ""};
         }
         return {"status": "unmet", "detail": "NFSA requires Indian citizenship or valid Ration Card / Aadhaar" + ("; dependent children in the household can still get school nutrition" if kids else ""), "change_note": ""};
     }
     if kind == "medicaid" {
-        if st == "eligible_immigrant" {
+        if st in ["eligible_immigrant", "citizen"] {
             return {"status": "met", "detail": "Aadhaar / Ration card holders qualify for Ayushman Bharat (PM-JAY)" + wait_note, "change_note": ""};
         }
         if st == "humanitarian" {
-            return {"status": "met", "detail": "Provisional resident beneficiaries qualify for public hospital care under Ayushman Bharat", "change_note": ""};
+            if today < "2026-10-01" {
+                return {"status": "met", "detail": "Refugees and asylees qualify until September 30, 2026", "change_note": "From October 1, 2026 (P.L. 119-21 §71109) federally funded Medicaid/CHIP ends for refugees, asylees and parolees who don't have a green card"};
+            }
+            return {"status": "unmet", "detail": "Since October 1, 2026 (P.L. 119-21 §71109) refugees, asylees and parolees without a green card can't get federally funded Medicaid/CHIP; some states cover them with state funds", "change_note": ""};
         }
         return {"status": "unmet", "detail": "Ayushman Bharat / government healthcare requires valid identity proof (Aadhaar / Ration Card)" + ("; children can access public health center treatment" if kids else ""), "change_note": ""};
     }
