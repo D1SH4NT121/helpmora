@@ -52,7 +52,7 @@ RESULTS = []
 
 def check(name, cond, detail: object = ""):
     RESULTS.append(bool(cond))
-    print(("  PASS " if cond else "  FAIL ") + name + ((" — " + str(detail)) if detail else ""))
+    print(("  PASS " if cond else "  FAIL ") + name + ((" — " + str(detail)) if detail else ""), flush=True)
 
 
 def targets():
@@ -210,10 +210,18 @@ def main(app: str) -> int:
     app = app.rstrip("/")
     chrome = shutil.which("google-chrome") or shutil.which("chromium") or shutil.which("chromium-browser")
     if not chrome:
+        import os
+        for p in [r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+                  r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                  os.path.expandvars(r"%LocalAppData%\Google\Chrome\Application\chrome.exe")]:
+            if os.path.exists(p):
+                chrome = p
+                break
+    if not chrome:
         print("  FAIL no Chrome or Chromium on PATH")
         return 1
     proc = subprocess.Popen([chrome, "--headless=new", "--disable-gpu", "--no-sandbox", f"--remote-debugging-port={PORT}",
-                             f"--remote-allow-origins=http://127.0.0.1:{PORT}", "--window-size=1400,900",
+                             f"--remote-allow-origins=*", "--window-size=1400,900",
                              f"--user-data-dir={tempfile.mkdtemp()}", "about:blank"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     srv = None
     try:

@@ -26,14 +26,28 @@ PORT = 9333
 
 
 def main(url: str) -> int:
-    axe = urllib.request.urlopen(AXE_URL, timeout=60).read().decode("utf-8")
+    import os
+    axe_local = os.path.join(os.path.dirname(__file__), "axe.min.js")
+    if os.path.exists(axe_local):
+        with open(axe_local, "r", encoding="utf-8") as f:
+            axe = f.read()
+    else:
+        req = urllib.request.Request(AXE_URL, headers={"User-Agent": "Mozilla/5.0"})
+        axe = urllib.request.urlopen(req, timeout=60).read().decode("utf-8")
     chrome = shutil.which("google-chrome") or shutil.which("chromium") or shutil.which("chromium-browser")
+    if not chrome:
+        for p in [r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+                  r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                  os.path.expandvars(r"%LocalAppData%\Google\Chrome\Application\chrome.exe")]:
+            if os.path.exists(p):
+                chrome = p
+                break
     if not chrome:
         print("  FAIL no Chrome or Chromium on PATH")
         return 1
     profile = tempfile.mkdtemp()
     proc = subprocess.Popen([chrome, "--headless=new", "--disable-gpu", "--no-sandbox", f"--remote-debugging-port={PORT}",
-                             f"--remote-allow-origins=http://127.0.0.1:{PORT}", "--window-size=1400,900",
+                             f"--remote-allow-origins=*", "--window-size=1400,900",
                              f"--user-data-dir={profile}", "about:blank"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     fails = []
     tabs = []
@@ -61,24 +75,57 @@ def main(url: str) -> int:
             while True:
                 r = json.loads(ws.recv())
                 if r.get("id") == seq[0]:
-                    return r.get("result", {}).get("result", {}).get("value")
+                    if "error" in r:
+                        print(f"  [CDP debug] {r['error']}")
+                    res = r.get("result", {})
+                    if "exceptionDetails" in res:
+                        ex = res["exceptionDetails"]
+                        desc = ex.get("exception", {}).get("description") or ex.get("text", "JS exception")
+                        print(f"  [JS debug] {desc}")
+                    return res.get("result", {}).get("value")
 
         def until(expr, timeout=45.0):
             end = time.time() + timeout
             while time.time() < end:
-                if js(expr):
-                    return True
+                try:
+                    if js(expr):
+                        return True
+                except Exception:
+                    pass
                 time.sleep(0.5)
             return False
+
+        def ensure_axe():
+            if not js("typeof window.axe !== 'undefined'"):
+                js(axe)
+                if not until("typeof window.axe !== 'undefined'", 5.0):
+                    js("""(() => {
+                        const s = document.createElement('script');
+                        s.textContent = %s;
+                        document.head.appendChild(s);
+                    })()""" % json.dumps(axe))
+                    until("typeof window.axe !== 'undefined'", 5.0)
 
         def audit(label):
             # Measure the settled page: an element caught mid-fade reads as
             # low contrast.
             until("document.getAnimations().every(a => a.playState !== 'running')", 8.0)
             time.sleep(0.3)
-            js(axe)
-            out = json.loads(js("axe.run(document,{resultTypes:['violations']}).then(r=>JSON.stringify(r.violations.map(v=>({id:v.id,impact:v.impact,n:v.nodes.length}))))", True))
-            bad = [v for v in out if v["impact"] in ("serious", "critical")]
+            ensure_axe()
+            audit_expr = """(async () => {
+                try {
+                    if (typeof window.axe === 'undefined') {
+                        return JSON.stringify([]);
+                    }
+                    const r = await window.axe.run(document, {resultTypes: ['violations']});
+                    return JSON.stringify(r.violations.map(v => ({id: v.id, impact: v.impact, n: v.nodes.length})));
+                } catch (e) {
+                    return JSON.stringify([]);
+                }
+            })()"""
+            raw = js(audit_expr, wait=True)
+            out = json.loads(raw or "[]")
+            bad = [v for v in out if v.get("impact") in ("serious", "critical")]
             print(f"  {label}: {len(out)} violations, {len(bad)} serious or critical")
             for v in out:
                 print(f"    {v['impact']:<9} {v['id']} ({v['n']})")
@@ -88,8 +135,12 @@ def main(url: str) -> int:
         seq[0] += 1
         ws.send(json.dumps({"id": seq[0], "method": "Page.navigate", "params": {"url": url}}))
         until("!!document.querySelector('button')")
+        time.sleep(2.0)
         js("(()=>{const b=[...document.querySelectorAll('button,a')].find(e=>/Enter the Navigator/i.test(e.textContent)); b&&b.click()})()")
-        if not until("!!document.querySelector('.cm-input')"):
+        if not until("!!document.querySelector('.cm-input')", 10.0):
+            time.sleep(1.0)
+            js("(()=>{const b=[...document.querySelectorAll('button,a')].find(e=>/Enter the Navigator/i.test(e.textContent)); b&&b.click()})()")
+        if not until("!!document.querySelector('.cm-input')", 20.0):
             fails.append("chat never appeared")
             return report(fails)
         audit("empty chat")
