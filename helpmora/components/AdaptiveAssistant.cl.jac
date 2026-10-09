@@ -38,6 +38,8 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
         raw_voice_on: bool = False,
         memory_wiped: bool = False,
         spoken_transcript: str = "",
+        run_id: str = "",
+        is_loading: bool = False,
         trace_events: list = [
             {"badge": "OMI", "title": "Voice Intake Normalized", "status": "completed", "detail": "Language: English/Hindi detected, session started"},
             {"badge": "QDRANT", "title": "Semantic Memory Scoped", "status": "completed", "detail": "User isolation filter: user_id verified"},
@@ -51,7 +53,7 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
 
     can with entry {
         try {
-            window.eval("""
+            (window: Any).eval("""
                 window._cm_speak = function(text) {
                     try {
                         if ('speechSynthesis' in window) {
@@ -88,118 +90,16 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
         } except Exception as _ex {}
     }
 
-    def toggleVoiceFirst {
-        voice_first = not voice_first;
-        if voice_first {
-            try {
-                if window._cm_speak {
-                    window._cm_speak("Voice-First mode activated. Click Speak Field to talk into your microphone.");
-                }
-            } except Exception as _ex {}
-        }
-    }
-
-    def triggerVoiceInput {
-        if voice_active {
-            voice_active = False;
-            agent_state = "reasoning";
-            try {
-                if window._cm_current_rec { window._cm_current_rec.stop(); }
-            } except Exception as _ex {}
-            return;
-        }
-
-        voice_active = True;
-        agent_state = "listening";
-        try {
-            if window._cm_listen_field {
-                window._cm_current_rec = window._cm_listen_field(
-                    lambda text: Any {
-                        spoken_transcript = str(text);
-                        digits = "".join([c for c in str(text) if c in "0123456789"]);
-                        if digits {
-                            voice_field_val = "₹" + digits;
-                        }
-                    },
-                    lambda {
-                        voice_active = False;
-                        agent_state = "reasoning";
-                        try {
-                            if window._cm_speak {
-                                window._cm_speak("I have noted " + voice_field_val + " for " + voice_field_name + ". Please confirm.");
-                            }
-                        } except Exception as _ex {}
-                    }
-                );
-            }
-        } except Exception as _ex {
-            voice_active = False;
-            agent_state = "reasoning";
-        }
-    }
-
-    def confirmVoiceField {
-        voice_confirmed = True;
-        active_step = 3;
-        agent_state = "verified";
-        try {
-            if window._cm_speak {
-                window._cm_speak("Income confirmed and saved to your case.");
-            }
-        } except Exception as _ex {}
-    }
-
-    def showFieldHelp(title: str, text: str) {
-        field_help_title = title;
-        field_help_body = text;
-    }
-
-    def closeFieldHelp {
-        field_help_title = "";
-        field_help_body = "";
-    }
-
-    def toggleRecovery {
-        recovery_open = not recovery_open;
-    }
-
-    def approveAction {
-        approval_status = "approved";
-        agent_state = "action_complete";
-        active_step = 5;
-        try {
-            if window._cm_speak {
-                window._cm_speak("Application approved and saved.");
-            }
-        } except Exception as _ex {}
-    }
-
-    def wipeAllMemory {
-        memory_wiped = True;
-        try {
-            fetch("/api/memory/user/" + user_id, {"method": "DELETE"});
-        } except Exception as _ex {}
-    }
-
-    def togglePrivacy(kind: str) {
-        if kind == "conv" { conv_memory_on = not conv_memory_on; }
-        if kind == "app" { app_history_on = not app_history_on; }
-        if kind == "docs" { docs_on = not docs_on; }
-        if kind == "voice" { raw_voice_on = not raw_voice_on; }
-        try {
-            fetch("/api/privacy/update", {
-                "method": "POST",
-                "headers": {"Content-Type": "application/json"},
-                "body": JSON.stringify({
-                    "user_id": user_id,
-                    "conversation_memory": conv_memory_on,
-                    "application_history": app_history_on,
-                    "documents": docs_on,
-                    "raw_voice_retention": raw_voice_on
-                })
-            });
-        } except Exception as _ex {}
-    }
+    async def runLiveAnalysis(text: str) -> None;
+    async def wipeAllMemory -> None;
+    async def approveAction -> None;
+    def confirmVoiceField -> None;
+    def triggerVoiceInput -> None;
+    def toggleVoiceFirst -> None;
+    def showFieldHelp(title: str, text: str) -> None;
+    def closeFieldHelp -> None;
+    def toggleRecovery -> None;
+    def togglePrivacy(kind: str) -> None;
 
     container_style = {
         "maxWidth": "1200px",
@@ -423,6 +323,56 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                     {("Stop Recording" if voice_active else "🎙️ Speak Field Now")}
                 </button>
             </div>}
+
+            <div style={{
+                "background": card_bg,
+                "backdropFilter": ("none" if reduced_motion else "blur(12px)"),
+                "borderRadius": "16px",
+                "border": ("2px solid #FFE500" if is_loading else ("0.5px solid " + border_color)),
+                "padding": "18px 22px",
+                "marginBottom": "20px"
+            }}>
+                <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "marginBottom": "10px", "flexWrap": "wrap", "gap": "10px"}}>
+                    <div style={{"display": "flex", "alignItems": "center", "gap": "8px"}}>
+                        <span style={{"fontSize": "18px"}}>⚡</span>
+                        <span style={{"fontSize": fs_base, "fontWeight": "600", "color": txt_main}}>
+                            {("Your Situation & Needs" if simple_lang else "Live Multi-Agent Case Scenario")}
+                        </span>
+                    </div>
+                    <button
+                        onClick={lambda _e: MouseEvent { runLiveAnalysis(input_text); }}
+                        style={{
+                            "padding": "8px 18px",
+                            "background": ("#00FF88" if is_loading else "#FFE500"),
+                            "color": "#0A0A0A",
+                            "borderRadius": "8px",
+                            "border": "none",
+                            "fontWeight": "700",
+                            "fontSize": fs_xs,
+                            "cursor": "pointer"
+                        }}
+                    >
+                        {("⏳ Running Real-Time Agents..." if is_loading else "⚡ Run Live Analysis")}
+                    </button>
+                </div>
+                <input
+                    type="text"
+                    value={input_text}
+                    onChange={lambda e: ChangeEvent { input_text = str((e.target: Any).value); }}
+                    placeholder="Describe your situation (e.g. lost job, rent due, 2 children, monthly income 8000)..."
+                    style={{
+                        "width": "100%",
+                        "boxSizing": "border-box",
+                        "padding": "11px 14px",
+                        "background": inner_card_bg,
+                        "border": inner_border,
+                        "borderRadius": "8px",
+                        "color": txt_main,
+                        "fontSize": fs_sm,
+                        "outline": "none"
+                    }}
+                />
+            </div>
 
             <div style={{
                 "display": "grid",

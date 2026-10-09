@@ -28,12 +28,13 @@ def bind_upstream() -> str:
                         sys.path.insert(0, parent_dir)
 
                     try:
-                        from integrations.api import router as integrations_router
+                        from integrations.api import router as integrations_router, root_router
                     except ImportError:
-                        from helpmora.integrations.api import router as integrations_router
+                        from helpmora.integrations.api import router as integrations_router, root_router
 
                     old_count = len(fastapi_app.router.routes)
                     fastapi_app.include_router(integrations_router)
+                    fastapi_app.include_router(root_router)
                     new_routes = fastapi_app.router.routes[old_count:]
                     # Prepend new routes before SPA wildcard catch-all route
                     fastapi_app.router.routes = new_routes + fastapi_app.router.routes[:old_count]

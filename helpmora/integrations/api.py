@@ -23,6 +23,7 @@ except ImportError:
 logger = logging.getLogger("helpmora.integrations.api")
 
 router = APIRouter(prefix="/api")
+root_router = APIRouter()
 
 
 # --- Pydantic Schemas ---
@@ -173,6 +174,80 @@ async def receive_omi_event(request: Request):
         "status": state.status,
         "normalized_input": normalized.to_dict(),
         "case_state": state.to_dict(),
+    }
+
+
+# --- Hackathon Standard Starter Kit Endpoints (/omi/conversation, /omi/realtime, /ask) ---
+
+@root_router.post("/omi/conversation")
+@router.post("/omi/conversation")
+async def on_omi_conversation(request: Request, uid: str = Query("anonymous")):
+    """Hackathon standard memory creation trigger: fires when an Omi conversation is finished."""
+    headers = {k.decode("latin-1") if isinstance(k, bytes) else k: v.decode("latin-1") if isinstance(v, bytes) else v for k, v in request.headers.items()}
+    token = request.query_params.get("token", "")
+    if not validate_omi_auth(headers, token):
+        raise HTTPException(status_code=401, detail="Unauthorized Omi webhook signature or secret.")
+    try:
+        payload = await request.json()
+    except Exception:
+        payload = {}
+    user_id = uid or payload.get("user_id") or payload.get("uid") or "anonymous"
+    payload["user_id"] = user_id
+    is_valid, normalized, err_msg = normalize_omi_event(payload)
+    if is_valid and normalized:
+        store = get_memory_store()
+        store.store_memory(user_id=user_id, memory_type="conversation", text=normalized.text, metadata={"source": "omi_conversation"})
+        wf = get_workflow_manager()
+        wf.run_pipeline(user_id=user_id, input_text=normalized.text, session_id=normalized.session_id, source="omi")
+    return {"status": "ok", "ok": True}
+
+
+@root_router.post("/omi/realtime")
+@router.post("/omi/realtime")
+async def on_omi_realtime(request: Request, uid: str = Query("anonymous"), session_id: str = Query("")):
+    """Hackathon standard real-time transcript trigger: fires in small batches while speaking."""
+    headers = {k.decode("latin-1") if isinstance(k, bytes) else k: v.decode("latin-1") if isinstance(v, bytes) else v for k, v in request.headers.items()}
+    token = request.query_params.get("token", "")
+    if not validate_omi_auth(headers, token):
+        raise HTTPException(status_code=401, detail="Unauthorized Omi webhook signature or secret.")
+    try:
+        payload = await request.json()
+    except Exception:
+        payload = {}
+    user_id = uid or payload.get("user_id") or payload.get("uid") or "anonymous"
+    payload["user_id"] = user_id
+    payload["session_id"] = session_id or payload.get("session_id")
+    is_valid, normalized, err_msg = normalize_omi_event(payload)
+    if is_valid and normalized:
+        store = get_memory_store()
+        store.store_memory(user_id=user_id, memory_type="realtime", text=normalized.text, metadata={"source": "omi_realtime"})
+    return {"status": "ok", "ok": True}
+
+
+@root_router.post("/ask")
+@router.post("/ask")
+async def ask_question(request: Request):
+    """Hackathon standard ask endpoint: retrieves Qdrant memories and calls agent pipeline."""
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    uid = body.get("uid") or body.get("user_id") or "anonymous"
+    question = body.get("question") or body.get("text") or ""
+    store = get_memory_store()
+    memories = store.retrieve_memories(user_id=uid, query_text=question, limit=5)
+    context = [m.get("text", "") for m in memories]
+    wf = get_workflow_manager()
+    state = wf.run_pipeline(user_id=uid, input_text=question, source="omi")
+    answer = state.next_steps[0] if state.next_steps else (
+        f"Evaluated against 40 Indian welfare programs. Matching: {', '.join(p['name'] for p in state.matching_programs[:3])}" if state.matching_programs else "Evaluated successfully. Please provide monthly income or family size to find exact matching programs."
+    )
+    return {
+        "ok": True,
+        "answer": answer,
+        "context": context,
+        "programs": [p["name"] for p in state.matching_programs],
+        "case_state": state.to_dict()
     }
 
 
