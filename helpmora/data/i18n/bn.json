@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "bn", "name": "Bengali", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "bn",
+    "name": "Bengali",
+    "review": "draft — native review welcome"
+  },
   "q.need": "এখন আপনার সবচেয়ে বেশি কোন সাহায্য দরকার?",
   "q.income": "আপনার পরিবারের মাসিক আয় আনুমানিক কত (কর দেওয়ার আগে)?",
   "q.household": "আপনাকে সহ আপনার বাড়িতে কতজন থাকেন?",
@@ -92,5 +96,9 @@
   "esc.housing": "সেই রাতেই আশ্রয় ও ভাড়া সহায়তার জন্য রেফারেল",
   "esc.healthcare": "আয় অনুযায়ী ফি নেওয়া ক্লিনিক ও Medicaid-এ নাম লেখানো",
   "esc.legal": "আপনার কাছে বিনামূল্যে দেওয়ানি আইনি সহায়তা",
-  "esc.interp": "দোভাষী বিনামূল্যে: কেউ ফোন ধরলে ইংরেজিতে \"{language}\" বলুন।"
+  "esc.interp": "দোভাষী বিনামূল্যে: কেউ ফোন ধরলে ইংরেজিতে \"{language}\" বলুন।",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "uk", "name": "Ukrainian", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "uk",
+    "name": "Ukrainian",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Яка допомога вам зараз потрібна найбільше?",
   "q.income": "Скільки приблизно заробляє ваша родина на місяць (до сплати податків)?",
   "q.household": "Скільки людей живе у вашому домогосподарстві, включно з вами?",
@@ -92,5 +96,9 @@
   "esc.housing": "притулок на цю ніч і направлення на допомогу з орендою",
   "esc.healthcare": "клініки з оплатою залежно від доходу та оформлення Medicaid",
   "esc.legal": "безкоштовна цивільна юридична допомога поруч із вами",
-  "esc.interp": "Перекладач безкоштовно: коли відповідять, скажіть англійською «{language}»."
+  "esc.interp": "Перекладач безкоштовно: коли відповідять, скажіть англійською «{language}».",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

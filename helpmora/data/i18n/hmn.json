@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "hmn", "name": "Hmong (White Hmong, RPA)", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "hmn",
+    "name": "Hmong (White Hmong, RPA)",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Tam sim no koj xav tau kev pab dab tsi tshaj plaws?",
   "q.income": "Koj tsev neeg khwv tau nyiaj li cas ib hlis (ua ntej them se)?",
   "q.household": "Muaj pes tsawg tus neeg nyob hauv koj tsev, suav nrog koj?",
@@ -92,5 +96,9 @@
   "esc.housing": "chaw nkaum hmo no thiab xa mus rau kev pab nqi xauj tsev",
   "esc.healthcare": "chaw kho mob sau nqi raws li nyiaj khwv thiab sau npe Medicaid",
   "esc.legal": "kev pab dawb txog kev cai lij choj pej xeem ze koj",
-  "esc.interp": "Tus neeg txhais lus yog pub dawb: thaum muaj neeg teb, hais ua lus Askiv tias \"{language}\"."
+  "esc.interp": "Tus neeg txhais lus yog pub dawb: thaum muaj neeg teb, hais ua lus Askiv tias \"{language}\".",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

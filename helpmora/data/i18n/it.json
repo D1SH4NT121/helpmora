@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "it", "name": "Italian", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "it",
+    "name": "Italian",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Di che cosa ha più bisogno di aiuto in questo momento?",
   "q.income": "Quanto guadagna più o meno la sua famiglia al mese (al lordo delle tasse)?",
   "q.household": "Quante persone vivono nella sua casa, lei compreso/a?",
@@ -92,5 +96,9 @@
   "esc.housing": "alloggio per la notte e segnalazioni per aiuti sull'affitto",
   "esc.healthcare": "cliniche con tariffe in base al reddito e iscrizione a Medicaid",
   "esc.legal": "assistenza legale civile gratuita vicino a lei",
-  "esc.interp": "Gli interpreti sono gratuiti: quando rispondono, dica \"{language}\"."
+  "esc.interp": "Gli interpreti sono gratuiti: quando rispondono, dica \"{language}\".",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

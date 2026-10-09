@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "id", "name": "Indonesian", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "id",
+    "name": "Indonesian",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Bantuan apa yang paling Anda butuhkan sekarang?",
   "q.income": "Berapa kira-kira penghasilan rumah tangga Anda per bulan (sebelum pajak)?",
   "q.household": "Berapa orang yang tinggal di rumah Anda, termasuk Anda?",
@@ -92,5 +96,9 @@
   "esc.housing": "penampungan malam itu juga dan rujukan bantuan sewa",
   "esc.healthcare": "klinik bertarif sesuai penghasilan dan pendaftaran Medicaid",
   "esc.legal": "bantuan hukum perdata gratis di dekat Anda",
-  "esc.interp": "Penerjemah gratis: saat ada yang menjawab, ucapkan dalam bahasa Inggris \"{language}\"."
+  "esc.interp": "Penerjemah gratis: saat ada yang menjawab, ucapkan dalam bahasa Inggris \"{language}\".",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "sh", "name": "Bosnian / Croatian / Serbian (Latin)", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "sh",
+    "name": "Bosnian / Croatian / Serbian (Latin)",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Za što vam je sada najviše potrebna pomoć?",
   "q.income": "Koliko otprilike vaše domaćinstvo zarađuje mjesečno (prije poreza)?",
   "q.household": "Koliko osoba živi u vašem domaćinstvu, uključujući vas?",
@@ -92,5 +96,9 @@
   "esc.housing": "smještaj za istu noć i upućivanje na pomoć za najamninu",
   "esc.healthcare": "klinike koje naplaćuju prema prihodima i upis u Medicaid",
   "esc.legal": "besplatna građanskopravna pomoć u vašoj blizini",
-  "esc.interp": "Prevoditelj je besplatan: kad se netko javi, recite na engleskom „{language}”."
+  "esc.interp": "Prevoditelj je besplatan: kad se netko javi, recite na engleskom „{language}”.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

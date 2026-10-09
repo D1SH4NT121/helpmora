@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "pl", "name": "Polish", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "pl",
+    "name": "Polish",
+    "review": "draft — native review welcome"
+  },
   "q.need": "W czym najbardziej potrzebujesz teraz pomocy?",
   "q.income": "Ile mniej więcej zarabia Twoje gospodarstwo domowe miesięcznie (przed podatkiem)?",
   "q.household": "Ile osób mieszka w Twoim domu, wliczając Ciebie?",
@@ -92,5 +96,9 @@
   "esc.housing": "schronienie na tę noc i skierowania do pomocy z czynszem",
   "esc.healthcare": "przychodnie z opłatami zależnymi od dochodu i zapisy do Medicaid",
   "esc.legal": "bezpłatna pomoc prawna w sprawach cywilnych w pobliżu",
-  "esc.interp": "Tłumacz jest bezpłatny: gdy ktoś odbierze, powiedz po angielsku „{language}”."
+  "esc.interp": "Tłumacz jest bezpłatny: gdy ktoś odbierze, powiedz po angielsku „{language}”.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

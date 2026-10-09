@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "yue", "name": "Cantonese (Traditional Chinese)", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "yue",
+    "name": "Cantonese (Traditional Chinese)",
+    "review": "draft — native review welcome"
+  },
   "q.need": "你而家最需要邊方面嘅幫助？",
   "q.income": "你屋企每個月大概收入幾多（除稅前）？",
   "q.household": "你屋企一共住幾多人（包括你自己）？",
@@ -92,5 +96,9 @@
   "esc.housing": "當晚嘅庇護安排同租金援助轉介",
   "esc.healthcare": "按收入收費嘅診所同 Medicaid 登記",
   "esc.legal": "你附近嘅免費民事法律援助",
-  "esc.interp": "傳譯服務免費：接通之後請用英文講 \"{language}\"。"
+  "esc.interp": "傳譯服務免費：接通之後請用英文講 \"{language}\"。",
+  "opt.education": "教育与助学贷款",
+  "chip.education.0": "我如何申请 PM-Vidyalaxmi 助学贷款？",
+  "chip.education.1": "我可以获得无抵押助学贷款吗？",
+  "chip.education.2": "我如何申请国家奖学金 (NSP)？"
 }

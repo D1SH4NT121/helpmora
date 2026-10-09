@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "nl", "name": "Dutch", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "nl",
+    "name": "Dutch",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Waarmee heeft u nu het meest hulp nodig?",
   "q.income": "Hoeveel verdient uw huishouden ongeveer per maand (vóór belastingen)?",
   "q.household": "Hoeveel mensen wonen er in uw huishouden, uzelf meegerekend?",
@@ -92,5 +96,9 @@
   "esc.housing": "opvang voor dezelfde nacht en doorverwijzing voor huurhulp",
   "esc.healthcare": "klinieken met tarieven naar inkomen en inschrijving bij Medicaid",
   "esc.legal": "gratis civielrechtelijke hulp bij u in de buurt",
-  "esc.interp": "Tolken zijn gratis: zeg \"{language}\" als er wordt opgenomen."
+  "esc.interp": "Tolken zijn gratis: zeg \"{language}\" als er wordt opgenomen.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "ur", "name": "Urdu", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "ur",
+    "name": "Urdu",
+    "review": "draft — native review welcome"
+  },
   "q.need": "آپ کو اس وقت سب سے زیادہ کس چیز میں مدد چاہیے؟",
   "q.income": "آپ کے گھرانے کی ماہانہ آمدنی تقریباً کتنی ہے (ٹیکس سے پہلے)؟",
   "q.household": "آپ سمیت آپ کے گھر میں کتنے لوگ رہتے ہیں؟",
@@ -92,5 +96,9 @@
   "esc.housing": "اسی رات پناہ اور کرائے کی مدد کے لیے حوالہ",
   "esc.healthcare": "آمدنی کے حساب سے فیس والے کلینک اور Medicaid میں اندراج",
   "esc.legal": "آپ کے قریب مفت دیوانی قانونی مدد",
-  "esc.interp": "ترجمان مفت ہے: جب کوئی فون اٹھائے تو انگریزی میں \"{language}\" کہیں۔"
+  "esc.interp": "ترجمان مفت ہے: جب کوئی فون اٹھائے تو انگریزی میں \"{language}\" کہیں۔",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

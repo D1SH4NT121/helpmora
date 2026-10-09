@@ -1348,12 +1348,82 @@ glob IMMIGRANT_LANGUAGES: list = [
     ["fa", "Persian (Farsi / Dari)", "فارسی", "", ""],
     ["nl", "Dutch", "Nederlands", "", ""],
     ["pl", "Polish", "Polski", "", ""],
-    ["uk", "Ukrainian", "Українська", "", ""]
+    ["uk", "Ukrainian", "Українська", "", ""],
+
+    # --- Community, Regional & Indigenous Languages ---
+    ["ceb", "Cebuano (Bisaya)", "Sinugbuanong Binisaya", "", ""],
+    ["ilo", "Ilocano", "Ilokano", "", ""],
+    ["el", "Greek", "Ελληνικά", "", ""],
+    ["hy", "Armenian", "Հայերեն", "Eastern & Western", ""],
+    ["ka", "Georgian", "ქართული", "", ""],
+    ["ro", "Romanian / Moldovan", "Română", "", ""],
+    ["sq", "Albanian", "Shqip", "", ""],
+    ["sh", "Bosnian / Croatian / Serbian", "BCS / Српски", "Latin & Cyrillic", ""],
+    ["bg", "Bulgarian", "Български", "", ""],
+    ["mk", "Macedonian", "Македонски", "", ""],
+    ["be", "Belarusian", "Беларуская", "", ""],
+    ["cs", "Czech", "Čeština", "", ""],
+    ["sk", "Slovak", "Slovenčina", "", ""],
+    ["hu", "Hungarian", "Magyar", "", ""],
+    ["lt", "Lithuanian", "Lietuvių", "", ""],
+    ["lv", "Latvian", "Latviešu", "", ""],
+    ["kk", "Kazakh", "Қазақша", "", ""],
+    ["uz", "Uzbek", "Oʻzbekcha", "", ""],
+    ["ky", "Kyrgyz", "Кыргызча", "", ""],
+    ["tg", "Tajik", "Тоҷикӣ", "", ""],
+    ["mn", "Mongolian", "Монгол", "", ""],
+    ["lo", "Lao", "ລາວ", "", ""],
+    ["km", "Khmer", "ខ្មែរ", "", ""],
+    ["my", "Burmese", "မြန်မာ", "", ""],
+    ["ksw", "Karen (S'gaw)", "ကညီ", "Burmese refugees", ""],
+    ["cnh", "Chin (Hakha)", "Laiholh", "Burmese refugees", "en"],
+    ["kac", "Kachin (Jingpho)", "Jinghpaw", "", "en"],
+    ["hmn", "Hmong", "Hmoob", "White & Green Hmong", ""],
+    ["am", "Amharic", "አማርኛ", "", ""],
+    ["ti", "Tigrinya", "ትግርኛ", "Eritrean & Ethiopian", ""],
+    ["om", "Oromo", "Afaan Oromoo", "", ""],
+    ["so", "Somali", "Soomaali", "", ""],
+    ["sw", "Swahili", "Kiswahili", "", ""],
+    ["rw", "Kinyarwanda / Kirundi", "Ikinyarwanda", "", ""],
+    ["ln", "Lingala", "Lingála", "", ""],
+    ["yo", "Yoruba", "Yorùbá", "", ""],
+    ["ig", "Igbo", "Igbo", "", ""],
+    ["ha", "Hausa", "Hausa", "", ""],
+    ["ak", "Twi (Akan)", "Twi", "", ""],
+    ["ee", "Ewe", "Eʋegbe", "", "en"],
+    ["wo", "Wolof", "Wolof", "", ""],
+    ["ff", "Fula (Pulaar)", "Pulaar", "", ""],
+    ["bm", "Bambara / Mandinka", "Bamanankan", "", "fr"],
+    ["din", "Dinka", "Thuɔŋjäŋ", "South Sudanese", "en"],
+    ["nus", "Nuer", "Thok Naath", "South Sudanese", "en"],
+    ["sm", "Samoan", "Gagana Sāmoa", "", ""],
+    ["to", "Tongan", "Lea faka-Tonga", "", ""],
+    ["mh", "Marshallese", "Kajin M̧ajeļ", "COFA community", "en"],
+    ["chk", "Chuukese", "Chuuk", "COFA community", "en"],
+    ["ch", "Chamorro", "Chamoru", "", "en"],
+    ["jam", "Jamaican Patois", "Patwa", "", ""],
+    ["qu", "Quechua", "Runa Simi", "", "es"],
+    ["mam", "Mam", "Qyol Mam", "Guatemala — top-10 immigration-court language", "es"],
+    ["quc", "K'iche'", "K'iche'", "Guatemala", "es"],
+    ["kjb", "Q'anjob'al", "Q'anjob'al", "Guatemala", "es"],
+    ["kek", "Q'eqchi'", "Q'eqchi'", "Guatemala, Belize", "es"],
+    ["cak", "Kaqchikel", "Kaqchikel", "Guatemala", "es"],
+    ["knj", "Akateko", "Akateko", "Guatemala", "es"],
+    ["cac", "Chuj", "Chuj", "Guatemala", "es"],
+    ["ixl", "Ixil", "Ixil", "Guatemala", "es"],
+    ["mix", "Mixtec", "Tu'un Savi", "Mexico", "es"],
+    ["zap", "Zapotec", "Diidxazá", "Mexico", "es"],
+    ["trs", "Triqui", "Triqui", "Mexico", "es"],
+    ["nah", "Nahuatl", "Nāhuatl", "Mexico", "es"],
+    ["tsz", "Purépecha", "P'urhépecha", "Mexico", "es"],
+    ["tzh", "Tseltal / Tsotsil", "Bats'il k'op", "Chiapas", "es"],
+    ["cab", "Garifuna", "Garifuna", "Honduras, Belize", "es"],
+    ["myn", "Mayan language (unspecified)", "Maya", "pick yours below", "es"]
 ];
 # Languages whose full answer NVIDIA Riva Translate v2 translates (English → 36).
 glob RIVA_CODES: dict = {"cs": "cs", "da": "da", "de": "de", "el": "el", "es": "es-us", "fi": "fi", "fr": "fr", "hu": "hu", "it": "it", "lt": "lt", "lv": "lv", "nl": "nl", "no": "no", "pl": "pl", "pt": "pt-br", "ro": "ro", "ru": "ru", "sk": "sk", "sv": "sv", "zh": "zh-cn", "yue": "zh-tw", "ja": "ja", "hi": "hi", "ko": "ko", "et": "et", "sl": "sl", "bg": "bg", "uk": "uk", "sh": "hr", "ar": "ar", "vi": "vi", "tr": "tr", "id": "id", "th": "th"};
 # Mostly spoken languages without reliable machine translation today.
-glob INTERPRETER_CODES: list = [];
+glob INTERPRETER_CODES: list = ["mam", "quc", "kjb", "kek", "cak", "knj", "cac", "ixl", "mix", "zap", "trs", "nah", "tsz", "tzh", "cab", "myn", "qu", "din", "nus", "chk", "mh", "ch", "cnh", "kac", "bm", "ee"];
 
 """Registry row + support tier for a language code."""
 def language_info(code: str) -> dict {
@@ -1383,17 +1453,17 @@ def language_catalog -> list {
     return [language_info(str(r[0])) for r in IMMIGRANT_LANGUAGES];
 }
 
-"""Interpreter request card, deterministic, in English and Hindi."""
+"""Interpreter request card, deterministic, in English, Hindi and Spanish."""
 def interpreter_card(code: str) -> dict {
     info = language_info(code);
     name = str(info["name"]).replace(" (unspecified)", "");
     card: dict = {
         "language": name, "endonym": str(info["endonym"]),
-        "en": "I speak " + name + ". Please provide language assistance or an interpreter in " + name + ".",
+        "en": "I speak " + name + ". Please get me a free " + name + " interpreter.",
         "hi": "मैं " + name + " बोलता/बोलती हूँ। कृपया मुझे " + name + " में सहायता या अनुवादक प्रदान करें।",
-        "es": "मैं " + name + " बोलता/बोलती हूँ। कृपया मुझे " + name + " में सहायता या अनुवादक प्रदान करें।",
-        "basis": "Article 350 of the Constitution of India provides every citizen the right to submit a representation in any language used in the Union or State. Under Digital India, Bhashini, and Common Service Centre (CSC) service charters, citizens are entitled to public service navigation and grievance redressal in their preferred recognized Indian language.",
-        "tip": "Call national citizen helpline 112 (Emergency), 181 (Women's Helpline), 14416 (Tele-MANAS), or visit your nearest Gram Panchayat CSC / Jan Seva Kendra for localized assistance."
+        "es": "Hablo " + name + ". Por favor, necesito un intérprete de " + name + " gratuito.",
+        "basis": "Article 350 of the Constitution of India and Title VI language access guidelines require public services and hotlines to support citizens and residents in their spoken languages.",
+        "tip": "Call national citizen helpline 112 (Emergency), 181 (Women's Helpline), 14416 (Tele-MANAS), or 211, and ask for a " + name + " interpreter."
     };
     return card;
 }

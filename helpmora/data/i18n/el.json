@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "el", "name": "Greek", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "el",
+    "name": "Greek",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Σε τι χρειάζεστε περισσότερο βοήθεια αυτή τη στιγμή;",
   "q.income": "Πόσα κερδίζει περίπου το νοικοκυριό σας τον μήνα (προ φόρων);",
   "q.household": "Πόσα άτομα ζουν στο σπίτι σας, μαζί με εσάς;",
@@ -92,5 +96,9 @@
   "esc.housing": "στέγη για την ίδια νύχτα και παραπομπές για βοήθεια ενοικίου",
   "esc.healthcare": "κλινικές με χρεώσεις ανάλογα με το εισόδημα και εγγραφή στο Medicaid",
   "esc.legal": "δωρεάν αστική νομική βοήθεια κοντά σας",
-  "esc.interp": "Οι διερμηνείς είναι δωρεάν: όταν απαντήσουν, πείτε στα αγγλικά «{language}»."
+  "esc.interp": "Οι διερμηνείς είναι δωρεάν: όταν απαντήσουν, πείτε στα αγγλικά «{language}».",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

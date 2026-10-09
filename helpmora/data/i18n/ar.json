@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "ar", "name": "Arabic", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "ar",
+    "name": "Arabic",
+    "review": "draft — native review welcome"
+  },
   "q.need": "ما نوع المساعدة التي تحتاجها أكثر الآن؟",
   "q.income": "كم يكسب أفراد أسرتك تقريبًا في الشهر (قبل الضرائب)؟",
   "q.household": "كم عدد الأشخاص الذين يعيشون في بيتك، بما فيهم أنت؟",
@@ -92,5 +96,9 @@
   "esc.housing": "مأوى في نفس الليلة وإحالات للمساعدة في الإيجار",
   "esc.healthcare": "عيادات تحدد السعر حسب الدخل والتسجيل في Medicaid",
   "esc.legal": "مساعدة قانونية مدنية مجانية قريبة منك",
-  "esc.interp": "الترجمة الفورية مجانية: عندما يرد أحد، قل بالإنجليزية \"{language}\"."
+  "esc.interp": "الترجمة الفورية مجانية: عندما يرد أحد، قل بالإنجليزية \"{language}\".",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

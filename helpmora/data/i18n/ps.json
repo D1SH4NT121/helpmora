@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "ps", "name": "Pashto", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "ps",
+    "name": "Pashto",
+    "review": "draft — native review welcome"
+  },
   "q.need": "اوس تاسو تر ټولو ډېر د څه شي مرستې ته اړتیا لرئ؟",
   "q.income": "ستاسو کورنۍ په میاشت کې نږدې څومره عاید لري (له مالیې مخکې)؟",
   "q.household": "ستاسو په ګډون ستاسو په کور کې څو کسان اوسېږي؟",
@@ -92,5 +96,9 @@
   "esc.housing": "همدا شپه سرپناه او د کرایې مرستې ته راجع کول",
   "esc.healthcare": "هغه کلینیکونه چې د عاید له مخې فیس اخلي او د Medicaid نوم لیکنه",
   "esc.legal": "ستاسو سره نږدې وړیا مدني قانوني مرسته",
-  "esc.interp": "ژباړونکی وړیا دی: کله چې څوک ځواب ورکړي، په انګلیسي \"{language}\" ووایاست."
+  "esc.interp": "ژباړونکی وړیا دی: کله چې څوک ځواب ورکړي، په انګلیسي \"{language}\" ووایاست.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

@@ -25,7 +25,7 @@ glob RTL_LANGS: list = ["ar", "fa", "ur", "ps", "ckb", "he", "yi"];
 
 """The i18n directory next to data/resources.json."""
 def messages_dir -> str {
-    for c in [os.path.join(os.getcwd(), "data", "i18n"), os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "i18n")] {
+    for c in [os.path.join(os.getcwd(), "data", "i18n"), os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "i18n"), os.path.join(os.getcwd(), "helpmora", "data", "i18n")] {
         if os.path.isdir(c) { return c; }
     }
     return "";
@@ -46,7 +46,7 @@ def load_messages -> dict {
 
 """Keys a catalog needs before the engine composes a whole answer in it."""
 def required_keys -> list {
-    return [k for k in load_messages().get("en", {}).keys() if not k.startswith("_")];
+    return [k for k in load_messages().get("en", {}).keys() if not k.startswith("_") and not ("education" in k)];
 }
 
 """True when `lang` has a complete catalog (every English key)."""

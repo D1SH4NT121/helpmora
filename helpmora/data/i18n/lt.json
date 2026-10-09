@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "lt", "name": "Lithuanian", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "lt",
+    "name": "Lithuanian",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Kokios pagalbos jums dabar labiausiai reikia?",
   "q.income": "Kiek maždaug per mėnesį uždirba jūsų namų ūkis (prieš mokesčius)?",
   "q.household": "Kiek žmonių gyvena jūsų namų ūkyje, įskaitant jus?",
@@ -92,5 +96,9 @@
   "esc.housing": "prieglauda tą pačią naktį ir nukreipimas dėl nuomos pagalbos",
   "esc.healthcare": "klinikos su mokesčiais pagal pajamas ir registracija į Medicaid",
   "esc.legal": "nemokama civilinė teisinė pagalba šalia jūsų",
-  "esc.interp": "Vertėjas nemokamas: kai atsilieps, pasakykite angliškai „{language}“."
+  "esc.interp": "Vertėjas nemokamas: kai atsilieps, pasakykite angliškai „{language}“.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

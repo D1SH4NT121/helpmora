@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "cs", "name": "Czech", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "cs",
+    "name": "Czech",
+    "review": "draft — native review welcome"
+  },
   "q.need": "S čím nejvíc potřebujete teď pomoct?",
   "q.income": "Kolik zhruba vydělává vaše domácnost měsíčně (před zdaněním)?",
   "q.household": "Kolik lidí žije ve vaší domácnosti, včetně vás?",
@@ -92,5 +96,9 @@
   "esc.housing": "ubytování na tutéž noc a doporučení na pomoc s nájmem",
   "esc.healthcare": "kliniky s poplatky podle příjmu a registrace do Medicaid",
   "esc.legal": "bezplatná občanskoprávní pomoc ve vašem okolí",
-  "esc.interp": "Tlumočník je zdarma: když to někdo zvedne, řekněte anglicky „{language}“."
+  "esc.interp": "Tlumočník je zdarma: když to někdo zvedne, řekněte anglicky „{language}“.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

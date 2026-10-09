@@ -96,5 +96,9 @@
   "esc.housing": "当晚的庇护安置和房租援助转介",
   "esc.healthcare": "按收入收费的诊所和 Medicaid 登记",
   "esc.legal": "您附近的免费民事法律援助",
-  "esc.interp": "口译服务免费：接通后请用英语说 \"{language}\"。"
+  "esc.interp": "口译服务免费：接通后请用英语说 \"{language}\"。",
+  "opt.education": "教育与助学贷款",
+  "chip.education.0": "我如何申请 PM-Vidyalaxmi 助学贷款？",
+  "chip.education.1": "我可以获得无抵押助学贷款吗？",
+  "chip.education.2": "我如何申请国家奖学金 (NSP)？"
 }

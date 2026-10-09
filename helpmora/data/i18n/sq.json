@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "sq", "name": "Albanian", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "sq",
+    "name": "Albanian",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Për çfarë keni më shumë nevojë për ndihmë tani?",
   "q.income": "Sa fiton afërsisht familja juaj në muaj (para taksave)?",
   "q.household": "Sa njerëz jetojnë në shtëpinë tuaj, përfshirë ju?",
@@ -92,5 +96,9 @@
   "esc.housing": "strehë për të njëjtën natë dhe drejtim për ndihmë me qiranë",
   "esc.healthcare": "klinika me tarifa sipas të ardhurave dhe regjistrim në Medicaid",
   "esc.legal": "ndihmë ligjore civile falas pranë jush",
-  "esc.interp": "Përkthyesi është falas: kur t'ju përgjigjen, thoni në anglisht \"{language}\"."
+  "esc.interp": "Përkthyesi është falas: kur t'ju përgjigjen, thoni në anglisht \"{language}\".",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

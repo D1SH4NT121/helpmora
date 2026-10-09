@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "lv", "name": "Latvian", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "lv",
+    "name": "Latvian",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Kāda palīdzība jums tagad visvairāk vajadzīga?",
   "q.income": "Cik aptuveni jūsu mājsaimniecība nopelna mēnesī (pirms nodokļiem)?",
   "q.household": "Cik cilvēku dzīvo jūsu mājsaimniecībā, ieskaitot jūs?",
@@ -92,5 +96,9 @@
   "esc.housing": "patversme tajā pašā naktī un nosūtīšana īres palīdzībai",
   "esc.healthcare": "klīnikas ar maksu atkarībā no ienākumiem un reģistrācija Medicaid",
   "esc.legal": "bezmaksas civiltiesiskā palīdzība jūsu tuvumā",
-  "esc.interp": "Tulks ir bez maksas: kad atbild, pasakiet angliski „{language}”."
+  "esc.interp": "Tulks ir bez maksas: kad atbild, pasakiet angliski „{language}”.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

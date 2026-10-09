@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "tl", "name": "Tagalog / Filipino", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "tl",
+    "name": "Tagalog / Filipino",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Ano ang pinakakailangan mong tulong ngayon?",
   "q.income": "Mga magkano ang kinikita ng inyong sambahayan kada buwan (bago ang buwis)?",
   "q.household": "Ilan kayong nakatira sa bahay, kasama ka?",
@@ -92,5 +96,9 @@
   "esc.housing": "matutuluyan ngayong gabi at tulong sa upa",
   "esc.healthcare": "mga klinikang ayon sa kita ang singil at pagpapatala sa Medicaid",
   "esc.legal": "libreng tulong legal na sibil malapit sa iyo",
-  "esc.interp": "Libre ang interpreter: sabihin ang \"{language}\" kapag may sumagot."
+  "esc.interp": "Libre ang interpreter: sabihin ang \"{language}\" kapag may sumagot.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

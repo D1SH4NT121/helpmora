@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "my", "name": "Burmese", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "my",
+    "name": "Burmese",
+    "review": "draft — native review welcome"
+  },
   "q.need": "အခု သင် အကူအညီ အများဆုံး လိုအပ်တာ ဘာလဲ။",
   "q.income": "သင့်အိမ်ထောင်စု တစ်လ ဝင်ငွေ ခန့်မှန်းခြေ ဘယ်လောက်လဲ (အခွန်မဆောင်မီ)။",
   "q.household": "သင့်အပါအဝင် သင့်အိမ်မှာ လူဘယ်နှစ်ယောက် နေလဲ။",
@@ -92,5 +96,9 @@
   "esc.housing": "ထိုညအတွက် ခိုလှုံရာနှင့် အိမ်လခအကူအညီ ညွှန်းပို့ခြင်း",
   "esc.healthcare": "ဝင်ငွေအလိုက် ကျသင့်ငွေယူသော ဆေးခန်းများနှင့် Medicaid စာရင်းသွင်းခြင်း",
   "esc.legal": "သင့်အနီးရှိ အခမဲ့ တရားမဥပဒေအကူအညီ",
-  "esc.interp": "စကားပြန် အခမဲ့ဖြစ်သည်: တစ်ယောက်ယောက် ဖုန်းကိုင်သောအခါ အင်္ဂလိပ်လို \"{language}\" ဟု ပြောပါ။"
+  "esc.interp": "စကားပြန် အခမဲ့ဖြစ်သည်: တစ်ယောက်ယောက် ဖုန်းကိုင်သောအခါ အင်္ဂလိပ်လို \"{language}\" ဟု ပြောပါ။",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

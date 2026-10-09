@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "ml", "name": "Malayalam", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "ml",
+    "name": "Malayalam",
+    "review": "draft — native review welcome"
+  },
   "q.need": "ഇപ്പോൾ നിങ്ങൾക്ക് ഏറ്റവും കൂടുതൽ എന്തിനാണ് സഹായം വേണ്ടത്?",
   "q.income": "നിങ്ങളുടെ കുടുംബത്തിന് മാസം ഏകദേശം എത്ര വരുമാനമുണ്ട് (നികുതിക്ക് മുമ്പ്)?",
   "q.household": "നിങ്ങളടക്കം നിങ്ങളുടെ വീട്ടിൽ എത്ര പേർ താമസിക്കുന്നു?",
@@ -92,5 +96,9 @@
   "esc.housing": "അതേ രാത്രി അഭയവും വാടക സഹായത്തിനുള്ള റഫറലും",
   "esc.healthcare": "വരുമാനത്തിനനുസരിച്ച് ഫീസ് ഈടാക്കുന്ന ക്ലിനിക്കുകളും Medicaid രജിസ്ട്രേഷനും",
   "esc.legal": "നിങ്ങളുടെ അടുത്ത് സൗജന്യ സിവിൽ നിയമ സഹായം",
-  "esc.interp": "ദ്വിഭാഷി സൗജന്യമാണ്: ആരെങ്കിലും ഫോൺ എടുക്കുമ്പോൾ ഇംഗ്ലീഷിൽ \"{language}\" എന്ന് പറയുക."
+  "esc.interp": "ദ്വിഭാഷി സൗജന്യമാണ്: ആരെങ്കിലും ഫോൺ എടുക്കുമ്പോൾ ഇംഗ്ലീഷിൽ \"{language}\" എന്ന് പറയുക.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

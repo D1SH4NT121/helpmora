@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "ro", "name": "Romanian / Moldovan", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "ro",
+    "name": "Romanian / Moldovan",
+    "review": "draft — native review welcome"
+  },
   "q.need": "De ce ajutor aveți cel mai mult nevoie acum?",
   "q.income": "Cât câștigă aproximativ gospodăria dumneavoastră pe lună (înainte de taxe)?",
   "q.household": "Câte persoane locuiesc în gospodăria dumneavoastră, inclusiv dumneavoastră?",
@@ -92,5 +96,9 @@
   "esc.housing": "adăpost pentru aceeași noapte și îndrumare pentru ajutor la chirie",
   "esc.healthcare": "clinici cu tarife în funcție de venit și înscriere în Medicaid",
   "esc.legal": "asistență juridică civilă gratuită lângă dumneavoastră",
-  "esc.interp": "Interpreții sunt gratuiți: când vă răspunde cineva, spuneți în engleză „{language}”."
+  "esc.interp": "Interpreții sunt gratuiți: când vă răspunde cineva, spuneți în engleză „{language}”.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

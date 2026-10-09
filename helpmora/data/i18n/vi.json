@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "vi", "name": "Vietnamese", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "vi",
+    "name": "Vietnamese",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Hiện giờ bạn cần giúp đỡ về việc gì nhất?",
   "q.income": "Gia đình bạn kiếm được khoảng bao nhiêu mỗi tháng (trước thuế)?",
   "q.household": "Nhà bạn có bao nhiêu người, tính cả bạn?",
@@ -92,5 +96,9 @@
   "esc.housing": "chỗ tạm trú ngay trong đêm và giới thiệu trợ giúp tiền thuê nhà",
   "esc.healthcare": "phòng khám tính phí theo thu nhập và ghi danh Medicaid",
   "esc.legal": "trợ giúp pháp lý dân sự miễn phí gần bạn",
-  "esc.interp": "Thông dịch viên miễn phí: khi có người nghe máy, hãy nói \"{language}\"."
+  "esc.interp": "Thông dịch viên miễn phí: khi có người nghe máy, hãy nói \"{language}\".",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

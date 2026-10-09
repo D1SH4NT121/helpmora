@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "km", "name": "Khmer", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "km",
+    "name": "Khmer",
+    "review": "draft — native review welcome"
+  },
   "q.need": "តើឥឡូវនេះអ្នកត្រូវការជំនួយអ្វីខ្លាំងជាងគេ?",
   "q.income": "តើគ្រួសាររបស់អ្នករកចំណូលបានប្រហែលប៉ុន្មានក្នុងមួយខែ (មុនបង់ពន្ធ)?",
   "q.household": "តើមានមនុស្សប៉ុន្មាននាក់រស់នៅក្នុងផ្ទះរបស់អ្នក រួមទាំងអ្នកផង?",
@@ -92,5 +96,9 @@
   "esc.housing": "ទីជម្រកសម្រាប់យប់នេះ និងការបញ្ជូនទៅជំនួយថ្លៃឈ្នួលផ្ទះ",
   "esc.healthcare": "គ្លីនិកដែលគិតថ្លៃតាមចំណូល និងការចុះឈ្មោះ Medicaid",
   "esc.legal": "ជំនួយផ្លូវច្បាប់រដ្ឋប្បវេណីឥតគិតថ្លៃនៅជិតអ្នក",
-  "esc.interp": "អ្នកបកប្រែឥតគិតថ្លៃ៖ ពេលមាននរណាលើកទូរស័ព្ទ សូមនិយាយជាភាសាអង់គ្លេសថា \"{language}\"។"
+  "esc.interp": "អ្នកបកប្រែឥតគិតថ្លៃ៖ ពេលមាននរណាលើកទូរស័ព្ទ សូមនិយាយជាភាសាអង់គ្លេសថា \"{language}\"។",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

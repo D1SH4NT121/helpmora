@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "ta", "name": "Tamil", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "ta",
+    "name": "Tamil",
+    "review": "draft — native review welcome"
+  },
   "q.need": "இப்போது உங்களுக்கு எந்த உதவி மிகவும் தேவை?",
   "q.income": "உங்கள் குடும்பத்தின் மாத வருமானம் சுமார் எவ்வளவு (வரிக்கு முன்)?",
   "q.household": "உங்களையும் சேர்த்து உங்கள் வீட்டில் எத்தனை பேர் வசிக்கிறார்கள்?",
@@ -92,5 +96,9 @@
   "esc.housing": "அதே இரவு தங்குமிடம் மற்றும் வாடகை உதவிக்கான பரிந்துரை",
   "esc.healthcare": "வருமானத்துக்கு ஏற்ப கட்டணம் வாங்கும் கிளினிக்குகள் மற்றும் Medicaid பதிவு",
   "esc.legal": "உங்கள் அருகில் இலவச சிவில் சட்ட உதவி",
-  "esc.interp": "மொழிபெயர்ப்பாளர் இலவசம்: யாராவது எடுத்ததும் ஆங்கிலத்தில் \"{language}\" என்று சொல்லுங்கள்."
+  "esc.interp": "மொழிபெயர்ப்பாளர் இலவசம்: யாராவது எடுத்ததும் ஆங்கிலத்தில் \"{language}\" என்று சொல்லுங்கள்.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

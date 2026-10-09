@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "ne", "name": "Nepali", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "ne",
+    "name": "Nepali",
+    "review": "draft — native review welcome"
+  },
   "q.need": "अहिले तपाईंलाई सबैभन्दा बढी कुन कुरामा सहयोग चाहिन्छ?",
   "q.income": "तपाईंको परिवारले महिनामा लगभग कति कमाउँछ (कर तिर्नुअघि)?",
   "q.household": "तपाईंसहित तपाईंको घरमा कति जना बस्नुहुन्छ?",
@@ -92,5 +96,9 @@
   "esc.housing": "त्यही रात आश्रय र भाडा सहयोगका लागि सिफारिस",
   "esc.healthcare": "आम्दानी अनुसार शुल्क लिने क्लिनिक र Medicaid दर्ता",
   "esc.legal": "तपाईंको नजिक निःशुल्क देवानी कानुनी सहायता",
-  "esc.interp": "दोभाषे निःशुल्क छ: कसैले फोन उठाएपछि अंग्रेजीमा \"{language}\" भन्नुहोस्।"
+  "esc.interp": "दोभाषे निःशुल्क छ: कसैले फोन उठाएपछि अंग्रेजीमा \"{language}\" भन्नुहोस्।",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

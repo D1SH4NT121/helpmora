@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "ht", "name": "Haitian Creole", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "ht",
+    "name": "Haitian Creole",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Ki èd ou pi bezwen kounye a?",
   "q.income": "Konbyen lajan fwaye w la fè chak mwa, apeprè (anvan taks)?",
   "q.household": "Konbyen moun ki rete lakay ou, avèk ou menm?",
@@ -92,5 +96,9 @@
   "esc.housing": "abri pou menm swa a ak referans pou èd lwaye",
   "esc.healthcare": "klinik ki fè pri selon revni ak enskripsyon Medicaid",
   "esc.legal": "èd legal sivil gratis toupre w",
-  "esc.interp": "Entèprèt gratis: lè yon moun reponn, di \"{language}\"."
+  "esc.interp": "Entèprèt gratis: lè yon moun reponn, di \"{language}\".",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "ti", "name": "Tigrinya", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "ti",
+    "name": "Tigrinya",
+    "review": "draft — native review welcome"
+  },
   "q.need": "ሕጂ ብዝበለጸ እንታይ ሓገዝ የድልየኩም?",
   "q.income": "ስድራቤትኩም ብወርሒ ብግምት ክንደይ ይረክብ (ቅድሚ ግብሪ)?",
   "q.household": "ምሳኹም ሓቢሩ ኣብ ገዛኹም ክንደይ ሰባት ይነብሩ?",
@@ -92,5 +96,9 @@
   "esc.housing": "ኣብታ ምሸት መዕቆቢን ንሓገዝ ክራይ ምሕላፍን",
   "esc.healthcare": "ብመሰረት እቶት ዘኽፍሉ ክሊኒካትን ምዝገባ Medicaid ን",
   "esc.legal": "ኣብ ጥቓኹም ናጻ ሲቪላዊ ሕጋዊ ሓገዝ",
-  "esc.interp": "ተርጓሚ ብነጻ እዩ: ሰብ ምስ መለሰ ብእንግሊዝኛ \"{language}\" በሉ።"
+  "esc.interp": "ተርጓሚ ብነጻ እዩ: ሰብ ምስ መለሰ ብእንግሊዝኛ \"{language}\" በሉ።",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

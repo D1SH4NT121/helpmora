@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "ru", "name": "Russian", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "ru",
+    "name": "Russian",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Какая помощь вам сейчас нужнее всего?",
   "q.income": "Сколько примерно зарабатывает ваша семья в месяц (до вычета налогов)?",
   "q.household": "Сколько человек живёт в вашем доме, включая вас?",
@@ -92,5 +96,9 @@
   "esc.housing": "приют на эту ночь и направления на помощь с арендой",
   "esc.healthcare": "клиники с оплатой по доходу и оформление Medicaid",
   "esc.legal": "бесплатная гражданская юридическая помощь рядом с вами",
-  "esc.interp": "Переводчик бесплатно: когда ответят, скажите по-английски «{language}»."
+  "esc.interp": "Переводчик бесплатно: когда ответят, скажите по-английски «{language}».",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

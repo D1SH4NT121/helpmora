@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "gu", "name": "Gujarati", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "gu",
+    "name": "Gujarati",
+    "review": "draft — native review welcome"
+  },
   "q.need": "અત્યારે તમને સૌથી વધુ શેની મદદ જોઈએ છે?",
   "q.income": "તમારા ઘરની માસિક આવક આશરે કેટલી છે (ટેક્સ પહેલાં)?",
   "q.household": "તમારા સહિત તમારા ઘરમાં કેટલા લોકો રહે છે?",
@@ -92,5 +96,9 @@
   "esc.housing": "એ જ રાત્રે આશ્રય અને ભાડા સહાય માટે રેફરલ",
   "esc.healthcare": "આવક મુજબ ફી લેતા ક્લિનિક અને Medicaid નોંધણી",
   "esc.legal": "તમારી નજીક મફત સિવિલ કાનૂની સહાય",
-  "esc.interp": "દુભાષિયો મફત છે: કોઈ ફોન ઉપાડે ત્યારે અંગ્રેજીમાં \"{language}\" કહો."
+  "esc.interp": "દુભાષિયો મફત છે: કોઈ ફોન ઉપાડે ત્યારે અંગ્રેજીમાં \"{language}\" કહો.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

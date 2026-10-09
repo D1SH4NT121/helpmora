@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "ko", "name": "Korean", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "ko",
+    "name": "Korean",
+    "review": "draft — native review welcome"
+  },
   "q.need": "지금 가장 도움이 필요한 것은 무엇인가요?",
   "q.income": "가구의 한 달 수입은 대략 얼마인가요 (세전)?",
   "q.household": "본인을 포함해 가구원은 몇 명인가요?",
@@ -92,5 +96,9 @@
   "esc.housing": "당일 밤 쉼터 배정 및 월세 지원 안내",
   "esc.healthcare": "소득 기준 요금 클리닉 및 Medicaid 가입",
   "esc.legal": "가까운 곳의 무료 민사 법률 지원",
-  "esc.interp": "통역은 무료입니다: 상담원이 받으면 영어로 \"{language}\"라고 말씀하세요."
+  "esc.interp": "통역은 무료입니다: 상담원이 받으면 영어로 \"{language}\"라고 말씀하세요.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

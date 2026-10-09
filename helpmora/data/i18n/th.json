@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "th", "name": "Thai", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "th",
+    "name": "Thai",
+    "review": "draft — native review welcome"
+  },
   "q.need": "ตอนนี้คุณต้องการความช่วยเหลือเรื่องอะไรมากที่สุด?",
   "q.income": "ครัวเรือนของคุณมีรายได้ประมาณเดือนละเท่าไร (ก่อนหักภาษี)?",
   "q.household": "รวมตัวคุณด้วย มีกี่คนอาศัยอยู่ในบ้านของคุณ?",
@@ -92,5 +96,9 @@
   "esc.housing": "ที่พักพิงในคืนเดียวกันและการส่งต่อเพื่อช่วยค่าเช่า",
   "esc.healthcare": "คลินิกที่คิดค่าบริการตามรายได้และการลงทะเบียน Medicaid",
   "esc.legal": "ความช่วยเหลือทางกฎหมายแพ่งฟรีใกล้คุณ",
-  "esc.interp": "ล่ามฟรี: เมื่อมีคนรับสาย ให้พูดเป็นภาษาอังกฤษว่า \"{language}\""
+  "esc.interp": "ล่ามฟรี: เมื่อมีคนรับสาย ให้พูดเป็นภาษาอังกฤษว่า \"{language}\"",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

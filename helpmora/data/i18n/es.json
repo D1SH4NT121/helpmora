@@ -96,5 +96,9 @@
   "esc.housing": "refugio para esta noche y ayuda con la renta",
   "esc.healthcare": "clínicas de pago según ingresos e inscripción en Medicaid",
   "esc.legal": "asistencia legal civil gratuita cerca de usted",
-  "esc.interp": "Los intérpretes son gratis: diga \"{language}\" cuando le contesten."
+  "esc.interp": "Los intérpretes son gratis: diga \"{language}\" cuando le contesten.",
+  "opt.education": "Educación y préstamos de estudio",
+  "chip.education.0": "¿Cómo solicito un préstamo de estudio PM-Vidyalaxmi?",
+  "chip.education.1": "¿Puedo obtener un préstamo de estudio sin garantía?",
+  "chip.education.2": "¿Cómo solicito la Beca Nacional (NSP)?"
 }

@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "tr", "name": "Turkish", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "tr",
+    "name": "Turkish",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Şu anda en çok hangi konuda yardıma ihtiyacınız var?",
   "q.income": "Hanenizin aylık geliri yaklaşık ne kadar (vergiden önce)?",
   "q.household": "Siz dahil evinizde kaç kişi yaşıyor?",
@@ -92,5 +96,9 @@
   "esc.housing": "aynı gece barınak ve kira yardımı yönlendirmesi",
   "esc.healthcare": "gelire göre ücret alan klinikler ve Medicaid kaydı",
   "esc.legal": "yakınınızda ücretsiz medeni hukuk yardımı",
-  "esc.interp": "Tercüman ücretsizdir: biri açınca İngilizce \"{language}\" deyin."
+  "esc.interp": "Tercüman ücretsizdir: biri açınca İngilizce \"{language}\" deyin.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

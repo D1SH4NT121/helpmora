@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "sw", "name": "Swahili", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "sw",
+    "name": "Swahili",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Unahitaji msaada gani zaidi sasa hivi?",
   "q.income": "Kaya yako inapata takriban kiasi gani kwa mwezi (kabla ya kodi)?",
   "q.household": "Watu wangapi wanaishi nyumbani kwako, pamoja na wewe?",
@@ -92,5 +96,9 @@
   "esc.housing": "makazi ya usiku huo huo na rufaa ya msaada wa kodi ya nyumba",
   "esc.healthcare": "kliniki zinazotoza kulingana na mapato na usajili wa Medicaid",
   "esc.legal": "msaada wa kisheria wa kiraia bila malipo karibu nawe",
-  "esc.interp": "Mkalimani ni bure: mtu akijibu, sema kwa Kiingereza \"{language}\"."
+  "esc.interp": "Mkalimani ni bure: mtu akijibu, sema kwa Kiingereza \"{language}\".",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

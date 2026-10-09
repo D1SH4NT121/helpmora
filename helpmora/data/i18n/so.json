@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "so", "name": "Somali", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "so",
+    "name": "Somali",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Hadda maxaad caawimaad ugu baahan tahay?",
   "q.income": "Qoyskaagu qiyaastii immisa ayuu bishii kasbadaa (ka hor canshuuraha)?",
   "q.household": "Immisa qof ayaa ku nool gurigaaga, adiga oo ku jira?",
@@ -92,5 +96,9 @@
   "esc.housing": "hoy isla habeenkaas ah iyo u gudbin caawimaad kirada",
   "esc.healthcare": "rugo caafimaad oo lacagta ku qaata dakhliga iyo diiwaangelinta Medicaid",
   "esc.legal": "caawimaad sharci madani ah oo bilaash ah oo kaa dhow",
-  "esc.interp": "Turjubaanku waa bilaash: marka qof jawaabo, ku dheh Ingiriis \"{language}\"."
+  "esc.interp": "Turjubaanku waa bilaash: marka qof jawaabo, ku dheh Ingiriis \"{language}\".",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

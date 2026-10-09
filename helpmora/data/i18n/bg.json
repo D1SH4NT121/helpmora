@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "bg", "name": "Bulgarian", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "bg",
+    "name": "Bulgarian",
+    "review": "draft — native review welcome"
+  },
   "q.need": "За какво най-много се нуждаете от помощ в момента?",
   "q.income": "Колко приблизително печели домакинството ви на месец (преди данъци)?",
   "q.household": "Колко души живеят в домакинството ви, включително вие?",
@@ -92,5 +96,9 @@
   "esc.housing": "подслон за същата нощ и насочване за помощ с наема",
   "esc.healthcare": "клиники с такси според дохода и записване в Medicaid",
   "esc.legal": "безплатна гражданскоправна помощ близо до вас",
-  "esc.interp": "Преводачът е безплатен: когато вдигнат, кажете на английски „{language}“."
+  "esc.interp": "Преводачът е безплатен: когато вдигнат, кажете на английски „{language}“.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

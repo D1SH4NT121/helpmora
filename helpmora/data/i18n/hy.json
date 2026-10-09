@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "hy", "name": "Armenian (Eastern)", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "hy",
+    "name": "Armenian (Eastern)",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Հիմա ինչի՞ կարիք ունեք ամենաշատը։",
   "q.income": "Ձեր ընտանիքը մոտավորապես ամսական որքա՞ն է վաստակում (մինչև հարկերը)։",
   "q.household": "Քանի՞ մարդ է ապրում ձեր տանը՝ ներառյալ ձեզ։",
@@ -92,5 +96,9 @@
   "esc.housing": "ապաստան նույն գիշերվա համար և ուղղորդում վարձի օգնության",
   "esc.healthcare": "կլինիկաներ՝ վճարով ըստ եկամտի, և Medicaid-ի գրանցում",
   "esc.legal": "անվճար քաղաքացիական իրավաբանական օգնություն ձեր մոտ",
-  "esc.interp": "Թարգմանիչն անվճար է. երբ պատասխանեն, անգլերենով ասեք «{language}»։"
+  "esc.interp": "Թարգմանիչն անվճար է. երբ պատասխանեն, անգլերենով ասեք «{language}»։",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

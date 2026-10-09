@@ -62,8 +62,11 @@ def main() -> None:
     os.environ["HELPMORA_UPSTREAM"] = f"http://127.0.0.1:{upstream_port}"
     os.environ["HELPMORA_UPSTREAM_BIND"] = "127.0.0.1"
 
+    import shutil
+    jac_bin = shutil.which("jac") or os.path.join(os.path.dirname(sys.executable), "jac.exe" if os.name == "nt" else "jac") or "jac"
+
     child = subprocess.Popen(
-        ["jac", "start", "app.jac", "--no-dev", "--port", str(upstream_port), "--host", "127.0.0.1"],
+        [jac_bin, "start", "app.jac", "--no-dev", "--port", str(upstream_port), "--host", "127.0.0.1"],
         env=dict(os.environ),
     )
 

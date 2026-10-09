@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "ja", "name": "Japanese", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "ja",
+    "name": "Japanese",
+    "review": "draft — native review welcome"
+  },
   "q.need": "今いちばん必要な支援は何ですか？",
   "q.income": "世帯の月収はだいたいいくらですか（税引き前）？",
   "q.household": "あなたを含めて、世帯には何人いますか？",
@@ -92,5 +96,9 @@
   "esc.housing": "当日のシェルター手配と家賃支援の紹介",
   "esc.healthcare": "収入に応じた料金のクリニックと Medicaid 登録",
   "esc.legal": "近くの無料民事法律支援",
-  "esc.interp": "通訳は無料です：電話がつながったら英語で \"{language}\" と言ってください。"
+  "esc.interp": "通訳は無料です：電話がつながったら英語で \"{language}\" と言ってください。",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

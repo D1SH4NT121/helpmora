@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "pa", "name": "Punjabi (Gurmukhi)", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "pa",
+    "name": "Punjabi (Gurmukhi)",
+    "review": "draft — native review welcome"
+  },
   "q.need": "ਤੁਹਾਨੂੰ ਇਸ ਵੇਲੇ ਸਭ ਤੋਂ ਵੱਧ ਕਿਸ ਚੀਜ਼ ਵਿੱਚ ਮਦਦ ਚਾਹੀਦੀ ਹੈ?",
   "q.income": "ਤੁਹਾਡੇ ਘਰ ਦੀ ਮਹੀਨੇ ਦੀ ਕਮਾਈ ਲਗਭਗ ਕਿੰਨੀ ਹੈ (ਟੈਕਸ ਤੋਂ ਪਹਿਲਾਂ)?",
   "q.household": "ਤੁਹਾਨੂੰ ਮਿਲਾ ਕੇ ਤੁਹਾਡੇ ਘਰ ਵਿੱਚ ਕਿੰਨੇ ਲੋਕ ਰਹਿੰਦੇ ਹਨ?",
@@ -92,5 +96,9 @@
   "esc.housing": "ਉਸੇ ਰਾਤ ਸ਼ੈਲਟਰ ਅਤੇ ਕਿਰਾਇਆ ਮਦਦ ਲਈ ਰੈਫ਼ਰਲ",
   "esc.healthcare": "ਆਮਦਨ ਮੁਤਾਬਕ ਫ਼ੀਸ ਵਾਲੇ ਕਲੀਨਿਕ ਅਤੇ Medicaid ਦਾਖ਼ਲਾ",
   "esc.legal": "ਤੁਹਾਡੇ ਨੇੜੇ ਮੁਫ਼ਤ ਸਿਵਲ ਕਾਨੂੰਨੀ ਮਦਦ",
-  "esc.interp": "ਦੁਭਾਸ਼ੀਆ ਮੁਫ਼ਤ ਹੈ: ਜਦੋਂ ਕੋਈ ਫ਼ੋਨ ਚੁੱਕੇ, ਅੰਗਰੇਜ਼ੀ ਵਿੱਚ \"{language}\" ਕਹੋ।"
+  "esc.interp": "ਦੁਭਾਸ਼ੀਆ ਮੁਫ਼ਤ ਹੈ: ਜਦੋਂ ਕੋਈ ਫ਼ੋਨ ਚੁੱਕੇ, ਅੰਗਰੇਜ਼ੀ ਵਿੱਚ \"{language}\" ਕਹੋ।",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

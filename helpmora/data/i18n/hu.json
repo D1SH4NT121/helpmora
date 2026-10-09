@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "hu", "name": "Hungarian", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "hu",
+    "name": "Hungarian",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Miben van most a legnagyobb szüksége segítségre?",
   "q.income": "Mennyit keres a háztartása körülbelül havonta (adózás előtt)?",
   "q.household": "Hányan élnek a háztartásában, Önt is beleértve?",
@@ -92,5 +96,9 @@
   "esc.housing": "szállás még aznap éjjelre és lakbértámogatási irányítás",
   "esc.healthcare": "jövedelemfüggő díjú klinikák és Medicaid-regisztráció",
   "esc.legal": "ingyenes polgári jogi segítség a közelében",
-  "esc.interp": "A tolmács ingyenes: amikor felveszik, mondja angolul: „{language}”."
+  "esc.interp": "A tolmács ingyenes: amikor felveszik, mondja angolul: „{language}”.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

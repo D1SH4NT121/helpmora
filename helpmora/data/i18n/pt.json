@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "pt", "name": "Portuguese", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "pt",
+    "name": "Portuguese",
+    "review": "draft — native review welcome"
+  },
   "q.need": "Com o que você mais precisa de ajuda agora?",
   "q.income": "Quanto sua família ganha por mês, mais ou menos (antes dos impostos)?",
   "q.household": "Quantas pessoas moram na sua casa, contando com você?",
@@ -92,5 +96,9 @@
   "esc.housing": "abrigo para esta noite e encaminhamento para ajuda com aluguel",
   "esc.healthcare": "clínicas que cobram conforme a renda e inscrição no Medicaid",
   "esc.legal": "assistência jurídica civil gratuita perto de você",
-  "esc.interp": "Intérprete grátis: quando atenderem, diga \"{language}\"."
+  "esc.interp": "Intérprete grátis: quando atenderem, diga \"{language}\".",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

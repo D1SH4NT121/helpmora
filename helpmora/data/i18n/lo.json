@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "lo", "name": "Lao", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "lo",
+    "name": "Lao",
+    "review": "draft — native review welcome"
+  },
   "q.need": "ຕອນນີ້ທ່ານຕ້ອງການຄວາມຊ່ວຍເຫຼືອເລື່ອງຫຍັງຫຼາຍທີ່ສຸດ?",
   "q.income": "ຄອບຄົວຂອງທ່ານມີລາຍໄດ້ປະມານເດືອນລະເທົ່າໃດ (ກ່ອນຫັກພາສີ)?",
   "q.household": "ລວມທັງທ່ານ, ມີຈັກຄົນອາໄສຢູ່ໃນເຮືອນຂອງທ່ານ?",
@@ -92,5 +96,9 @@
   "esc.housing": "ບ່ອນພັກພິງໃນຄືນດຽວກັນ ແລະ ການສົ່ງຕໍ່ເພື່ອຊ່ວຍຄ່າເຊົ່າ",
   "esc.healthcare": "ຄລີນິກທີ່ຄິດຄ່າບໍລິການຕາມລາຍໄດ້ ແລະ ການລົງທະບຽນ Medicaid",
   "esc.legal": "ການຊ່ວຍເຫຼືອດ້ານກົດໝາຍແພ່ງຟຣີໃກ້ທ່ານ",
-  "esc.interp": "ນາຍພາສາຟຣີ: ເມື່ອມີຄົນຮັບສາຍ, ໃຫ້ເວົ້າເປັນພາສາອັງກິດວ່າ \"{language}\"."
+  "esc.interp": "ນາຍພາສາຟຣີ: ເມື່ອມີຄົນຮັບສາຍ, ໃຫ້ເວົ້າເປັນພາສາອັງກິດວ່າ \"{language}\".",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

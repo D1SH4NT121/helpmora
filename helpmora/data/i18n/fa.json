@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "fa", "name": "Persian (Farsi / Dari)", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "fa",
+    "name": "Persian (Farsi / Dari)",
+    "review": "draft — native review welcome"
+  },
   "q.need": "الان بیشتر از همه به چه کمکی نیاز دارید؟",
   "q.income": "درآمد ماهانهٔ خانوار شما تقریباً چقدر است (قبل از مالیات)؟",
   "q.household": "با خودتان، چند نفر در خانه‌تان زندگی می‌کنند؟",
@@ -92,5 +96,9 @@
   "esc.housing": "سرپناه همان شب و معرفی برای کمک اجاره",
   "esc.healthcare": "درمانگاه‌هایی با هزینه بر اساس درآمد و ثبت‌نام در Medicaid",
   "esc.legal": "کمک حقوقی مدنی رایگان نزدیک شما",
-  "esc.interp": "مترجم رایگان است: وقتی کسی جواب داد، به انگلیسی بگویید \"{language}\"."
+  "esc.interp": "مترجم رایگان است: وقتی کسی جواب داد، به انگلیسی بگویید \"{language}\".",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

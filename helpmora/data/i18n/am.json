@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "am", "name": "Amharic", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "am",
+    "name": "Amharic",
+    "review": "draft — native review welcome"
+  },
   "q.need": "አሁን በጣም የሚያስፈልግዎት እርዳታ ምንድን ነው?",
   "q.income": "ቤተሰብዎ በወር በግምት ምን ያህል ያገኛል (ከግብር በፊት)?",
   "q.household": "እርስዎን ጨምሮ በቤትዎ ስንት ሰዎች ይኖራሉ?",
@@ -92,5 +96,9 @@
   "esc.housing": "በዚያው ምሽት መጠለያ እና ለቤት ኪራይ እርዳታ ሪፈራል",
   "esc.healthcare": "እንደ ገቢ የሚያስከፍሉ ክሊኒኮች እና የ Medicaid ምዝገባ",
   "esc.legal": "በአቅራቢያዎ ነፃ የፍትሐ ብሔር የሕግ እርዳታ",
-  "esc.interp": "አስተርጓሚ ነፃ ነው: አንድ ሰው ሲመልስ በእንግሊዝኛ \"{language}\" ይበሉ።"
+  "esc.interp": "አስተርጓሚ ነፃ ነው: አንድ ሰው ሲመልስ በእንግሊዝኛ \"{language}\" ይበሉ።",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }

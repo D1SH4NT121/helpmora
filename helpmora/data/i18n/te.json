@@ -1,5 +1,9 @@
 {
-  "_meta": {"language": "te", "name": "Telugu", "review": "draft — native review welcome"},
+  "_meta": {
+    "language": "te",
+    "name": "Telugu",
+    "review": "draft — native review welcome"
+  },
   "q.need": "ఇప్పుడు మీకు ఎక్కువగా ఏ సహాయం కావాలి?",
   "q.income": "మీ కుటుంబానికి నెలకు సుమారు ఎంత ఆదాయం వస్తుంది (పన్నులకు ముందు)?",
   "q.household": "మీతో కలిపి మీ ఇంట్లో ఎంతమంది ఉంటారు?",
@@ -92,5 +96,9 @@
   "esc.housing": "అదే రాత్రి ఆశ్రయం మరియు అద్దె సహాయానికి రిఫరల్",
   "esc.healthcare": "ఆదాయాన్ని బట్టి ఫీజు తీసుకునే క్లినిక్‌లు మరియు Medicaid నమోదు",
   "esc.legal": "మీ దగ్గర ఉచిత సివిల్ న్యాయ సహాయం",
-  "esc.interp": "దుబాసీ ఉచితం: ఎవరైనా ఫోన్ ఎత్తినప్పుడు ఇంగ్లీష్‌లో \"{language}\" అని చెప్పండి."
+  "esc.interp": "దుబాసీ ఉచితం: ఎవరైనా ఫోన్ ఎత్తినప్పుడు ఇంగ్లీష్‌లో \"{language}\" అని చెప్పండి.",
+  "opt.education": "Education & Study Loans",
+  "chip.education.0": "How do I apply for PM-Vidyalaxmi study loan?",
+  "chip.education.1": "Can I get an education loan without collateral?",
+  "chip.education.2": "How do I apply for National Scholarship (NSP)?"
 }
