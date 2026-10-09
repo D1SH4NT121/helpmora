@@ -37,10 +37,11 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
         docs_on: bool = True,
         raw_voice_on: bool = False,
         memory_wiped: bool = False,
+        spoken_transcript: str = "",
         trace_events: list = [
             {"badge": "OMI", "title": "Voice Intake Normalized", "status": "completed", "detail": "Language: English/Hindi detected, session started"},
             {"badge": "QDRANT", "title": "Semantic Memory Scoped", "status": "completed", "detail": "User isolation filter: user_id verified"},
-            {"badge": "CONTEXT", "title": "Context Agent Profile", "status": "completed", "detail": "Extracted: income ₹8,000/mo, 2 children, unemployed"},
+            {"badge": "CONTEXT", "title": "Context Agent Profile", "status": "completed", "detail": "Extracted: income ₹8,00,0/mo, 2 children, unemployed"},
             {"badge": "RESOURCE", "title": "Resource Agent Evaluated", "status": "completed", "detail": "40 official Indian welfare schemes checked"},
             {"badge": "ELIGIBILITY", "title": "Deterministic Policy Engine", "status": "completed", "detail": "Evaluated against 2026 EWS income limit (₹3,00,000)"},
             {"badge": "PATHFINDER", "title": "Pathfinder Agent (26 Paths)", "status": "completed", "detail": "Alternative bridge via SUH shelter prepared"},
@@ -48,29 +49,104 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
             {"badge": "WORKFLOW", "title": "Adaptive Assistant", "status": "active", "detail": "Waiting for explicit human approval to proceed"}
         ];
 
+    can with entry {
+        try {
+            window.eval("""
+                window._cm_speak = function(text) {
+                    try {
+                        if ('speechSynthesis' in window) {
+                            window.speechSynthesis.cancel();
+                            var utt = new SpeechSynthesisUtterance(text);
+                            utt.lang = 'en-IN';
+                            utt.rate = 1.0;
+                            window.speechSynthesis.speak(utt);
+                        }
+                    } catch(e) {}
+                };
+                window._cm_listen_field = function(onText, onDone) {
+                    try {
+                        var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                        if (!SR) return null;
+                        var rec = new SR();
+                        rec.continuous = false;
+                        rec.interimResults = true;
+                        rec.lang = 'en-IN';
+                        rec.onresult = function(e) {
+                            var t = '';
+                            for (var i = 0; i < e.results.length; i++) {
+                                t += e.results[i][0].transcript;
+                            }
+                            if (onText) onText(t);
+                        };
+                        rec.onend = function() { if (onDone) onDone(); };
+                        rec.onerror = function() { if (onDone) onDone(); };
+                        rec.start();
+                        return rec;
+                    } catch(e) { if (onDone) onDone(); return null; }
+                };
+            """);
+        } except Exception as _ex {}
+    }
+
+    def toggleVoiceFirst {
+        voice_first = not voice_first;
+        if voice_first {
+            try {
+                if window._cm_speak {
+                    window._cm_speak("Voice-First mode activated. Click Speak Field to talk into your microphone.");
+                }
+            } except Exception as _ex {}
+        }
+    }
+
     def triggerVoiceInput {
         if voice_active {
-            try {
-                if window._cm_voice_bridge { window._cm_voice_bridge.stop(); }
-            } except Exception as _ex {}
             voice_active = False;
             agent_state = "reasoning";
+            try {
+                if window._cm_current_rec { window._cm_current_rec.stop(); }
+            } except Exception as _ex {}
             return;
         }
 
         voice_active = True;
         agent_state = "listening";
         try {
-            if window._cm_voice_bridge {
-                window._cm_voice_bridge.start("en-IN");
+            if window._cm_listen_field {
+                window._cm_current_rec = window._cm_listen_field(
+                    lambda text: Any {
+                        spoken_transcript = str(text);
+                        digits = "".join([c for c in str(text) if c in "0123456789"]);
+                        if digits {
+                            voice_field_val = "₹" + digits;
+                        }
+                    },
+                    lambda {
+                        voice_active = False;
+                        agent_state = "reasoning";
+                        try {
+                            if window._cm_speak {
+                                window._cm_speak("I have noted " + voice_field_val + " for " + voice_field_name + ". Please confirm.");
+                            }
+                        } except Exception as _ex {}
+                    }
+                );
             }
-        } except Exception as _ex {}
+        } except Exception as _ex {
+            voice_active = False;
+            agent_state = "reasoning";
+        }
     }
 
     def confirmVoiceField {
         voice_confirmed = True;
         active_step = 3;
         agent_state = "verified";
+        try {
+            if window._cm_speak {
+                window._cm_speak("Income confirmed and saved to your case.");
+            }
+        } except Exception as _ex {}
     }
 
     def showFieldHelp(title: str, text: str) {
@@ -91,6 +167,11 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
         approval_status = "approved";
         agent_state = "action_complete";
         active_step = 5;
+        try {
+            if window._cm_speak {
+                window._cm_speak("Application approved and saved.");
+            }
+        } except Exception as _ex {}
     }
 
     def wipeAllMemory {
@@ -156,9 +237,9 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
     lbl_step6 = "6. Check Everything and Agree" if simple_lang else "6. Review & Human Approval";
 
     lbl_voice_title = "Talk Instead of Typing:" if simple_lang else "Voice-to-Form Capture:";
-    lbl_voice_prompt = "What you said: \"I make 8,000 rupees a month.\"" if simple_lang else "Spoken input: \"My monthly income is eight thousand rupees.\"";
+    lbl_voice_prompt = ("Spoken input: \"" + spoken_transcript + "\"") if spoken_transcript else ("What you said: \"I make 8,000 rupees a month.\"" if simple_lang else "Spoken input: \"My monthly income is eight thousand rupees.\"");
     lbl_field_name = "Money Made Each Month" if simple_lang else voice_field_name;
-    lbl_voice_question = ("Field confirmed and saved." if voice_confirmed else ("HELPmora: \"I wrote down ₹8,000 for your monthly money. Does that sound right?\"" if simple_lang else "HELPmora: \"I have entered ₹8,000 for Monthly Income. Is that correct?\""));
+    lbl_voice_question = ("Field confirmed and saved." if voice_confirmed else ("HELPmora: \"I wrote down " + voice_field_val + " for your monthly money. Does that sound right?\"" if simple_lang else "HELPmora: \"I have entered " + voice_field_val + " for Monthly Income. Is that correct?\""));
     lbl_recovery_btn = "Don't have your papers?" if simple_lang else "Cannot find document?";
     lbl_recovery_title = "Help: If You Don't Have an Income Paper" if simple_lang else "Guided Recovery: Missing Income Certificate";
     lbl_recovery_sub = "If you don't have an official paper right now, you can still get help:" if simple_lang else "If you do not have a formal income certificate right now, you do not have to start over:";
@@ -226,7 +307,7 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
             }}>
                 <span style={{"fontSize": fs_xs, "fontWeight": "600", "color": txt_dim, "letterSpacing": "0.04em", "textTransform": "uppercase"}}>Accessibility</span>
                 <button
-                    onClick={lambda _e: MouseEvent { voice_first = not voice_first; }}
+                    onClick={lambda _e: MouseEvent { toggleVoiceFirst(); }}
                     style={{
                         "padding": "5px 12px",
                         "borderRadius": "8px",
@@ -310,7 +391,8 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
             {voice_first and <div style={{
                 "display": "flex",
                 "alignItems": "center",
-                "gap": "10px",
+                "justifyContent": "space-between",
+                "gap": "12px",
                 "padding": "12px 18px",
                 "background": "rgba(255, 229, 0, 0.12)",
                 "border": "1px solid rgba(255, 229, 0, 0.4)",
@@ -318,10 +400,28 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                 "marginBottom": "20px",
                 "color": "#FFE500",
                 "fontSize": fs_sm,
-                "fontWeight": "600"
+                "fontWeight": "600",
+                "flexWrap": "wrap"
             }}>
-                <span style={{"fontSize": fs_lg}}>🎙️</span>
-                <span>Voice-First Mode Active: Voice input is prioritized. Click "Speak Field" or speak your answers directly.</span>
+                <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
+                    <span style={{"fontSize": fs_lg}}>🎙️</span>
+                    <span>Voice-First Mode Active: Voice input is prioritized. Click "🎙️ Speak Field Now" to talk into your microphone.</span>
+                </div>
+                <button
+                    onClick={lambda _e: MouseEvent { triggerVoiceInput(); }}
+                    style={{
+                        "padding": "6px 14px",
+                        "background": ("#FF4444" if voice_active else "#FFE500"),
+                        "color": ("#FFFFFF" if voice_active else "#0A0A0A"),
+                        "borderRadius": "8px",
+                        "border": "none",
+                        "fontWeight": "700",
+                        "fontSize": fs_xs,
+                        "cursor": "pointer"
+                    }}
+                >
+                    {("Stop Recording" if voice_active else "🎙️ Speak Field Now")}
+                </button>
             </div>}
 
             <div style={{
@@ -401,6 +501,24 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                                 {("Stop Recording" if voice_active else ("🎙️ Speak Field Now" if voice_first else "Speak Field"))}
                             </button>
                         </div>
+
+                        {voice_active and <div style={{
+                            "display": "flex",
+                            "alignItems": "center",
+                            "gap": "8px",
+                            "padding": "8px 12px",
+                            "background": "rgba(255, 68, 68, 0.15)",
+                            "border": "1px solid rgba(255, 68, 68, 0.4)",
+                            "borderRadius": "8px",
+                            "color": "#FF4444",
+                            "fontSize": fs_xs,
+                            "fontWeight": "600",
+                            "marginBottom": "12px"
+                        }}>
+                            <span style={{"fontSize": "16px"}}>🎙️</span>
+                            <span>Microphone Listening... Speak your monthly income (e.g. "8000 rupees")</span>
+                        </div>}
+
                         <div style={{"fontSize": fs_sm, "fontStyle": "italic", "color": txt_dim, "marginBottom": "12px"}}>
                             {lbl_voice_prompt}
                         </div>
