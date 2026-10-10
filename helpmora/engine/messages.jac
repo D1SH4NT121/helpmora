@@ -109,7 +109,7 @@ def quick_options(key: str, lang: str) -> list {
     } elif key == "need" {
         rows = [["opt.food", "I need food"], ["opt.housing", "I need help with housing"], ["opt.health", "I need a doctor"], ["opt.legal", "I need a lawyer"]];
     } elif key == "income" {
-        rows = [["opt.inc1", "about $800 a month"], ["opt.inc2", "about $1,500 a month"], ["opt.inc3", "about $2,500 a month"], ["opt.inc4", "about $3,500 a month"], ["opt.inc0", "no income"]];
+        rows = [["opt.inc1", "about ₹8,000 a month"], ["opt.inc2", "about ₹15,000 a month"], ["opt.inc3", "about ₹25,000 a month"], ["opt.inc4", "about ₹35,000 a month"], ["opt.inc0", "no income"]];
     } elif key == "household" {
         rows = [["opt.just_me", "just me"], ["2", "household of 2"], ["3", "household of 3"], ["4", "household of 4"], ["5+", "household of 5"]];
     } elif key == "citizenship" {

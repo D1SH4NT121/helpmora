@@ -122,7 +122,7 @@ def:pub ActionPlan(user_id: str, walker_events: list = []) -> JsxElement {
                         }}>
                             <div style={{"color": "#FFE500", "fontWeight": "600", "marginBottom": "6px"}}>To get ApplicationNodes written here, try a prompt that matches a real resource:</div>
                             <div>"I'm a 28-year-old domestic violence survivor with a 5-year-old, need emergency shelter."</div>
-                            <div style={{"marginTop": "5px"}}>"I'm 72, on $1200/month Social Security, my landlord is trying to evict me illegally."</div>
+                            <div style={{"marginTop": "5px"}}>"I'm 72, on ₹12,000/month pension, my landlord is trying to evict me illegally."</div>
                             <div style={{"marginTop": "5px"}}>"My kids and I haven't eaten in 2 days. We're in Texas."</div>
                         </div>
                     </div>
@@ -168,7 +168,7 @@ def:pub ActionPlan(user_id: str, walker_events: list = []) -> JsxElement {
                     <div style={{"color": "#FFE500", "fontWeight": "600", "marginBottom": "6px"}}>
                         Try a chat prompt like:
                     </div>
-                    <div>"I'm a single mother with 2 kids and need housing help. I earn $1800/month in Houston."</div>
+                    <div>"I'm a single mother with 2 kids and need housing help. I earn ₹15,000/month in Delhi."</div>
                     <div style={{"marginTop": "5px"}}>"I need food assistance for my family."</div>
                     <div style={{"marginTop": "5px"}}>"I lost my job and need legal help to avoid eviction."</div>
                 </div>

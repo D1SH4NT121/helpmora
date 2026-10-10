@@ -85,7 +85,7 @@ walker GraphSnapshotWalker {
                 nodes.append({
                     "id": rid, "type": "ResourceNode", "label": short_label(str(r.agency_name)),
                     "tier": str(e.tier), "p": float(e.p_eligible), "rank": int(e.rank),
-                    "tip": str(r.agency_name) + " · " + str(e.tier).replace("_", " ") + " · P(eligible) " + str(int(round(float(e.p_eligible) * 100))) + "%" + (" · ≈ $" + str(ben) + "/mo" if ben > 0 else "") + " · " + str(r.capacity) + (" · " + str(r.contact_phone) if r.contact_phone else "")
+                    "tip": str(r.agency_name) + " · " + str(e.tier).replace("_", " ") + " · P(eligible) " + str(int(round(float(e.p_eligible) * 100))) + "%" + (" · ≈ ₹" + str(ben) + "/mo" if ben > 0 else "") + " · " + str(r.capacity) + (" · " + str(r.contact_phone) if r.contact_phone else "")
                 });
                 edges.append({"src": "need", "tgt": rid, "label": "eligible_for · " + str(int(round(float(e.p_eligible) * 100))) + "%", "tier": str(e.tier)});
                 rules = [r ->:governed_by:-> [?:EligibilityRuleNode]];

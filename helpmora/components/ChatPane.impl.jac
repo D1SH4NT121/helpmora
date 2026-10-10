@@ -735,7 +735,7 @@ impl ChatPane.renderProfilePanel -> JsxElement {
     rows = [
         ["Need", (str(p["category"]) + " · " + str(p["urgency"]).replace("_", " ")) if p["category"] else ""],
         ["Language", lang_label if lang_label else (str(p["language"]).toUpperCase() if p["language"] else "")],
-        ["Income", ("$" + Number(p["income_annual"]).toLocaleString() + "/yr") if (p["income_annual"] != None and Number(p["income_annual"]) >= 0) else ""],
+        ["Income", ("₹" + Number(p["income_annual"]).toLocaleString() + "/yr") if (p["income_annual"] != None and Number(p["income_annual"]) >= 0) else ""],
         ["Household", str(p["household_size"]) if Number(p["household_size"]) > 0 else ""],
         ["Age", str(p["age"]) if Number(p["age"]) > 0 else ""],
         ["Location", ((str(p["city"]) + ", ") if p["city"] else "") + str(p["state"]) if p["state"] else ""],

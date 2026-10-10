@@ -521,12 +521,12 @@ def snap_estimate(profile: dict) -> dict {
     if ben <= 0 {
         return {};
     }
-    deds = ("the 20% earnings and $" + str(sd) + " standard deductions") if earned else ("the $" + str(sd) + " standard deduction; no earnings deduction for Social Security, SSI or pension income");
+    deds = ("the 20% earnings and ₹" + str(sd) + " standard deductions") if earned else ("the ₹" + str(sd) + " standard deduction; no earnings deduction for Social Security, SSI or pension income");
     raises = "Rent, childcare and medical costs usually raise it." if elderly_disabled else "Rent and childcare deductions usually raise it.";
     return {
         "monthly": ben, "max": maxa, "household": n, "assumed_household": assumed,
-        "label": "≈ $" + f"{ben:,}" + "/mo",
-        "basis": "USDA " + str(y["fy"]) + ": max $" + f"{maxa:,}" + " for " + str(n) + " − 30% of net income ($" + f"{int(net):,}" + "/mo after " + deds + "). " + raises,
+        "label": "≈ ₹" + f"{ben:,}" + "/mo",
+        "basis": "USDA " + str(y["fy"]) + ": max ₹" + f"{maxa:,}" + " for " + str(n) + " − 30% of net income (₹" + f"{int(net):,}" + "/mo after " + deds + "). " + raises,
         "source": "USDA SNAP " + str(y["fy"]) + " maximum allotments and deductions (from " + str(y["from"]) + ")"
     };
 }

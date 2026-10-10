@@ -77,7 +77,7 @@ def need_summary(profile: dict) -> str {
     hh = int(profile.get("household_size", 0) or 0);
     if hh > 0 { parts.append("household " + str(hh)); }
     inc = int(profile.get("income_annual", -1) if profile.get("income_annual", -1) is not None else -1);
-    if inc >= 0 { parts.append("$" + format(inc, ",") + "/yr"); }
+    if inc >= 0 { parts.append("₹" + format(inc, ",") + "/yr"); }
     return " · ".join([x for x in parts if x]);
 }
 

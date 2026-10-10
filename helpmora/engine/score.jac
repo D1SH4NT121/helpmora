@@ -165,7 +165,7 @@ def beta_posterior(approvals: int, attempts: int, capacity: str) -> dict {
 
 """Money formatting for explanations."""
 def usd(v: float) -> str {
-    return "$" + f"{int(round(v)):,}";
+    return "₹" + f"{int(round(v)):,}";
 }
 
 # ---------- per-criterion evaluators ----------

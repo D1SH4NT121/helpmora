@@ -63,9 +63,9 @@ def:pub ChatPane(
             "id": "welcome",
             "text": "Hi, I'm HELPmora. Tell me what's going on, in your own words and in your own language, and I'll find the housing, food, healthcare or legal programs you can use and show exactly why. In 51 languages the whole answer — programs, next steps and my follow-up questions — comes back in yours right away; in 60 more I add a translation a few seconds later, and for languages machines can't translate yet I give you an interpreter card. Pick yours at the top if I get it wrong.",
             "suggestions": [
-                "I'm 72, on $1200/month Social Security, my landlord is trying to evict me illegally.",
+                "I'm 72, on ₹12,000/month pension, my landlord is trying to evict me illegally.",
                 "Mi familia y yo no hemos comido en 2 días. Estamos en Texas.",
-                "I'm a single mother with 2 kids in Houston. I earn $1,800/month and need housing help.",
+                "I'm a single mother with 2 kids in Delhi. I earn ₹15,000/month and need housing help.",
                 "我今天在哪里可以得到食物？我没有工作。"
             ]
         }];
