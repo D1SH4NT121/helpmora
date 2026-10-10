@@ -409,9 +409,8 @@ def:pub AdaptiveAssistant(
                     onClick={lambda _e: MouseEvent {
                         try {
                             window.location.hash = "chat";
-                            var nav_btn = document.querySelector('nav button:first-child');
-                            if (nav_btn) nav_btn.click();
-                        } catch(e) {}
+                            window.eval("var b = document.querySelector('nav button:first-child'); if (b) b.click();");
+                        } except Exception as _ex {}
                     }}
                     style={{
                         "padding": "8px 16px",
