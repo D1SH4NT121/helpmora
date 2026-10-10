@@ -1,7 +1,5 @@
 """Async and walker-backed real-time logic for AdaptiveAssistant."""
 
-import from "@jac/runtime" { jacSpawn, jacIsLoggedIn }
-
 impl AdaptiveAssistant.runLiveAnalysis(text: str) -> None {
     if not text { return; }
     is_loading = True;

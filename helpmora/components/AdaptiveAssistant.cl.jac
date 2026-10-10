@@ -12,6 +12,7 @@ Provides:
 - HELPmora Animated Logo bound directly to system states (idle -> listening -> reasoning -> memory -> verified -> action_complete)
 """
 
+import from "@jac/runtime" { jacSpawn, jacIsLoggedIn }
 import from .HELPmoraLogo { HELPmoraLogo }
 
 def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = None) -> JsxElement {
