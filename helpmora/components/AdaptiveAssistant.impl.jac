@@ -24,9 +24,9 @@ impl AdaptiveAssistant.syncFromChat -> None {
 
         # Income extraction from profile OR chat text
         found_monthly = -1;
-        if prof and prof["income_annual"] is not None and int(prof["income_annual"]) >= 0 {
+        if prof and ("income_annual" in prof) and prof["income_annual"] is not None and int(prof["income_annual"]) >= 0 {
             found_monthly = int(int(prof["income_annual"]) / 12);
-        } elif prof and prof.get("monthly_income") is not None and int(prof.get("monthly_income", -1)) >= 0 {
+        } elif prof and ("monthly_income" in prof) and prof["monthly_income"] is not None and int(prof["monthly_income"]) >= 0 {
             found_monthly = int(prof["monthly_income"]);
         } elif chat_user_text {
             tokens = chat_user_text.replace(",", "").replace("₹", " ").replace("rs.", " ").replace("rs", " ").replace("rupees", " ").replace("/", " ").split(" ");
@@ -46,27 +46,27 @@ impl AdaptiveAssistant.syncFromChat -> None {
         }
 
         # Household and children from profile
-        if prof and prof.get("household_size") is not None and int(prof["household_size"]) > 0 {
+        if prof and ("household_size" in prof) and prof["household_size"] is not None and int(prof["household_size"]) > 0 {
             chat_household = int(prof["household_size"]);
         }
-        if prof and prof.get("children") is not None and int(prof["children"]) >= 0 {
+        if prof and ("children" in prof) and prof["children"] is not None and int(prof["children"]) >= 0 {
             chat_children = int(prof["children"]);
         }
 
         # Matched program extraction
-        match_list: list = list(c["matches"]) if c.get("matches") else [];
-        plan_raw: Any = c.get("plan") if c.get("plan") else {};
-        plan_steps: list = list(plan_raw.get("steps", [])) if (plan_raw and plan_raw.get("steps")) else [];
-        res_list: list = list(c["resources"]) if c.get("resources") else [];
+        match_list: list = list(c["matches"]) if (c and "matches" in c and c["matches"]) else [];
+        plan_raw: Any = c["plan"] if (c and "plan" in c and c["plan"]) else {};
+        plan_steps: list = list(plan_raw["steps"]) if (plan_raw and "steps" in plan_raw and plan_raw["steps"]) else [];
+        res_list: list = list(c["resources"]) if (c and "resources" in c and c["resources"]) else [];
 
         extracted_scheme = "";
-        if len(match_list) > 0 and match_list[0] and match_list[0].get("resource_name") {
+        if len(match_list) > 0 and match_list[0] and ("resource_name" in match_list[0]) and match_list[0]["resource_name"] {
             extracted_scheme = str(match_list[0]["resource_name"]);
-        } elif len(res_list) > 0 and res_list[0] and res_list[0].get("name") {
+        } elif len(res_list) > 0 and res_list[0] and ("name" in res_list[0]) and res_list[0]["name"] {
             extracted_scheme = str(res_list[0]["name"]);
-        } elif len(plan_steps) > 0 and plan_steps[0] and plan_steps[0].get("resource") {
+        } elif len(plan_steps) > 0 and plan_steps[0] and ("resource" in plan_steps[0]) and plan_steps[0]["resource"] {
             extracted_scheme = str(plan_steps[0]["resource"]);
-        } elif prof and prof.get("category") {
+        } elif prof and ("category" in prof) and prof["category"] {
             cat_lower = str(prof["category"]).lower();
             if "food" in cat_lower or "nutrition" in cat_lower or "ration" in cat_lower {
                 extracted_scheme = "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / Free Food Grain)";
