@@ -60,10 +60,10 @@ impl AdaptiveAssistant.syncFromChat -> None {
         }
 
         # Matched program extraction
-        match_list: list = list(c["matches"]) if (c and "matches" in c and c["matches"]) else [];
+        match_list = c["matches"] if (c and "matches" in c and c["matches"]) else [];
         plan_raw: Any = c["plan"] if (c and "plan" in c and c["plan"]) else {};
-        plan_steps: list = list(plan_raw["steps"]) if (plan_raw and "steps" in plan_raw and plan_raw["steps"]) else [];
-        res_list: list = list(c["resources"]) if (c and "resources" in c and c["resources"]) else [];
+        plan_steps = plan_raw["steps"] if (plan_raw and "steps" in plan_raw and plan_raw["steps"]) else [];
+        res_list = c["resources"] if (c and "resources" in c and c["resources"]) else [];
 
         extracted_scheme = "";
         if len(match_list) > 0 and match_list[0] and ("resource_name" in match_list[0]) and match_list[0]["resource_name"] {
@@ -120,10 +120,11 @@ impl AdaptiveAssistant.syncFromChat -> None {
         # Dynamic Live Observable Execution Trace based on real chat data
         lang_str = "English/Hindi";
         if c and ("language_name" in c) and c["language_name"] {
-            if type(c["language_name"]) == list and len(c["language_name"]) > 0 {
-                lang_str = str(c["language_name"][0]);
+            raw_lang = c["language_name"];
+            if raw_lang and len(raw_lang) > 0 and raw_lang[0] and len(raw_lang[0]) > 1 {
+                lang_str = str(raw_lang[0]);
             } else {
-                lang_str = str(c["language_name"]);
+                lang_str = str(raw_lang);
             }
         }
 
@@ -168,7 +169,7 @@ impl AdaptiveAssistant.runLiveAnalysis(text: str) -> None {
         if len(reps) > 0 and reps[0] and reps[0]["case_state"] {
             cs: Any = reps[0]["case_state"];
             run_id = str(cs["case_id"]);
-            raw_trace: list = list(cs["execution_trace"]) if cs["execution_trace"] else [];
+            raw_trace = cs["execution_trace"] if cs["execution_trace"] else [];
             if len(raw_trace) > 0 {
                 new_trace: list = [];
                 for t in raw_trace {
@@ -198,7 +199,7 @@ impl AdaptiveAssistant.runLiveAnalysis(text: str) -> None {
                 }
             }
 
-            cands: list = list(cs["candidate_resources"]) if cs["candidate_resources"] else [];
+            cands = cs["candidate_resources"] if cs["candidate_resources"] else [];
             if len(cands) > 0 and cands[0] and cands[0]["name"] {
                 approved_program = str(cands[0]["name"]);
             }
