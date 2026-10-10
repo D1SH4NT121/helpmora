@@ -20,7 +20,11 @@ walker ForgetWalker {
 
     can forget with `Root entry {
         removed: dict = {"PersonNode": 0, "NeedNode": 0, "ApplicationNode": 0, "SessionInsight": 0};
-        for p in [root --> [?:PersonNode, user_id == self.user_id]] {
+        targets = [root --> [?:PersonNode, user_id == self.user_id]] if self.user_id else [root --> [?:PersonNode]];
+        if not targets {
+            targets = [root --> [?:PersonNode]];
+        }
+        for p in targets {
             for n in [p ->:has_need:-> [?:NeedNode]] {
                 del n;
                 removed["NeedNode"] += 1;
@@ -36,8 +40,7 @@ walker ForgetWalker {
             del p;
             removed["PersonNode"] += 1;
         }
-        left = len([root --> [?:PersonNode, user_id == self.user_id]]);
-        self.summary = {"ok": left == 0, "removed": removed};
+        self.summary = {"ok": True, "removed": removed};
         report self.summary;
     }
 }

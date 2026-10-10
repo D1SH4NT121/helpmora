@@ -26,9 +26,14 @@ impl GraphViz.loadSnap -> None {
 }
 
 impl GraphViz.resetGraph -> None {
-    if not user_id { return; }
     loading = True;
-    await jacSpawn("ForgetWalker", "", {"user_id": user_id}).catch(
+    try { sessionStorage.removeItem("cm_chat_started"); } except Exception as _ex {}
+    if user_id {
+        await jacSpawn("ForgetWalker", "", {"user_id": user_id}).catch(
+            lambda e: Any -> dict { return {"reports": []}; }
+        );
+    }
+    await jacSpawn("ForgetWalker", "", {}).catch(
         lambda e: Any -> dict { return {"reports": []}; }
     );
     snap = None;

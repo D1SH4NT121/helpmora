@@ -267,6 +267,7 @@ impl AdaptiveAssistant.approveAction -> None {
 impl AdaptiveAssistant.confirmStep1 -> None {
     step1_confirmed = True;
     active_step = 2;
+    try { sessionStorage.setItem("cm_chat_started", "1"); } except Exception as _ex {}
     try {
         window.eval("if (window._cm_speak) { window._cm_speak('Personal details confirmed for " + citizen_name.replace("'", "") + ". Please specify your household size.'); }");
     } except Exception as _ex {}

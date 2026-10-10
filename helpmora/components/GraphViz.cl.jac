@@ -77,7 +77,11 @@ def:pub GraphViz(walker_events: list, user_id: str = "") -> JsxElement {
 
     nodes: list = list(snap["nodes"]) if (snap and snap["nodes"]) else [];
     counts: Any = snap["counts"] if (snap and snap["counts"]) else {};
-    empty = (not snap) or bool(snap["empty"]) or len(nodes) <= 2;
+    has_chat: bool = False;
+    try {
+        has_chat = bool(len(walker_events) > 0 or (sessionStorage.getItem("cm_chat_started") == "1"));
+    } except Exception as _ex {}
+    empty = (not snap) or bool(snap["empty"]) or len(nodes) <= 2 or (not has_chat);
     m = model();
     has_routes = len(m["routes"]) > 0;
     gr = GV_GR if has_routes else (64 if len(m["arcs"]) > 0 else 12);

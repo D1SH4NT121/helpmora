@@ -99,6 +99,7 @@ impl ChatPane.sendMessage(text_override: str = "", answering: str = "", display:
     user_msg = {"role": "user", "kind": "text", "id": "u" + str(Math.random()), "text": shown, "evidence": []};
     new_messages = messages + [user_msg];
     messages = new_messages;
+    try { sessionStorage.setItem("cm_chat_started", "1"); } except Exception as _ex {}
     is_loading = True;
 
     # A request the hosting proxy never answers used to leave the typing dots
