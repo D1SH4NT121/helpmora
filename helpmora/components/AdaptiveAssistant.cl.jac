@@ -157,7 +157,7 @@ def:pub AdaptiveAssistant(
         syncFromChat();
     }
 
-    can with [active_case, walker_events, voice_field_val, approval_status, approved_program] entry {
+    can with [active_case, walker_events] entry {
         syncFromChat();
     }
 
@@ -873,15 +873,15 @@ def:pub AdaptiveAssistant(
                                     type="text"
                                     value={voice_field_val}
                                     onChange={lambda e: ChangeEvent {
-                                        raw_input = str(e.target.value);
-                                        num_digits = "".join([c for c in raw_input if c.isdigit()]);
+                                        voice_field_val = str(e.target.value);
+                                        user_overrode_income = True;
+                                        voice_confirmed = False;
+                                    }}
+                                    onBlur={lambda _e: FocusEvent {
+                                        num_digits = "".join([c for c in voice_field_val if c.isdigit()]);
                                         if num_digits {
                                             voice_field_val = "₹" + f"{int(num_digits):,}";
-                                            user_overrode_income = True;
-                                        } else {
-                                            voice_field_val = raw_input;
                                         }
-                                        voice_confirmed = False;
                                         try {
                                             window.eval("window._cm_manual_income = '" + voice_field_val + "'; try { sessionStorage.setItem('cm_manual_income', '" + voice_field_val + "'); } catch(e) {}");
                                         } except Exception as _ex {}
