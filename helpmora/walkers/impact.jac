@@ -18,7 +18,7 @@ fast even when called from a public-facing dashboard tab. Spawned from the
 ImpactReport React component on mount and on tab switch.
 """
 
-import from graph.nodes { PersonNode, NeedNode, ApplicationNode }
+import from graph.nodes { PersonNode, NeedNode, ApplicationNode, ResourceNode }
 import from graph.edges { applied_to, has_need }
 import from engine.stats { stats_snapshot }
 
@@ -30,6 +30,7 @@ walker ImpactWalker {
         people = [root --> [?:PersonNode]];
 
         total_users = len(people);
+        total_needs = 0;
         languages: dict = {};
         need_categories: dict = {};
         app_status_counts: dict = {
@@ -51,6 +52,7 @@ walker ImpactWalker {
             }
 
             needs = [p ->:has_need:-> [?:NeedNode]];
+            total_needs = total_needs + len(needs);
             for n in needs {
                 cat = str(n.category) if n.category else "unknown";
                 if cat in need_categories {
@@ -74,6 +76,16 @@ walker ImpactWalker {
                     resource_counts[rname] = int(resource_counts[rname]) + 1;
                 } else {
                     resource_counts[rname] = 1;
+                }
+
+                res_matches = [root --> [?:ResourceNode, agency_name == rname]];
+                if res_matches and res_matches[0].category {
+                    rcat = str(res_matches[0].category).lower();
+                    if rcat in need_categories {
+                        need_categories[rcat] = int(need_categories[rcat]) + 1;
+                    } else {
+                        need_categories[rcat] = 1;
+                    }
                 }
             }
         }
@@ -125,6 +137,7 @@ walker ImpactWalker {
 
         payload = {
             "total_users": total_users,
+            "total_needs": total_needs,
             "total_applications": total_applications,
             "languages": language_pairs,
             "need_categories": category_pairs,
