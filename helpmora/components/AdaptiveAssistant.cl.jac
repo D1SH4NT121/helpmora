@@ -15,10 +15,17 @@ Provides:
 import from "@jac/runtime" { jacSpawn, jacIsLoggedIn }
 import from .HELPmoraLogo { HELPmoraLogo }
 
-def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = None) -> JsxElement {
+def:pub AdaptiveAssistant(
+    user_id: str = "anonymous",
+    on_walker_event: Any = None,
+    active_case: Any = None,
+    walker_events: list = []
+) -> JsxElement {
     has agent_state: str = "idle",
         active_step: int = 3,
-        input_text: str = "I lost my job two months ago. I am behind on rent, I have two children, and my monthly income is eight thousand rupees.",
+        chat_user_text: str = "",
+        chat_category: str = "",
+        chat_connected: bool = False,
         voice_active: bool = False,
         voice_field_val: str = "₹8,000",
         voice_field_name: str = "Monthly Family Income",
@@ -93,8 +100,14 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                 };
             """);
         } except Exception as _ex {}
+        syncFromChat();
     }
 
+    can with [active_case, walker_events] entry {
+        syncFromChat();
+    }
+
+    def syncFromChat -> None;
     async def runLiveAnalysis(text: str) -> None;
     async def wipeAllMemory -> None;
     async def approveAction -> None;
@@ -109,7 +122,6 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
     def closeFieldHelp -> None;
     def toggleRecovery -> None;
     def togglePrivacy(kind: str) -> None;
-    def setScenario(preset: str) -> None;
 
     container_style = {
         "maxWidth": "1200px",
@@ -334,114 +346,87 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                 </button>
             </div>}
 
-            <div style={{
-                "background": card_bg,
-                "backdropFilter": ("none" if reduced_motion else "blur(12px)"),
-                "borderRadius": "16px",
-                "border": ("2px solid #FFE500" if is_loading else ("0.5px solid " + border_color)),
-                "padding": "18px 22px",
-                "marginBottom": "20px"
+            {chat_connected and <div style={{
+                "background": ("#000000" if high_contrast else "rgba(255, 229, 0, 0.04)"),
+                "borderRadius": "14px",
+                "border": ("1px solid #FFE500" if high_contrast else "0.5px solid rgba(255, 229, 0, 0.3)"),
+                "padding": "14px 18px",
+                "marginBottom": "20px",
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "space-between",
+                "flexWrap": "wrap",
+                "gap": "12px"
             }}>
-                <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "marginBottom": "10px", "flexWrap": "wrap", "gap": "10px"}}>
-                    <div style={{"display": "flex", "alignItems": "center", "gap": "8px"}}>
-                        <span style={{"fontSize": "18px"}}>⚡</span>
-                        <span style={{"fontSize": fs_base, "fontWeight": "600", "color": txt_main}}>
-                            {("Your Situation & Needs" if simple_lang else "Live Multi-Agent Case Scenario")}
-                        </span>
+                <div style={{"display": "flex", "alignItems": "center", "gap": "12px"}}>
+                    <span style={{"fontSize": "22px"}}>💬</span>
+                    <div>
+                        <div style={{"fontSize": fs_xs, "color": "#FFE500", "fontWeight": "700", "textTransform": "uppercase", "letterSpacing": "0.06em"}}>
+                            {"Live Synced with Real-Time Chat"}
+                        </div>
+                        <div style={{"fontSize": fs_sm, "color": txt_main, "marginTop": "2px"}}>
+                            {("Case: \"" + chat_user_text + "\"") if chat_user_text else "Active conversation linked"}
+                        </div>
                     </div>
-                    <button
-                        onClick={lambda _e: MouseEvent { runLiveAnalysis(input_text); }}
-                        style={{
-                            "padding": "8px 18px",
-                            "background": ("#00FF88" if is_loading else "#FFE500"),
-                            "color": "#0A0A0A",
-                            "borderRadius": "8px",
-                            "border": "none",
-                            "fontWeight": "700",
-                            "fontSize": fs_xs,
-                            "cursor": "pointer"
-                        }}
-                    >
-                        {("⏳ Running Real-Time Agents..." if is_loading else "⚡ Run Live Analysis")}
-                    </button>
                 </div>
-                <input
-                    type="text"
-                    value={input_text}
-                    onChange={lambda e: ChangeEvent { input_text = str(e.target.value); }}
-                    placeholder="Describe your situation (e.g. lost job, rent due, 2 children, monthly income 8000)..."
-                    style={{
-                        "width": "100%",
-                        "boxSizing": "border-box",
-                        "padding": "11px 14px",
-                        "background": inner_card_bg,
-                        "border": inner_border,
-                        "borderRadius": "8px",
-                        "color": txt_main,
-                        "fontSize": fs_sm,
-                        "outline": "none"
-                    }}
-                />
-                <div style={{"display": "flex", "alignItems": "center", "gap": "8px", "marginTop": "10px", "flexWrap": "wrap"}}>
-                    <span style={{"fontSize": fs_xs, "color": txt_dim}}>Test or Load a Life Scenario:</span>
-                    <button
-                        onClick={lambda _e: MouseEvent { setScenario("clear"); }}
-                        style={{"padding": "4px 10px", "borderRadius": "6px", "fontSize": fs_xs, "cursor": "pointer", "background": "rgba(255, 255, 255, 0.06)", "color": txt_main, "border": inner_border}}
-                    >
-                        🔄 Clear / Custom Situation
-                    </button>
-                    <button
-                        onClick={lambda _e: MouseEvent { setScenario("single_mother"); }}
-                        style={{"padding": "4px 10px", "borderRadius": "6px", "fontSize": fs_xs, "cursor": "pointer", "background": "rgba(255, 229, 0, 0.12)", "color": "#FFE500", "border": "0.5px solid rgba(255, 229, 0, 0.3)"}}
-                    >
-                        👩 Single Mother (Housing)
-                    </button>
-                    <button
-                        onClick={lambda _e: MouseEvent { setScenario("senior"); }}
-                        style={{"padding": "4px 10px", "borderRadius": "6px", "fontSize": fs_xs, "cursor": "pointer", "background": "rgba(68, 136, 255, 0.12)", "color": "#4488FF", "border": "0.5px solid rgba(68, 136, 255, 0.3)"}}
-                    >
-                        👴 Senior Citizen (Pension & Health)
-                    </button>
-                    <button
-                        onClick={lambda _e: MouseEvent { setScenario("food"); }}
-                        style={{"padding": "4px 10px", "borderRadius": "6px", "fontSize": fs_xs, "cursor": "pointer", "background": "rgba(0, 255, 136, 0.12)", "color": "#00FF88", "border": "0.5px solid rgba(0, 255, 136, 0.3)"}}
-                    >
-                        🌾 Family (Ration & Grain)
-                    </button>
+                <div style={{"display": "flex", "alignItems": "center", "gap": "8px", "flexWrap": "wrap"}}>
+                    <span style={{"fontSize": fs_xs, "padding": "4px 8px", "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_muted}}>
+                        {"Need: " + (chat_category if chat_category else "Welfare Assistance")}
+                    </span>
+                    <span style={{"fontSize": fs_xs, "padding": "4px 8px", "borderRadius": "6px", "background": "rgba(0,255,136,0.1)", "color": "#00FF88", "fontWeight": "600"}}>
+                        {"Income: " + voice_field_val}
+                    </span>
+                    <span style={{"fontSize": fs_xs, "padding": "4px 8px", "borderRadius": "6px", "background": "rgba(255,229,0,0.1)", "color": "#FFE500", "fontWeight": "600"}}>
+                        {"Matched Scheme: " + approved_program}
+                    </span>
                 </div>
+            </div>}
 
-                <div style={{
-                    "display": "flex",
-                    "flexDirection": "column",
-                    "gap": "6px",
-                    "marginTop": "12px",
-                    "padding": "10px 14px",
-                    "background": ("#000000" if high_contrast else "rgba(255, 255, 255, 0.02)"),
-                    "borderRadius": "8px",
-                    "border": inner_border,
-                    "fontSize": fs_xs,
-                    "lineHeight": "1.5"
-                }}>
-                    <div style={{"display": "flex", "alignItems": "flex-start", "gap": "6px"}}>
-                        <span style={{"color": "#FFE500", "fontWeight": "bold", "minWidth": "65px"}}>WHAT:</span>
-                        <span style={{"color": txt_main}}>
-                            {("No crisis entered yet. Type your situation or click a scenario." if not input_text else ("Need: " + ("Housing & shelter" if "rent" in input_text.lower() else ("Healthcare & legal aid" if "72" in input_text else "Food rations")) + " · Monthly Family Income: " + voice_field_val + " · Family dependents recorded."))}
-                        </span>
-                    </div>
-                    <div style={{"display": "flex", "alignItems": "flex-start", "gap": "6px"}}>
-                        <span style={{"color": "#4488FF", "fontWeight": "bold", "minWidth": "65px"}}>WHERE:</span>
-                        <span style={{"color": txt_muted}}>
-                            {"Parsed from your spoken words or typed text in the box above. You have 100% control over this data."}
-                        </span>
-                    </div>
-                    <div style={{"display": "flex", "alignItems": "flex-start", "gap": "6px"}}>
-                        <span style={{"color": "#00FF88", "fontWeight": "bold", "minWidth": "65px"}}>WHICH:</span>
-                        <span style={{"color": txt_muted}}>
-                            {("Matched Scheme: " + approved_program + " (Evaluated against statutory rules: EWS Income Limit < ₹3,00,000/yr).")}
-                        </span>
+            {(not chat_connected) and <div style={{
+                "background": card_bg,
+                "borderRadius": "14px",
+                "border": ("1px solid #FFFFFF" if high_contrast else "0.5px solid " + border_color),
+                "padding": "16px 20px",
+                "marginBottom": "20px",
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "space-between",
+                "flexWrap": "wrap",
+                "gap": "14px"
+            }}>
+                <div style={{"display": "flex", "alignItems": "center", "gap": "12px"}}>
+                    <span style={{"fontSize": "22px"}}>💬</span>
+                    <div>
+                        <div style={{"fontSize": fs_xs, "color": "#FFE500", "fontWeight": "700", "textTransform": "uppercase", "letterSpacing": "0.06em"}}>
+                            {"Real-Time Chat Connection"}
+                        </div>
+                        <div style={{"fontSize": fs_sm, "color": txt_muted, "marginTop": "2px"}}>
+                            {"Chat your situation in the Chat Panel — your crisis, family, and income will automatically guide this workflow in real time."}
+                        </div>
                     </div>
                 </div>
-            </div>
+                <button
+                    onClick={lambda _e: MouseEvent {
+                        try {
+                            window.location.hash = "chat";
+                            var nav_btn = document.querySelector('nav button:first-child');
+                            if (nav_btn) nav_btn.click();
+                        } catch(e) {}
+                    }}
+                    style={{
+                        "padding": "8px 16px",
+                        "background": "#FFE500",
+                        "color": "#0A0A0A",
+                        "borderRadius": "8px",
+                        "border": "none",
+                        "fontWeight": "700",
+                        "fontSize": fs_xs,
+                        "cursor": "pointer"
+                    }}
+                >
+                    💬 Go to Chat Panel
+                </button>
+            </div>}
 
             <div style={{
                 "display": "grid",

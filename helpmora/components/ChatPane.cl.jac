@@ -26,7 +26,8 @@ def:pub ChatPane(
     on_walker_event: Any,
     auth_ready: Any = None,
     walker_events: list = [],
-    platform: Any = None
+    platform: Any = None,
+    on_case_update: Any = None
 ) -> JsxElement {
     has messages: list[dict] = [],
         input_val: str = "",

@@ -94,6 +94,10 @@ impl ClientApp.pushWalkerEvent(events: list) -> None {
     walker_events = events;
 }
 
+impl ClientApp.handleCaseUpdate(case_data: Any) -> None {
+    active_case = case_data;
+}
+
 impl ClientApp.navTab(tab_id: str, label: str) -> JsxElement {
     is_active = active_tab == tab_id;
     return

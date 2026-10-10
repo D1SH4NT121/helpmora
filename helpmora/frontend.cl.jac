@@ -44,7 +44,8 @@ def:pub ClientApp -> JsxElement {
         platform: Any = None,
         # initAuth's promise (resolves to the visitor id): the chat awaits it
         # before its first request.
-        auth_ready: Any = None;
+        auth_ready: Any = None,
+        active_case: Any = None;
 
     # Master action list for the Cmd+K command palette. Each entry is a
     # (label, kind, payload) triple so navigate actions and side effects
@@ -64,6 +65,7 @@ def:pub ClientApp -> JsxElement {
     def startApp -> None;
     def goHome -> None;
     def togglePalette -> None;
+    def handleCaseUpdate(case_data: Any) -> None;
     def runPaletteAction(action: Any) -> None;
     def renderPaletteItem(action: Any, idx: int, sel: int) -> JsxElement;
     def renderPalette -> JsxElement;
@@ -261,12 +263,18 @@ def:pub ClientApp -> JsxElement {
                         user_id={user_id}
                         auth_ready={auth_ready}
                         on_walker_event={pushWalkerEvent}
+                        on_case_update={handleCaseUpdate}
                         walker_events={walker_events}
                         platform={platform}
                     />
                 </div>
                 <div style={{"display": ("block" if active_tab == "adaptive" else "none")}}>
-                    <AdaptiveAssistant user_id={user_id} on_walker_event={pushWalkerEvent}/>
+                    <AdaptiveAssistant
+                        user_id={user_id}
+                        active_case={active_case}
+                        walker_events={walker_events}
+                        on_walker_event={pushWalkerEvent}
+                    />
                 </div>
                 <div style={{"display": ("block" if active_tab == "graph" else "none")}}>
                     <GraphViz walker_events={walker_events} user_id={user_id}/>

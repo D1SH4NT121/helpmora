@@ -1,5 +1,58 @@
 """Async and walker-backed real-time logic for AdaptiveAssistant with accurate voice narration."""
 
+impl AdaptiveAssistant.syncFromChat -> None {
+    c = active_case;
+    try {
+        if not c and window._cm_latest_case {
+            c = window._cm_latest_case;
+        }
+        if not c {
+            raw_s = sessionStorage.getItem("cm_latest_case");
+            if raw_s {
+                c = JSON.parse(raw_s);
+            }
+        }
+    } except Exception as _ex {}
+
+    if not c { return; }
+
+    try {
+        prof: Any = c["profile"] if c["profile"] else {};
+        chat_user_text = str(c["last_user_text"] if c["last_user_text"] else (c["conversation"] if c["conversation"] else ""));
+        chat_category = str(prof["category"]).replace("_", " ").title() if prof and prof["category"] else "Welfare Assistance";
+        chat_connected = True;
+
+        # Income extraction
+        inc_annual = int(prof["income_annual"] if (prof and prof["income_annual"] is not None and prof["income_annual"] >= 0) else -1);
+        if inc_annual >= 0 {
+            monthly_val = int(inc_annual / 12);
+            voice_field_val = "₹" + f"{monthly_val:,}";
+            voice_confirmed = True;
+        }
+
+        # Matched program extraction
+        res_list: list = list(c["resources"]) if c["resources"] else [];
+        plan_list: list = list(c["plan"]) if c["plan"] else [];
+        if len(res_list) > 0 and res_list[0] and res_list[0]["name"] {
+            approved_program = str(res_list[0]["name"]);
+        } elif len(plan_list) > 0 and plan_list[0] and plan_list[0]["resource"] {
+            approved_program = str(plan_list[0]["resource"]);
+        }
+
+        # Step progression based on real chat facts
+        if approval_status == "approved" {
+            active_step = 6;
+        } elif len(res_list) > 0 or len(plan_list) > 0 {
+            active_step = 5;
+        } elif inc_annual >= 0 {
+            active_step = 4;
+        } else {
+            active_step = 3;
+        }
+        agent_state = "verified";
+    } except Exception as _ex {}
+}
+
 impl AdaptiveAssistant.runLiveAnalysis(text: str) -> None {
     if not text { return; }
     is_loading = True;
@@ -250,52 +303,5 @@ impl AdaptiveAssistant.togglePrivacy(kind: str) -> None {
         raw_voice_on = new_val;
         state_str = "enabled" if new_val else "disabled";
         try { window.eval("if (window._cm_speak) { window._cm_speak('Raw voice retention " + state_str + ".'); }"); } except Exception as _e {}
-    }
-}
-
-impl AdaptiveAssistant.setScenario(preset: str) -> None {
-    if preset == "clear" {
-        input_text = "";
-        voice_field_val = "₹0";
-        approval_status = "pending";
-        voice_confirmed = False;
-        active_step = 1;
-        agent_state = "idle";
-        try {
-            window.eval("if (window._cm_speak) { window._cm_speak('Case cleared. Type your custom situation or click Speak Field.'); }");
-        } except Exception as _ex {}
-    } elif preset == "single_mother" {
-        input_text = "I lost my job two months ago. I am behind on rent, I have two children, and my monthly income is eight thousand rupees.";
-        voice_field_val = "₹8,000";
-        approved_program = "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)";
-        approval_status = "pending";
-        voice_confirmed = False;
-        active_step = 3;
-        agent_state = "idle";
-        try {
-            window.eval("if (window._cm_speak) { window._cm_speak('Loaded single mother housing and shelter scenario.'); }");
-        } except Exception as _ex {}
-    } elif preset == "senior" {
-        input_text = "I am 72 years old, on a monthly pension of twelve thousand rupees. My landlord is trying to evict me illegally and I need medicines.";
-        voice_field_val = "₹12,000";
-        approved_program = "National Social Assistance & Jan Aushadhi Generic Medicine Scheme";
-        approval_status = "pending";
-        voice_confirmed = False;
-        active_step = 3;
-        agent_state = "idle";
-        try {
-            window.eval("if (window._cm_speak) { window._cm_speak('Loaded senior citizen healthcare and eviction defense scenario.'); }");
-        } except Exception as _ex {}
-    } elif preset == "food" {
-        input_text = "We are a family of four in Delhi. I earn fifteen thousand rupees a month and we need food rations and subsidized grain.";
-        voice_field_val = "₹15,000";
-        approved_program = "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / Free Food Grain)";
-        approval_status = "pending";
-        voice_confirmed = False;
-        active_step = 3;
-        agent_state = "idle";
-        try {
-            window.eval("if (window._cm_speak) { window._cm_speak('Loaded food grain and ration card assistance scenario.'); }");
-        } except Exception as _ex {}
     }
 }

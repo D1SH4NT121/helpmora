@@ -160,6 +160,20 @@ impl ChatPane.sendMessage(text_override: str = "", answering: str = "", display:
     pending_question = str(q["key"]) if (q and q["key"]) else "";
     last_trace = data["trace"];
     on_walker_event(spansToEvents(list(data["trace"]["spans"])));
+    try {
+        data["last_user_text"] = user_text;
+        if on_case_update { on_case_update(data); }
+        window._cm_latest_case = data;
+        try {
+            sessionStorage.setItem("cm_latest_case", JSON.stringify({
+                "profile": data["profile"],
+                "last_user_text": user_text,
+                "resources": data["resources"],
+                "plan": data["plan"],
+                "language_name": data["language_name"]
+            }));
+        } except Exception as _se {}
+    } except Exception as _ce {}
     is_loading = False;
 
     llm = data["llm"];
