@@ -239,14 +239,18 @@ async def ask_question(request: Request):
     context = [m.get("text", "") for m in memories]
     wf = get_workflow_manager()
     state = wf.run_pipeline(user_id=uid, input_text=question, source="omi")
-    answer = state.next_steps[0] if state.next_steps else (
-        f"Evaluated against 40 Indian welfare programs. Matching: {', '.join(p['name'] for p in state.matching_programs[:3])}" if state.matching_programs else "Evaluated successfully. Please provide monthly income or family size to find exact matching programs."
-    )
+    programs = [r.get("agency_name") or r.get("name") or "Welfare Scheme" for r in state.candidate_resources[:3]]
+    if state.actions:
+        answer = f"Synthesized roadmap: {state.actions[0].get('title', '')}. Matching programs: {', '.join(programs) if programs else '40 Indian programs'}"
+    elif programs:
+        answer = f"Evaluated against 40 Indian welfare programs. Matching: {', '.join(programs)}"
+    else:
+        answer = "Evaluated successfully. Please provide monthly income or family size to find exact matching programs."
     return {
         "ok": True,
         "answer": answer,
         "context": context,
-        "programs": [p["name"] for p in state.matching_programs],
+        "programs": programs,
         "case_state": state.to_dict()
     }
 
