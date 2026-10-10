@@ -45,9 +45,15 @@ impl AdaptiveAssistant.syncFromChat -> None {
             voice_field_val = "₹" + f"{found_monthly:,}";
         }
 
-        # Household and children from profile
+        # Household and children from profile or chat text
         if prof and ("household_size" in prof) and prof["household_size"] is not None and int(prof["household_size"]) > 0 {
             chat_household = int(prof["household_size"]);
+        } elif chat_user_text {
+            lower_txt = chat_user_text.lower();
+            if "alone" in lower_txt or "single" in lower_txt or "myself" in lower_txt {
+                chat_household = 1;
+                chat_children = 0;
+            }
         }
         if prof and ("children" in prof) and prof["children"] is not None and int(prof["children"]) >= 0 {
             chat_children = int(prof["children"]);
