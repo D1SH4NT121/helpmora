@@ -2,7 +2,7 @@
 
 impl GraphViz.loadSnap -> None {
     if not user_id or not jacIsLoggedIn() { return; }
-    loading = True;
+    loading = (not snap);
     res = await jacSpawn("GraphSnapshotWalker", "", {"user_id": user_id}).catch(
         lambda e: Any -> dict { return {"reports": [], "spawn_error": str(e)}; }
     );

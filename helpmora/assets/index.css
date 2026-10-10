@@ -1293,3 +1293,15 @@ html, body { overflow-x: hidden; }
 .cm-quick-exit {
   display: none !important;
 }
+
+/* Snappy smooth transitions & GPU hardware acceleration */
+button, input, select, textarea, .cm-tab-btn, .cm-card, .gv-card, .gv-rcard, .cm-ghost-btn {
+  will-change: transform, opacity, background-color, border-color;
+  transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+}
+button:active {
+  transform: scale(0.985) translateZ(0);
+}
+

@@ -285,7 +285,7 @@ impl ActionPlan.loadPlan -> None {
         loading = False;
         return;
     }
-    loading = True;
+    loading = (len(steps) == 0);
     res = await jacSpawn("MemoryWalker", "", {"user_id": user_id, "mode": "read_session"}).catch(lambda e: Any -> dict { return {"reports": [], "spawn_error": str(e)}; });
     try {
         if res["reports"] and len(res["reports"]) > 0 {
@@ -316,14 +316,30 @@ impl ActionPlan.loadPlan -> None {
 }
 
 impl ActionPlan.markApplied(resource_name: str, idx: int) -> None {
-    res = await jacSpawn("MemoryWalker", "", {"user_id": user_id, "mode": "update_status", "resource_name": resource_name, "new_status": "applied"}).catch(lambda e: Any -> dict { return {"reports": [], "spawn_error": str(e)}; });
-    if not res["spawn_error"] {
-        steps[idx]["status"] = "applied";
+    old_st = str(steps[idx]["status"]) if (idx < len(steps) and steps[idx]) else "";
+    steps[idx]["status"] = "applied";
+    if old_st != "applied" and old_st != "approved" {
         done_count = done_count + 1;
     }
+    steps = list(steps);
+    await jacSpawn("MemoryWalker", "", {
+        "user_id": user_id,
+        "mode": "update_status",
+        "resource_name": resource_name,
+        "new_status": "applied"
+    }).catch(lambda e: Any -> dict { return {"reports": [], "spawn_error": str(e)}; });
 }
 
 impl ActionPlan.markOutcome(resource_name: str, idx: int, outcome: str) -> None {
+    old_st = str(steps[idx]["status"]) if (idx < len(steps) and steps[idx]) else "";
+    steps[idx]["status"] = outcome;
+    if outcome == "approved" and old_st != "approved" and old_st != "applied" {
+        done_count = done_count + 1;
+    } elif outcome == "denied" and (old_st == "approved" or old_st == "applied") {
+        done_count = Math.max(0, done_count - 1);
+    }
+    outcome_note = "Recorded: " + resource_name + " " + outcome + ".";
+    steps = list(steps);
     res = await jacSpawn("MemoryWalker", "", {
         "user_id": user_id,
         "mode": "update_status",
@@ -337,10 +353,6 @@ impl ActionPlan.markOutcome(resource_name: str, idx: int, outcome: str) -> None 
         post = r["posterior"] if r else None;
         if post and post["mean"] != None {
             outcome_note = "Recorded: " + resource_name + " " + outcome + ". Approval odds " + str(Math.round(Number(post["before"]) * 100)) + "% → " + str(Math.round(Number(post["mean"]) * 100)) + "% (Beta posterior, " + str(post["observed"]) + " real outcome" + ("s" if post["observed"] != 1 else "") + "). Future rankings use it.";
-        } else {
-            outcome_note = "Recorded: " + resource_name + " " + outcome + ".";
         }
     }
-    steps[idx]["status"] = outcome;
-    steps = list(steps);
 }
