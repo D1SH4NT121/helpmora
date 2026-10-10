@@ -228,7 +228,7 @@ impl ClientApp.runPaletteAction(action: Any) -> None {
             window.open("/docs", "_blank");
         } except Exception as _ex {}
     } elif kind == "reset" {
-        await resetSession();
+        resetSession();
     }
     palette_open = False;
     palette_query = "";
