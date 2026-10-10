@@ -53,7 +53,7 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
 
     can with entry {
         try {
-            (window: Any).eval("""
+            window.eval("""
                 window._cm_speak = function(text) {
                     try {
                         if ('speechSynthesis' in window) {
@@ -358,7 +358,7 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                 <input
                     type="text"
                     value={input_text}
-                    onChange={lambda e: ChangeEvent { input_text = str((e.target: Any).value); }}
+                    onChange={lambda e: ChangeEvent { input_text = str(e.target.value); }}
                     placeholder="Describe your situation (e.g. lost job, rent due, 2 children, monthly income 8000)..."
                     style={{
                         "width": "100%",

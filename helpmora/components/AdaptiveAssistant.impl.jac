@@ -88,7 +88,7 @@ impl AdaptiveAssistant.approveAction -> None {
     }).catch(lambda e: Any -> dict { return {"reports": []}; });
 
     try {
-        (window: Any).eval("if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance('Application approved and permanently saved.'); u.lang='en-IN'; window.speechSynthesis.speak(u); }");
+        window.eval("if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance('Application approved and permanently saved.'); u.lang='en-IN'; window.speechSynthesis.speak(u); }");
     } except Exception as _ex {}
 }
 
@@ -97,7 +97,7 @@ impl AdaptiveAssistant.confirmVoiceField -> None {
     active_step = 3;
     agent_state = "verified";
     try {
-        (window: Any).eval("if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance('Income confirmed. Running live policy analysis.'); u.lang='en-IN'; window.speechSynthesis.speak(u); }");
+        window.eval("if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance('Income confirmed. Running live policy analysis.'); u.lang='en-IN'; window.speechSynthesis.speak(u); }");
     } except Exception as _ex {}
     runLiveAnalysis("My monthly income is " + voice_field_val + ". " + input_text);
 }
@@ -107,7 +107,7 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
         voice_active = False;
         agent_state = "reasoning";
         try {
-            (window: Any).eval("if (window._cm_current_rec) { window._cm_current_rec.stop(); }");
+            window.eval("if (window._cm_current_rec) { window._cm_current_rec.stop(); }");
         } except Exception as _ex {}
         return;
     }
@@ -115,7 +115,7 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
     voice_active = True;
     agent_state = "listening";
     try {
-        (window: Any).eval("""
+        window.eval("""
             if (window._cm_listen_field) {
                 window._cm_current_rec = window._cm_listen_field(
                     function(text) {
@@ -142,7 +142,7 @@ impl AdaptiveAssistant.toggleVoiceFirst -> None {
     voice_first = not voice_first;
     if voice_first {
         try {
-            (window: Any).eval("if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance('Voice-First mode activated. Click Speak Field to talk into your microphone.'); u.lang='en-IN'; window.speechSynthesis.speak(u); }");
+            window.eval("if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance('Voice-First mode activated. Click Speak Field to talk into your microphone.'); u.lang='en-IN'; window.speechSynthesis.speak(u); }");
         } except Exception as _ex {}
     }
 }
