@@ -1,20 +1,32 @@
 """Async and walker-backed real-time logic for AdaptiveAssistant with accurate voice narration."""
 
 impl AdaptiveAssistant.syncFromChat -> None {
+    has_chat: bool = False;
+    try {
+        has_chat = bool(len(walker_events) > 0 or (sessionStorage.getItem("cm_chat_started") == "1"));
+    } except Exception as _ex {}
+
     c = active_case;
     try {
         if not c and window._cm_latest_case {
             c = window._cm_latest_case;
         }
-        if not c {
-            raw_s = sessionStorage.getItem("cm_latest_case");
-            if raw_s {
-                c = JSON.parse(raw_s);
-            }
-        }
     } except Exception as _ex {}
 
-    if not c { return; }
+    if not has_chat or not c {
+        chat_connected = False;
+        active_step = 1;
+        step1_confirmed = False;
+        step2_confirmed = False;
+        voice_confirmed = False;
+        approval_status = "pending";
+        chat_user_text = "";
+        approved_program = "";
+        trace_events = [
+            {"badge": "READY", "title": "Engine Initialized", "status": "active", "detail": "Awaiting citizen intake or chat message to begin evaluation"}
+        ];
+        return;
+    }
 
     try {
         prof: Any = c["profile"] if c["profile"] else {};

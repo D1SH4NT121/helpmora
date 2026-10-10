@@ -29,11 +29,11 @@ def:pub AdaptiveAssistant(
         location_city: str = "Delhi NCR",
         chat_user_text: str = "",
         chat_category: str = "",
-        chat_household: int = 3,
-        chat_children: int = 2,
+        chat_household: int = 1,
+        chat_children: int = 0,
         chat_connected: bool = False,
         voice_active: bool = False,
-        voice_field_val: str = "₹8,000",
+        voice_field_val: str = "",
         user_overrode_income: bool = False,
         voice_field_name: str = "Monthly Family Income",
         voice_confirmed: bool = False,
@@ -41,7 +41,7 @@ def:pub AdaptiveAssistant(
         field_help_body: str = "",
         recovery_open: bool = False,
         approval_status: str = "pending",
-        approved_program: str = "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)",
+        approved_program: str = "",
         large_text: bool = False,
         high_contrast: bool = False,
         reduced_motion: bool = False,
@@ -56,14 +56,7 @@ def:pub AdaptiveAssistant(
         run_id: str = "",
         is_loading: bool = False,
         trace_events: list = [
-            {"badge": "OMI", "title": "Voice Intake Normalized", "status": "completed", "detail": "Language: English/Hindi detected, session started"},
-            {"badge": "QDRANT", "title": "Semantic Memory Scoped", "status": "completed", "detail": "User isolation filter: user_id verified"},
-            {"badge": "CONTEXT", "title": "Context Agent Profile", "status": "completed", "detail": "Extracted: income ₹8,00,0/mo, 2 children, unemployed"},
-            {"badge": "RESOURCE", "title": "Resource Agent Evaluated", "status": "completed", "detail": "40 official Indian welfare schemes checked"},
-            {"badge": "ELIGIBILITY", "title": "Deterministic Policy Engine", "status": "completed", "detail": "Evaluated against 2026 EWS income limit (₹3,00,000)"},
-            {"badge": "PATHFINDER", "title": "Pathfinder Agent (26 Paths)", "status": "completed", "detail": "Alternative bridge via SUH shelter prepared"},
-            {"badge": "VERIFIER", "title": "Verification Gate", "status": "completed", "detail": "Statutory rules and document proofs passed"},
-            {"badge": "WORKFLOW", "title": "Adaptive Assistant", "status": "active", "detail": "Waiting for explicit human approval to proceed"}
+            {"badge": "READY", "title": "Engine Initialized", "status": "active", "detail": "Awaiting citizen intake or chat message to begin evaluation"}
         ];
 
     can with entry {

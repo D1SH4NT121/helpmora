@@ -236,9 +236,15 @@ impl ClientApp.runPaletteAction(action: Any) -> None {
 }
 
 impl ClientApp.resetSession -> None {
+    try {
+        sessionStorage.removeItem("cm_chat_started");
+        sessionStorage.removeItem("cm_latest_case");
+        window._cm_latest_case = None;
+    } except Exception as _ex {}
     if user_id {
         await jacSpawn("ForgetWalker", "", {"user_id": user_id}).catch(lambda e: Any -> dict { return {"reports": []}; });
     }
+    await jacSpawn("ForgetWalker", "", {}).catch(lambda e: Any -> dict { return {"reports": []}; });
     creds = resetVisitorCreds();
     walker_events = [];
     active_case = None;
