@@ -98,12 +98,23 @@ impl AdaptiveAssistant.syncFromChat -> None {
         # Step progression based on real chat facts
         if approval_status == "approved" {
             active_step = 6;
+            step1_confirmed = True;
+            step2_confirmed = True;
         } elif len(match_list) > 0 or len(plan_steps) > 0 or len(res_list) > 0 {
             active_step = 5;
-        } elif found_monthly >= 0 {
+            step1_confirmed = True;
+            step2_confirmed = True;
+        } elif voice_confirmed or found_monthly >= 0 {
             active_step = 4;
-        } else {
+            step1_confirmed = True;
+            step2_confirmed = True;
+        } elif step2_confirmed or (chat_household > 0 and chat_connected) {
             active_step = 3;
+            step1_confirmed = True;
+        } elif step1_confirmed or chat_connected {
+            active_step = 2;
+        } else {
+            active_step = 1;
         }
 
         # Dynamic Live Observable Execution Trace based on real chat data
@@ -250,6 +261,29 @@ impl AdaptiveAssistant.approveAction -> None {
         }
     }
     trace_events = new_trace;
+}
+
+impl AdaptiveAssistant.confirmStep1 -> None {
+    step1_confirmed = True;
+    active_step = 2;
+    try {
+        window.eval("if (window._cm_speak) { window._cm_speak('Personal details confirmed for " + citizen_name.replace("'", "") + ". Please specify your household size.'); }");
+    } except Exception as _ex {}
+}
+
+impl AdaptiveAssistant.confirmStep2 -> None {
+    step2_confirmed = True;
+    active_step = 3;
+    try {
+        window.eval("if (window._cm_speak) { window._cm_speak('Household of " + str(chat_household) + " members recorded. Please speak or enter your monthly family income.'); }");
+    } except Exception as _ex {}
+}
+
+impl AdaptiveAssistant.confirmStep4 -> None {
+    active_step = 5;
+    try {
+        window.eval("if (window._cm_speak) { window._cm_speak('Welfare scheme selected. Checking required statutory documents.'); }");
+    } except Exception as _ex {}
 }
 
 impl AdaptiveAssistant.confirmVoiceField -> None {

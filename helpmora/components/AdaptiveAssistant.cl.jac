@@ -22,7 +22,11 @@ def:pub AdaptiveAssistant(
     walker_events: list = []
 ) -> JsxElement {
     has agent_state: str = "idle",
-        active_step: int = 3,
+        active_step: int = 1,
+        step1_confirmed: bool = False,
+        step2_confirmed: bool = False,
+        citizen_name: str = "Citizen (Anonymous)",
+        location_city: str = "Delhi NCR",
         chat_user_text: str = "",
         chat_category: str = "",
         chat_household: int = 3,
@@ -161,6 +165,9 @@ def:pub AdaptiveAssistant(
     async def runLiveAnalysis(text: str) -> None;
     async def wipeAllMemory -> None;
     async def approveAction -> None;
+    def confirmStep1 -> None;
+    def confirmStep2 -> None;
+    def confirmStep4 -> None;
     def confirmVoiceField -> None;
     def triggerVoiceInput -> None;
     def toggleVoiceFirst -> None;
@@ -494,14 +501,43 @@ def:pub AdaptiveAssistant(
                     </h3>
 
                     <div style={{"display": "flex", "flexDirection": "column", "gap": "8px", "marginBottom": "20px"}}>
-                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(active_step > 1 or step1_confirmed or chat_connected) and <div onClick={lambda _e: MouseEvent { active_step = 1; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
-                            <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step1}</span>
-                        </div>
-                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step1.replace(" (Current Step)", "") + " (" + citizen_name + " · " + location_city + ")"}</span>
+                        </div>}
+                        {active_step == 1 and (not step1_confirmed and not chat_connected) and <div style={{
+                            "display": "flex",
+                            "alignItems": "center",
+                            "gap": "10px",
+                            "background": "rgba(255, 229, 0, 0.08)",
+                            "padding": "8px 12px",
+                            "borderRadius": "8px",
+                            "borderLeft": "3px solid #FFE500"
+                        }}>
+                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
+                            <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step1 + " (Current Step)"}</span>
+                        </div>}
+
+                        {(active_step > 2 or step2_confirmed or (chat_household > 0 and chat_connected)) and <div onClick={lambda _e: MouseEvent { active_step = 2; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
-                            <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step2}</span>
-                        </div>
+                            <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step2.replace(" (Current Step)", "")}</span>
+                        </div>}
+                        {active_step == 2 and <div style={{
+                            "display": "flex",
+                            "alignItems": "center",
+                            "gap": "10px",
+                            "background": "rgba(255, 229, 0, 0.08)",
+                            "padding": "8px 12px",
+                            "borderRadius": "8px",
+                            "borderLeft": "3px solid #FFE500"
+                        }}>
+                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
+                            <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step2 + " (Current Step)"}</span>
+                        </div>}
+                        {active_step < 2 and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
+                            <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step2}</span>
+                        </div>}
                         {active_step > 3 and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step3.replace(" (Current Step)", "") + " (" + voice_field_val + " Verified)"}</span>
@@ -583,7 +619,190 @@ def:pub AdaptiveAssistant(
                         </div>}
                     </div>
 
-                    <div style={{
+                    {active_step == 1 and <div style={{
+                        "background": inner_card_bg,
+                        "borderRadius": "12px",
+                        "padding": "18px",
+                        "border": inner_border,
+                        "marginBottom": "20px"
+                    }}>
+                        <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "marginBottom": "10px"}}>
+                            <span style={{"fontSize": fs_sm, "fontWeight": "600", "color": "#FFE500"}}>
+                                {"Step 1: Personal & Identity Information"}
+                            </span>
+                            <span style={{"fontSize": fs_xs, "color": "#00FF88", "background": "rgba(0, 255, 136, 0.1)", "padding": "2px 8px", "borderRadius": "4px", "fontWeight": "600"}}>
+                                {"Turn 1 Active"}
+                            </span>
+                        </div>
+                        <div style={{"fontSize": fs_sm, "color": txt_dim, "marginBottom": "14px"}}>
+                            {"Please provide your name and state/city of residence so HELPmora can locate the right local welfare programs."}
+                        </div>
+                        <div style={{"display": "flex", "flexDirection": "column", "gap": "10px", "marginBottom": "16px"}}>
+                            <div>
+                                <span style={{"fontSize": fs_xs, "color": txt_dim, "display": "block", "marginBottom": "4px"}}>{"Applicant Name:"}</span>
+                                <input
+                                    type="text"
+                                    value={citizen_name}
+                                    onChange={lambda e: ChangeEvent { citizen_name = str(e.target.value); }}
+                                    placeholder="e.g. Priya Sharma"
+                                    style={{
+                                        "width": "100%",
+                                        "padding": "8px 12px",
+                                        "borderRadius": "8px",
+                                        "background": ("#000000" if high_contrast else "rgba(255, 255, 255, 0.05)"),
+                                        "color": txt_main,
+                                        "border": inner_border,
+                                        "fontSize": fs_sm,
+                                        "outline": "none",
+                                        "boxSizing": "border-box"
+                                    }}
+                                />
+                            </div>
+                            <div>
+                                <span style={{"fontSize": fs_xs, "color": txt_dim, "display": "block", "marginBottom": "4px"}}>{"City / State of Residence:"}</span>
+                                <input
+                                    type="text"
+                                    value={location_city}
+                                    onChange={lambda e: ChangeEvent { location_city = str(e.target.value); }}
+                                    placeholder="e.g. Delhi NCR"
+                                    style={{
+                                        "width": "100%",
+                                        "padding": "8px 12px",
+                                        "borderRadius": "8px",
+                                        "background": ("#000000" if high_contrast else "rgba(255, 255, 255, 0.05)"),
+                                        "color": txt_main,
+                                        "border": inner_border,
+                                        "fontSize": fs_sm,
+                                        "outline": "none",
+                                        "boxSizing": "border-box"
+                                    }}
+                                />
+                            </div>
+                            <div style={{"display": "flex", "alignItems": "center", "gap": "6px", "flexWrap": "wrap"}}>
+                                <span style={{"fontSize": fs_xs, "color": txt_dim}}>{"Quick locations:"}</span>
+                                <button onClick={lambda _e: MouseEvent { location_city = "Delhi NCR"; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>Delhi</button>
+                                <button onClick={lambda _e: MouseEvent { location_city = "Mumbai, Maharashtra"; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>Mumbai</button>
+                                <button onClick={lambda _e: MouseEvent { location_city = "Uttar Pradesh"; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>UP</button>
+                                <button onClick={lambda _e: MouseEvent { location_city = "Bihar"; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>Bihar</button>
+                            </div>
+                        </div>
+                        <button
+                            onClick={lambda _e: MouseEvent { confirmStep1(); }}
+                            style={{
+                                "padding": "8px 18px",
+                                "background": "#FFE500",
+                                "color": "#0A0A0A",
+                                "borderRadius": "8px",
+                                "border": "none",
+                                "fontWeight": "700",
+                                "fontSize": fs_sm,
+                                "cursor": "pointer"
+                            }}
+                        >
+                            {"Confirm Personal Info & Proceed to Household Details →"}
+                        </button>
+                    </div>}
+
+                    {active_step == 2 and <div style={{
+                        "background": inner_card_bg,
+                        "borderRadius": "12px",
+                        "padding": "18px",
+                        "border": inner_border,
+                        "marginBottom": "20px"
+                    }}>
+                        <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "marginBottom": "10px"}}>
+                            <span style={{"fontSize": fs_sm, "fontWeight": "600", "color": "#FFE500"}}>
+                                {"Step 2: Household Size & Family Composition"}
+                            </span>
+                            <button
+                                onClick={lambda _e: MouseEvent { active_step = 1; }}
+                                style={{"background": "none", "border": "none", "color": txt_dim, "fontSize": fs_xs, "cursor": "pointer"}}
+                            >
+                                {"← Back to Step 1"}
+                            </button>
+                        </div>
+                        <div style={{"fontSize": fs_sm, "color": txt_dim, "marginBottom": "14px"}}>
+                            {"Government quotas and welfare limits depend directly on how many family members live together."}
+                        </div>
+                        <div style={{"display": "flex", "flexDirection": "column", "gap": "14px", "marginBottom": "16px"}}>
+                            <div>
+                                <span style={{"fontSize": fs_xs, "color": txt_dim, "display": "block", "marginBottom": "6px"}}>{"Total Family Members Living Together:"}</span>
+                                <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max="15"
+                                        value={chat_household}
+                                        onChange={lambda e: ChangeEvent {
+                                            chat_household = int(e.target.value) if (e.target.value and int(e.target.value) > 0) else 1;
+                                        }}
+                                        style={{
+                                            "fontSize": fs_lg,
+                                            "fontWeight": "700",
+                                            "padding": "6px 12px",
+                                            "width": "80px",
+                                            "borderRadius": "8px",
+                                            "background": ("#000000" if high_contrast else "rgba(255, 255, 255, 0.05)"),
+                                            "color": "#00FF88",
+                                            "border": inner_border,
+                                            "outline": "none"
+                                        }}
+                                    />
+                                    <span style={{"fontSize": fs_sm, "color": txt_muted}}>{"Members in household"}</span>
+                                </div>
+                                <div style={{"display": "flex", "alignItems": "center", "gap": "6px", "flexWrap": "wrap", "marginTop": "8px"}}>
+                                    <button onClick={lambda _e: MouseEvent { chat_household = 1; chat_children = 0; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>1 (Alone)</button>
+                                    <button onClick={lambda _e: MouseEvent { chat_household = 2; chat_children = 0; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>2 Members</button>
+                                    <button onClick={lambda _e: MouseEvent { chat_household = 3; chat_children = 1; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>3 Members</button>
+                                    <button onClick={lambda _e: MouseEvent { chat_household = 4; chat_children = 2; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>4 Members</button>
+                                    <button onClick={lambda _e: MouseEvent { chat_household = 5; chat_children = 3; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>5+ Members</button>
+                                </div>
+                            </div>
+                            <div>
+                                <span style={{"fontSize": fs_xs, "color": txt_dim, "display": "block", "marginBottom": "6px"}}>{"Dependent Children under 18:"}</span>
+                                <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        max="10"
+                                        value={chat_children}
+                                        onChange={lambda e: ChangeEvent {
+                                            chat_children = int(e.target.value) if (e.target.value and int(e.target.value) >= 0) else 0;
+                                        }}
+                                        style={{
+                                            "fontSize": fs_lg,
+                                            "fontWeight": "700",
+                                            "padding": "6px 12px",
+                                            "width": "80px",
+                                            "borderRadius": "8px",
+                                            "background": ("#000000" if high_contrast else "rgba(255, 255, 255, 0.05)"),
+                                            "color": "#00FF88",
+                                            "border": inner_border,
+                                            "outline": "none"
+                                        }}
+                                    />
+                                    <span style={{"fontSize": fs_sm, "color": txt_muted}}>{"Children in family"}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            onClick={lambda _e: MouseEvent { confirmStep2(); }}
+                            style={{
+                                "padding": "8px 18px",
+                                "background": "#FFE500",
+                                "color": "#0A0A0A",
+                                "borderRadius": "8px",
+                                "border": "none",
+                                "fontWeight": "700",
+                                "fontSize": fs_sm,
+                                "cursor": "pointer"
+                            }}
+                        >
+                            {"Confirm Household & Proceed to Income Verification →"}
+                        </button>
+                    </div>}
+
+                    {(active_step == 3 or voice_active or voice_first) and <div style={{
                         "background": inner_card_bg,
                         "borderRadius": "12px",
                         "padding": "18px",
@@ -728,7 +947,48 @@ def:pub AdaptiveAssistant(
                                 {lbl_recovery_btn}
                             </button>
                         </div>}
-                    </div>
+                    </div>}
+
+                    {active_step == 4 and <div style={{
+                        "background": inner_card_bg,
+                        "borderRadius": "12px",
+                        "padding": "18px",
+                        "border": "1px solid #FFE500",
+                        "marginBottom": "20px"
+                    }}>
+                        <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "marginBottom": "10px"}}>
+                            <span style={{"fontSize": fs_sm, "fontWeight": "600", "color": "#FFE500"}}>
+                                {"Step 4: Matched Welfare Program"}
+                            </span>
+                            <button
+                                onClick={lambda _e: MouseEvent { active_step = 3; }}
+                                style={{"background": "none", "border": "none", "color": txt_dim, "fontSize": fs_xs, "cursor": "pointer"}}
+                            >
+                                {"← Back to Income"}
+                            </button>
+                        </div>
+                        <div style={{"fontSize": fs_base, "fontWeight": "700", "color": txt_main, "marginBottom": "6px"}}>
+                            {approved_program}
+                        </div>
+                        <div style={{"fontSize": fs_sm, "color": txt_muted, "marginBottom": "14px", "lineHeight": "1.5"}}>
+                            {"Evaluated for family of " + str(chat_household) + " with monthly earnings of " + voice_field_val + ". All 2026 statutory income limits passed."}
+                        </div>
+                        <button
+                            onClick={lambda _e: MouseEvent { confirmStep4(); }}
+                            style={{
+                                "padding": "8px 18px",
+                                "background": "#FFE500",
+                                "color": "#0A0A0A",
+                                "borderRadius": "8px",
+                                "border": "none",
+                                "fontWeight": "700",
+                                "fontSize": fs_sm,
+                                "cursor": "pointer"
+                            }}
+                        >
+                            {"Review Required Documents & Proceed →"}
+                        </button>
+                    </div>}
 
                     {recovery_open and <div style={{
                         "background": ("#000000" if high_contrast else "rgba(90, 162, 255, 0.05)"),
@@ -765,7 +1025,22 @@ def:pub AdaptiveAssistant(
                         </button>
                     </div>}
 
-                    <div style={{
+                    {(active_step < 5 and approval_status != "approved") and <div style={{
+                        "background": ("#000000" if high_contrast else "rgba(255, 255, 255, 0.03)"),
+                        "border": inner_border,
+                        "borderRadius": "12px",
+                        "padding": "14px 16px",
+                        "display": "flex",
+                        "alignItems": "center",
+                        "gap": "10px",
+                        "color": txt_dim,
+                        "fontSize": fs_xs
+                    }}>
+                        <span style={{"fontSize": "16px"}}>🔒</span>
+                        <span>{"Steps 5 & 6 (Documents & Approval Gate) will unlock after confirming Step " + str(active_step) + " above."}</span>
+                    </div>}
+
+                    {(active_step >= 5 or approval_status == "approved") and <div style={{
                         "background": ("#000000" if high_contrast else "rgba(255, 229, 0, 0.04)"),
                         "border": ("2px solid #FFE500" if high_contrast else "0.5px solid rgba(255, 229, 0, 0.2)"),
                         "borderRadius": "12px",
@@ -809,7 +1084,7 @@ def:pub AdaptiveAssistant(
                         }}>
                             {lbl_gate_approved}
                         </div>}
-                    </div>
+                    </div>}
                 </div>
 
                 <div style={{
