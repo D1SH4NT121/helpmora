@@ -153,7 +153,7 @@ def:pub AdaptiveAssistant(
         syncFromChat();
     }
 
-    can with [active_case, walker_events] entry {
+    can with [active_case, walker_events, voice_field_val, approval_status, approved_program] entry {
         syncFromChat();
     }
 
