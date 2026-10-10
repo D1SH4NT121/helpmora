@@ -57,8 +57,9 @@ walker GraphSnapshotWalker {
             return;
         }
         p: PersonNode = persons[0];
-        counts["PersonNode"] = 1;
-        nodes.append({"id": "person", "type": "PersonNode", "label": "You", "tip": "PersonNode · language " + str(p.language or "en") + (" · household " + str(p.family_size) if int(p.family_size or 0) > 0 else "")});
+        inc_info = (" · income " + str(p.income_bracket)) if p.income_bracket else "";
+        loc_info = (" · location " + str(p.location_zip)) if p.location_zip else "";
+        nodes.append({"id": "person", "type": "PersonNode", "label": "You", "tip": "Citizen Profile · language " + str(p.language or "en").upper() + (" · household " + str(p.family_size) + " members" if int(p.family_size or 0) > 0 else "") + inc_info + loc_info});
         edges.append({"src": "root", "tgt": "person", "label": "owns"});
 
         needs = [p ->:has_need:-> [?:NeedNode]];
@@ -85,20 +86,20 @@ walker GraphSnapshotWalker {
                 nodes.append({
                     "id": rid, "type": "ResourceNode", "label": short_label(str(r.agency_name)),
                     "tier": str(e.tier), "p": float(e.p_eligible), "rank": int(e.rank),
-                    "tip": str(r.agency_name) + " · " + str(e.tier).replace("_", " ") + " · P(eligible) " + str(int(round(float(e.p_eligible) * 100))) + "%" + (" · ≈ ₹" + str(ben) + "/mo" if ben > 0 else "") + " · " + str(r.capacity) + (" · " + str(r.contact_phone) if r.contact_phone else "")
+                    "tip": str(r.agency_name) + " · " + str(e.tier).replace("_", " ") + " · Rule Match " + str(int(round(float(e.p_eligible) * 100))) + "%" + (" · Monthly Benefit: ≈ ₹" + str(ben) if ben > 0 else "") + " · Intake: " + str(r.capacity) + (" · Sector: " + str(r.category) if r.category else "") + (" · Helpline: " + str(r.contact_phone) if r.contact_phone else "")
                 });
                 edges.append({"src": "need", "tgt": rid, "label": "eligible_for · " + str(int(round(float(e.p_eligible) * 100))) + "%", "tier": str(e.tier)});
                 rules = [r ->:governed_by:-> [?:EligibilityRuleNode]];
                 if rules {
                     ru: EligibilityRuleNode = rules[0];
                     ruid = "rule:" + str(ru.rule_id);
-                    nodes.append({"id": ruid, "type": "EligibilityRuleNode", "label": "rule", "tip": str(ru.criteria_summary)[:160] + (" · " + str(ru.prior_approvals) + "/" + str(ru.prior_attempts) + " recorded approvals" if int(ru.prior_attempts or 0) > 0 else ""), "parent": rid});
+                    nodes.append({"id": ruid, "type": "EligibilityRuleNode", "label": "rule", "tip": "Statutory Rule: " + str(ru.criteria_summary)[:160] + (" · Income limit: ₹" + str(ru.income_limit_annual) + "/yr" if ru.income_limit_annual and int(ru.income_limit_annual) > 0 else "") + (" · Approvals: " + str(ru.prior_approvals) + "/" + str(ru.prior_attempts) if int(ru.prior_attempts or 0) > 0 else ""), "parent": rid});
                     edges.append({"src": rid, "tgt": ruid, "label": "governed_by"});
                     forms = [ru ->:requires_form:-> [?:FormNode]];
                     if forms {
                         f: FormNode = forms[0];
                         fid = "form:" + str(f.form_id);
-                        nodes.append({"id": fid, "type": "FormNode", "label": "form", "tip": str(f.form_name) + " · " + str(f.estimated_minutes) + " min · " + ", ".join([str(d) for d in list(f.required_documents)][:3]), "parent": rid});
+                        nodes.append({"id": fid, "type": "FormNode", "label": "form", "tip": "Form: " + str(f.form_name) + " · Time: " + str(f.estimated_minutes) + " min · Proofs required: " + ", ".join([str(d) for d in list(f.required_documents)][:4]), "parent": rid});
                         edges.append({"src": ruid, "tgt": fid, "label": "requires_form"});
                     }
                 }

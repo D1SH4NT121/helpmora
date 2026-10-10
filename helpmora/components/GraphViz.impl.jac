@@ -441,12 +441,27 @@ impl GraphViz.renderDetail(m: dict) -> JsxElement {
     picked: Any = m["byid"][nid] if nid else None;
     if not picked {
         return
-            <div className="gv-detail cm-muted">
-                Hover, tap or tab to a card. Each program card shows the engine's verdict for your latest need and its eligibility score (a score from the rules, not a measured probability); its rule and form are the program's EligibilityRuleNode and FormNode.
+            <div className="gv-detail" style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}>
+                <div style={{"display": "flex", "alignItems": "center", "gap": "6px", "color": "#FFE500", "fontWeight": "700", "fontSize": "11px", "letterSpacing": "0.06em", "textTransform": "uppercase"}}>
+                    <span>🔍</span>
+                    <span>Workflow & Case Graph Guide</span>
+                </div>
+                <div style={{"color": "rgba(255,255,255,0.85)", "fontSize": "12px", "lineHeight": "1.5"}}>
+                    {"Every card in this graph connects to your 6-step guided welfare workflow. Click or hover any card to inspect in-depth statutory logic."}
+                </div>
+                <div style={{"display": "flex", "flexDirection": "column", "gap": "6px", "background": "rgba(255,255,255,0.03)", "padding": "10px 12px", "borderRadius": "8px", "border": "0.5px solid rgba(255,255,255,0.08)", "fontSize": "11px", "lineHeight": "1.45", "color": "rgba(255,255,255,0.65)"}}>
+                    <div><b style={{"color": "#FFE500"}}>Step 1 & 2 (You & Need):</b> {"Citizen identity, household size, and primary urgency category."}</div>
+                    <div><b style={{"color": "#00E08A"}}>Step 3 & 4 (Scored Programs):</b> {"Evaluated against 2026 EWS income rules (Likely, Needs Info, Unlikely)."}</div>
+                    <div><b style={{"color": "#5AA2FF"}}>Step 5 (Rule & Form):</b> {"Statutory criteria check and required identity/income proofs."}</div>
+                    <div><b style={{"color": "#FFB344"}}>Step 6 (Where They Lead):</b> {"Multi-hop transition pathways and human-approved application tracking."}</div>
+                </div>
+                <div style={{"fontSize": "11px", "color": "rgba(255,255,255,0.45)", "fontStyle": "italic"}}>
+                    {"💡 Tap any program card on the canvas to inspect its exact mathematical eligibility score, criteria rules, document proofs, and forward pathways."}
+                </div>
             </div>;
     }
     t = str(picked["type"]);
-    kind = {"PersonNode": "You", "NeedNode": "Need", "ResourceNode": ("Later route" if picked["route"] else "Program"), "ApplicationNode": "Application you're tracking", "SessionInsight": "Self-critique", "EligibilityRuleNode": "Rule", "FormNode": "Form"}[t];
+    kind = {"PersonNode": "Citizen Profile (Step 1-2)", "NeedNode": "Intake Need (Step 2)", "ResourceNode": ("Escape Route (Step 4)" if picked["route"] else "Scored Welfare Program (Step 4)"), "ApplicationNode": "Tracked Application (Step 6)", "SessionInsight": "Quality Self-Critique", "EligibilityRuleNode": "Statutory Eligibility Rule (Step 5)", "FormNode": "Intake Form & Proofs (Step 5)"}[t];
     parts: list = str(picked["tip"]).split(" · ");
     title = str(picked["label"]);
     body = str(picked["tip"]);
@@ -475,17 +490,29 @@ impl GraphViz.renderDetail(m: dict) -> JsxElement {
             leads.append((str(tg["tip"]).split(" · ")[0] if tg else "?") + " — typically " + dd + (" day" if dd == "1" else " days") + ", " + str(r["diff"]));
         }
     }
+    score_pct = Math.round(Number(picked["p"]) * 100) if picked["p"] else 0;
     return
         <div className="gv-detail">
-            <div className="gv-detail-type" style={{"color": (ti["color"] if ti else "rgba(255,255,255,0.55)")}}>{kind + (" · " + t if schema else "")}</div>
+            <div className="gv-detail-type" style={{"color": (ti["color"] if ti else "#FFE500"), "display": "flex", "alignItems": "center", "justifyContent": "space-between"}}>
+                <span>{kind + (" · " + t if schema else "")}</span>
+                {ti and <span style={{"background": "rgba(255,255,255,0.06)", "padding": "2px 6px", "borderRadius": "4px", "color": ti["color"]}}>{"Score: " + str(score_pct) + "%"}</span>}
+            </div>
             <div className="gv-detail-title">{title}</div>
-            {ti and <div className="gv-detail-tier" style={{"--tier": ti["color"]}}><span className="gv-tier-ico">{ti["icon"]}</span>{ti["label"] + " · score " + str(Math.round(Number(picked["p"]) * 100)) + "%"}</div>}
-            <div className="gv-detail-tip">{body}</div>
-            {kids["rule"] and <div className="gv-kv"><span>Rule</span><div>{str(kids["rule"]["tip"])}</div></div>}
-            {kids["form"] and <div className="gv-kv"><span>Form</span><div>{(str(kids["form"]["tip"]).slice(0, -3) if str(kids["form"]["tip"]).endsWith(" · ") else str(kids["form"]["tip"])).replace(" · 0 min", "")}</div></div>}
-            {app and <div className="gv-kv"><span>Applied</span><div>{str(app["sub"]) + " — " + str(app["tip"]).split(" · ").slice(-1)[0]}</div></div>}
-            {len(leads) > 0 and <div className="gv-kv"><span>Leads to</span><div>{[<div key={"l" + str(q)}>{leads[q]}</div> for q in range(len(leads))]}</div></div>}
-            {len(edges) > 0 and <div className="gv-kv gv-kv-mono"><span>Edges</span><div>{[<div key={"e" + str(q)}>{edges[q]}</div> for q in range(len(edges))]}</div></div>}
+            {ti and <div style={{"marginBottom": "8px"}}>
+                <div className="gv-detail-tier" style={{"--tier": ti["color"], "marginBottom": "4px"}}>
+                    <span className="gv-tier-ico">{ti["icon"]}</span>
+                    <span>{ti["label"] + " — Rule Confidence: " + str(score_pct) + "%"}</span>
+                </div>
+                <div style={{"background": "rgba(255,255,255,0.08)", "borderRadius": "4px", "height": "5px", "width": "100%", "overflow": "hidden"}}>
+                    <div style={{"background": ti["color"], "height": "100%", "width": str(score_pct) + "%", "borderRadius": "4px"}}/>
+                </div>
+            </div>}
+            <div className="gv-detail-tip" style={{"background": "rgba(255,255,255,0.03)", "padding": "8px 10px", "borderRadius": "6px", "marginTop": "6px"}}>{body}</div>
+            {kids["rule"] and <div className="gv-kv"><span>Rule Check</span><div>{str(kids["rule"]["tip"])}</div></div>}
+            {kids["form"] and <div className="gv-kv"><span>Form & Proofs</span><div>{(str(kids["form"]["tip"]).slice(0, -3) if str(kids["form"]["tip"]).endsWith(" · ") else str(kids["form"]["tip"])).replace(" · 0 min", "")}</div></div>}
+            {app and <div className="gv-kv"><span>Workflow App</span><div><b style={{"color": "#00FF88"}}>{"Status: " + str(app["sub"])}</b>{" — " + str(app["tip"]).split(" · ").slice(-1)[0]}</div></div>}
+            {len(leads) > 0 and <div className="gv-kv"><span>Reachable Routes</span><div>{[<div key={"l" + str(q)} style={{"marginBottom": "3px"}}>{leads[q]}</div> for q in range(len(leads))]}</div></div>}
+            {len(edges) > 0 and <div className="gv-kv gv-kv-mono"><span>Graph Edges</span><div>{[<div key={"e" + str(q)}>{edges[q]}</div> for q in range(len(edges))]}</div></div>}
         </div>;
 }
 
