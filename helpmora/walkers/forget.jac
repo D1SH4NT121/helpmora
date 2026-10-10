@@ -13,12 +13,14 @@ password with no personal data), so the next visit starts as a stranger.
 
 import from graph.nodes { PersonNode, NeedNode, ApplicationNode, SessionInsight }
 import from graph.edges { has_need, applied_to, reflected_on }
+import from engine.stats { reset_stats }
 
 walker ForgetWalker {
     has user_id: str = "";
     has summary: dict = {};
 
     can forget with `Root entry {
+        reset_stats();
         removed: dict = {"PersonNode": 0, "NeedNode": 0, "ApplicationNode": 0, "SessionInsight": 0};
         targets = [root --> [?:PersonNode, user_id == self.user_id]] if self.user_id else [root --> [?:PersonNode]];
         if not targets {

@@ -86,11 +86,14 @@ def:pub ImpactReport -> JsxElement {
         } except Exception as _ex { status_counts = {}; }
     }
 
-    # Categories: platform-wide when available and non-empty (each visitor's own graph is small).
-    if plat and ("categories" in plat) and len(list(plat["categories"])) > 0 {
-        category_pairs_raw = list(plat["categories"]);
+    # Categories: If current session graph is empty (fresh session or after New Session),
+    # do not inherit stale platform-wide turns or categories from old sessions.
+    if total_users == 0 and total_apps == 0 {
+        category_pairs_raw = [];
     } elif summary and ("need_categories" in summary) and len(list(summary["need_categories"])) > 0 {
         category_pairs_raw = list(summary["need_categories"]);
+    } elif plat and ("categories" in plat) and len(list(plat["categories"])) > 0 {
+        category_pairs_raw = list(plat["categories"]);
     }
     # Fold the server's category list into a lookup keyed by category name
     # so the bar-chart loop can fetch each canonical category's count by
@@ -132,11 +135,13 @@ def:pub ImpactReport -> JsxElement {
     }
     if max_res == 0 { max_res = 1; }
 
-    # Languages: the platform-wide view when non-empty, otherwise visitor's languages
-    if plat and ("languages" in plat) and len(list(plat["languages"])) > 0 {
-        lang_pairs = list(plat["languages"]);
+    # Languages: If fresh session, keep empty. Otherwise read from visitor/platform
+    if total_users == 0 and total_apps == 0 {
+        lang_pairs = [];
     } elif summary and ("languages" in summary) and len(list(summary["languages"])) > 0 {
         lang_pairs = list(summary["languages"]);
+    } elif plat and ("languages" in plat) and len(list(plat["languages"])) > 0 {
+        lang_pairs = list(plat["languages"]);
     }
     if len(lang_pairs) == 0 and (total_users > 0 or total_apps > 0) {
         lang_pairs = [{"lang": "en", "count": 1}];
@@ -167,59 +172,9 @@ def:pub ImpactReport -> JsxElement {
     try { denied_count = int(status_counts["denied"]); } except Exception as _ex { denied_count = 0; }
     try { applied_count = int(status_counts["applied"]); } except Exception as _ex { applied_count = 0; }
 
-    banner_turns = max(plat_turns, total_needs, total_apps);
-    banner_visitors = max(int(plat["visitors"] if plat["visitors"] else 0), total_users, (1 if total_apps > 0 else 0));
-    banner_langs = max(len(plat["languages"]) if plat["languages"] else 0, len(lang_pairs) if lang_pairs else 0, (1 if total_users > 0 or total_apps > 0 else 0));
-
-    # Cold-graph empty state.
-    if total_users == 0 and total_apps == 0 and banner_turns == 0 {
-        return
-            <div
-                style={{
-                    "padding": "48px 36px",
-                    "background": "rgba(255,255,255,0.03)",
-                    "backdropFilter": "blur(12px)",
-                    "border": "0.5px solid rgba(255,255,255,0.08)",
-                    "borderRadius": "16px",
-                    "maxWidth": "640px",
-                    "margin": "0 auto",
-                    "textAlign": "center"
-                }}
-            >
-                <div style={{"width": "52px", "height": "52px", "borderRadius": "14px", "background": "rgba(255,229,0,0.08)", "border": "1px solid rgba(255,229,0,0.3)", "display": "flex", "alignItems": "center", "justifyContent": "center", "margin": "0 auto 18px"}}>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                        <path
-                            d="M12 3 L 14 9 L 20 9 L 15 13 L 17 19 L 12 15.5 L 7 19 L 9 13 L 4 9 L 10 9 Z"
-                            stroke="#FFE500"
-                            strokeWidth="1.6"
-                            strokeLinejoin="round"
-                            fill="rgba(255,229,0,0.18)"
-                        />
-                    </svg>
-                </div>
-                <div style={{"fontSize": "18px", "fontWeight": "700", "letterSpacing": "-0.02em", "color": "#FFE500", "marginBottom": "10px"}}>
-                    Impact report is empty — for now
-                </div>
-                <div style={{"fontSize": "13px", "color": "rgba(255,255,255,0.6)", "lineHeight": "1.6", "marginBottom": "22px"}}>
-                    ImpactWalker traverses every PersonNode + ApplicationNode persisted in the graph and aggregates outcomes. On a fresh deployment there's nothing to count yet. Send a real prompt in the <strong style={{"color": "#FFE500"}}>Chat tab</strong> — once IntakeWalker writes a NeedNode and NavigationWalker writes an ApplicationNode, refresh here and the numbers light up.
-                </div>
-                <div style={{
-                    "padding": "14px 18px",
-                    "background": "rgba(0,255,136,0.05)",
-                    "border": "0.5px solid rgba(0,255,136,0.25)",
-                    "borderRadius": "10px",
-                    "fontSize": "11px",
-                    "color": "rgba(255,255,255,0.65)",
-                    "textAlign": "left",
-                    "lineHeight": "1.55"
-                }}>
-                    <div style={{"color": "#00FF88", "fontWeight": "600", "marginBottom": "5px", "textTransform": "uppercase", "letterSpacing": "0.06em", "fontSize": "10px"}}>
-                        What this tab will show once populated
-                    </div>
-                    Platform counters since the last restart (turns, languages, engine latency, how often an LLM was needed) and your own case: open applications, outcomes you recorded, need mix.
-                </div>
-            </div>;
-    }
+    banner_turns = 0 if (total_users == 0 and total_apps == 0) else max(plat_turns, total_needs, total_apps);
+    banner_visitors = 0 if (total_users == 0 and total_apps == 0) else max(int(plat["visitors"] if plat["visitors"] else 0), total_users, (1 if total_apps > 0 else 0));
+    banner_langs = 0 if (total_users == 0 and total_apps == 0) else max(len(plat["languages"]) if plat["languages"] else 0, len(lang_pairs) if lang_pairs else 0, (1 if total_users > 0 or total_apps > 0 else 0));
 
     return
         <div style={{"display": "flex", "flexDirection": "column", "gap": "14px"}}>

@@ -73,3 +73,18 @@ def stats_snapshot -> dict {
         "narration_ms_p50": round(_pct(STATS["narr_ms"], 0.5), 0)
     };
 }
+
+"""Reset all live in-process platform counters for a fresh session."""
+def reset_stats -> None {
+    STATS["started"] = datetime.datetime.utcnow().isoformat() + "Z";
+    STATS["turns"] = 0;
+    STATS["visitors"] = {};
+    STATS["languages"] = {};
+    STATS["categories"] = {};
+    STATS["engine_ms"] = [];
+    STATS["sync_llm"] = 0;
+    STATS["deadline_hits"] = 0;
+    STATS["narr_ok"] = 0;
+    STATS["narr_fail"] = 0;
+    STATS["narr_ms"] = [];
+}
