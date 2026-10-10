@@ -22,12 +22,27 @@ impl AdaptiveAssistant.syncFromChat -> None {
         chat_category = str(prof["category"]).replace("_", " ").title() if prof and prof["category"] else "Welfare Assistance";
         chat_connected = True;
 
-        # Income extraction
-        inc_annual = int(prof["income_annual"] if (prof and prof["income_annual"] is not None and prof["income_annual"] >= 0) else -1);
-        if inc_annual >= 0 {
-            monthly_val = int(inc_annual / 12);
-            voice_field_val = "₹" + f"{monthly_val:,}";
-            voice_confirmed = True;
+        # Income extraction from profile OR chat text
+        found_monthly = -1;
+        if prof and prof["income_annual"] is not None and int(prof["income_annual"]) >= 0 {
+            found_monthly = int(int(prof["income_annual"]) / 12);
+        } elif prof and prof.get("monthly_income") is not None and int(prof.get("monthly_income", -1)) >= 0 {
+            found_monthly = int(prof["monthly_income"]);
+        } elif chat_user_text {
+            tokens = chat_user_text.replace(",", "").replace("₹", " ").replace("rs.", " ").replace("rs", " ").replace("rupees", " ").replace("/", " ").split(" ");
+            for tok in tokens {
+                digits_tok = "".join([ch for ch in tok if ch.isdigit()]);
+                if len(digits_tok) >= 3 and len(digits_tok) <= 7 {
+                    parsed_int = int(digits_tok);
+                    if parsed_int >= 500 and parsed_int <= 1000000 {
+                        found_monthly = parsed_int;
+                    }
+                }
+            }
+        }
+
+        if found_monthly >= 0 {
+            voice_field_val = "₹" + f"{found_monthly:,}";
         }
 
         # Matched program extraction
@@ -44,7 +59,7 @@ impl AdaptiveAssistant.syncFromChat -> None {
             active_step = 6;
         } elif len(res_list) > 0 or len(plan_list) > 0 {
             active_step = 5;
-        } elif inc_annual >= 0 {
+        } elif found_monthly >= 0 {
             active_step = 4;
         } else {
             active_step = 3;

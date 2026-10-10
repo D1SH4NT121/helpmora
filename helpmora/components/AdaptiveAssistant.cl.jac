@@ -159,7 +159,7 @@ def:pub AdaptiveAssistant(
     lbl_step6 = "6. Check Everything and Agree" if simple_lang else "6. Review & Human Approval";
 
     lbl_voice_title = "Talk Instead of Typing:" if simple_lang else "Voice-to-Form Capture:";
-    lbl_voice_prompt = ("Spoken input: " + chr(34) + spoken_transcript + chr(34)) if spoken_transcript else ("What you said: " + chr(34) + "I make 8,000 rupees a month." + chr(34) if simple_lang else "Spoken input: " + chr(34) + "My monthly income is eight thousand rupees." + chr(34));
+    lbl_voice_prompt = ("Spoken input: " + chr(34) + spoken_transcript + chr(34)) if spoken_transcript else (("From chat: " + chr(34) + chat_user_text + chr(34)) if chat_user_text else "Speak with microphone or type your monthly income below.");
     lbl_field_name = "Money Made Each Month" if simple_lang else voice_field_name;
     lbl_voice_question = ("Field confirmed and saved." if voice_confirmed else ("HELPmora: " + chr(34) + "I wrote down " + voice_field_val + " for your monthly money. Does that sound right?" + chr(34) if simple_lang else "HELPmora: " + chr(34) + "I have entered " + voice_field_val + " for Monthly Income. Is that correct?" + chr(34)));
     lbl_recovery_btn = "Don't have your papers?" if simple_lang else "Cannot find document?";
@@ -583,13 +583,13 @@ def:pub AdaptiveAssistant(
 
                         <div style={{
                             "background": ("#000000" if high_contrast else "rgba(0, 0, 0, 0.4)"),
-                            "padding": "12px 14px",
+                            "padding": "14px 16px",
                             "borderRadius": "8px",
                             "border": inner_border,
                             "marginBottom": "12px"
                         }}>
-                            <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "marginBottom": "4px"}}>
-                                <span style={{"fontSize": fs_xs, "color": txt_dim}}>{lbl_field_name}</span>
+                            <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "marginBottom": "8px"}}>
+                                <span style={{"fontSize": fs_xs, "color": txt_dim}}>{lbl_field_name + " (Editable):"}</span>
                                 <button
                                     onClick={lambda _e: MouseEvent { showFieldHelp("Income Verification", "Total gross earnings of all adult members. Under PMAY-U EWS rules, this must be under ₹3,00,000 annually (₹25,000/month)."); }}
                                     style={{"background": "none", "border": "none", "color": "#FFE500", "fontSize": fs_xs, "cursor": "pointer", "padding": "0", "textDecoration": "underline"}}
@@ -597,8 +597,43 @@ def:pub AdaptiveAssistant(
                                     Ask HELPmora
                                 </button>
                             </div>
-                            <div style={{"fontSize": fs_xl, "fontWeight": "700", "color": "#00FF88"}}>
-                                {voice_field_val}
+                            <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "flexWrap": "wrap"}}>
+                                <input
+                                    type="text"
+                                    value={voice_field_val}
+                                    onChange={lambda e: ChangeEvent {
+                                        raw_input = str(e.target.value);
+                                        num_digits = "".join([c for c in raw_input if c.isdigit()]);
+                                        if num_digits {
+                                            voice_field_val = "₹" + f"{int(num_digits):,}";
+                                        } else {
+                                            voice_field_val = raw_input;
+                                        }
+                                        voice_confirmed = False;
+                                    }}
+                                    placeholder="e.g. ₹15,000"
+                                    style={{
+                                        "fontSize": fs_xl,
+                                        "fontWeight": "700",
+                                        "color": "#00FF88",
+                                        "background": ("#000000" if high_contrast else "rgba(255, 255, 255, 0.05)"),
+                                        "border": ("1px solid #00FF88" if high_contrast else "0.5px solid rgba(0, 255, 136, 0.4)"),
+                                        "borderRadius": "8px",
+                                        "padding": "6px 12px",
+                                        "outline": "none",
+                                        "width": "180px",
+                                        "boxSizing": "border-box"
+                                    }}
+                                />
+                                <span style={{"fontSize": fs_xs, "color": txt_dim}}>✏️ Click to edit or type any amount</span>
+                            </div>
+                            <div style={{"display": "flex", "alignItems": "center", "gap": "6px", "marginTop": "8px", "flexWrap": "wrap"}}>
+                                <span style={{"fontSize": fs_xs, "color": txt_dim}}>Quick pick:</span>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹5,000"; voice_confirmed = False; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹5,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹8,000"; voice_confirmed = False; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹8,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹12,000"; voice_confirmed = False; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹12,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹15,000"; voice_confirmed = False; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹15,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹25,000"; voice_confirmed = False; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹25,000</button>
                             </div>
                         </div>
 
