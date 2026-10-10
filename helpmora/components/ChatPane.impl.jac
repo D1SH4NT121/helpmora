@@ -168,9 +168,10 @@ impl ChatPane.sendMessage(text_override: str = "", answering: str = "", display:
             sessionStorage.setItem("cm_latest_case", JSON.stringify({
                 "profile": data["profile"],
                 "last_user_text": user_text,
-                "resources": data["resources"],
+                "matches": data["matches"],
                 "plan": data["plan"],
-                "language_name": data["language_name"]
+                "language_name": data["language_name"],
+                "escalation": data["escalation"]
             }));
         } except Exception as _se {}
     } except Exception as _ce {}

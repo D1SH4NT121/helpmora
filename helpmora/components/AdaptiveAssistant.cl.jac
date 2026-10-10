@@ -25,6 +25,8 @@ def:pub AdaptiveAssistant(
         active_step: int = 3,
         chat_user_text: str = "",
         chat_category: str = "",
+        chat_household: int = 3,
+        chat_children: int = 2,
         chat_connected: bool = False,
         voice_active: bool = False,
         voice_field_val: str = "₹8,000",
@@ -200,9 +202,9 @@ def:pub AdaptiveAssistant(
 
     lbl_workflow = "Simple Step-by-Step Guide" if simple_lang else "Guided Welfare Workflow";
     lbl_step1 = "1. About You" if simple_lang else "1. Personal Information";
-    lbl_step2 = "2. Your Family (2 children, 3 members)" if simple_lang else "2. Household Composition (2 children, 3 members)";
+    lbl_step2 = ("2. Family (" + str(chat_children) + " children, " + str(chat_household) + " members)") if simple_lang else ("2. Household Details (" + str(chat_children) + " children, " + str(chat_household) + " members)" if (chat_household > 0 and chat_children > 0) else "2. Household Composition");
     lbl_step3 = "3. How Much Money You Make (Current Step)" if simple_lang else "3. Income Verification (Current Step)";
-    lbl_step4 = "4. Free Shelter or Govt House (PMAY-U / SUH)" if simple_lang else "4. Housing Program (PMAY-U / SUH Shelter)";
+    lbl_step4 = ("4. Scheme: " + approved_program) if simple_lang else ("4. Matched Scheme: " + approved_program);
     lbl_step5 = "5. Required Papers (ID Card & Income Paper)" if simple_lang else "5. Required Documents (Aadhaar, Income Proof)";
     lbl_step6 = "6. Check Everything and Agree" if simple_lang else "6. Review & Human Approval";
 

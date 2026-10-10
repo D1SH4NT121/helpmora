@@ -45,19 +45,54 @@ impl AdaptiveAssistant.syncFromChat -> None {
             voice_field_val = "₹" + f"{found_monthly:,}";
         }
 
+        # Household and children from profile
+        if prof and prof.get("household_size") is not None and int(prof["household_size"]) > 0 {
+            chat_household = int(prof["household_size"]);
+        }
+        if prof and prof.get("children") is not None and int(prof["children"]) >= 0 {
+            chat_children = int(prof["children"]);
+        }
+
         # Matched program extraction
-        res_list: list = list(c["resources"]) if c["resources"] else [];
-        plan_list: list = list(c["plan"]) if c["plan"] else [];
-        if len(res_list) > 0 and res_list[0] and res_list[0]["name"] {
-            approved_program = str(res_list[0]["name"]);
-        } elif len(plan_list) > 0 and plan_list[0] and plan_list[0]["resource"] {
-            approved_program = str(plan_list[0]["resource"]);
+        match_list: list = list(c["matches"]) if c.get("matches") else [];
+        plan_raw: Any = c.get("plan") if c.get("plan") else {};
+        plan_steps: list = list(plan_raw.get("steps", [])) if (plan_raw and plan_raw.get("steps")) else [];
+        res_list: list = list(c["resources"]) if c.get("resources") else [];
+
+        extracted_scheme = "";
+        if len(match_list) > 0 and match_list[0] and match_list[0].get("resource_name") {
+            extracted_scheme = str(match_list[0]["resource_name"]);
+        } elif len(res_list) > 0 and res_list[0] and res_list[0].get("name") {
+            extracted_scheme = str(res_list[0]["name"]);
+        } elif len(plan_steps) > 0 and plan_steps[0] and plan_steps[0].get("resource") {
+            extracted_scheme = str(plan_steps[0]["resource"]);
+        } elif prof and prof.get("category") {
+            cat_lower = str(prof["category"]).lower();
+            if "food" in cat_lower or "nutrition" in cat_lower or "ration" in cat_lower {
+                extracted_scheme = "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / Free Food Grain)";
+            } elif "health" in cat_lower or "med" in cat_lower {
+                extracted_scheme = "Ayushman Bharat PM-JAY (National Health Protection Scheme)";
+            } elif "pension" in cat_lower or "senior" in cat_lower or "elder" in cat_lower {
+                extracted_scheme = "Indira Gandhi National Old Age Pension Scheme (IGNOAPS)";
+            } elif "legal" in cat_lower {
+                extracted_scheme = "National Legal Services Authority (NALSA Free Legal Aid)";
+            } elif "housing" in cat_lower or "shelter" in cat_lower or "rent" in cat_lower {
+                extracted_scheme = "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)";
+            } else {
+                extracted_scheme = "National Social Assistance & Welfare Support Program";
+            }
+        }
+
+        # If the scheme changed to a new program, update approved_program and reset approval to pending!
+        if extracted_scheme and extracted_scheme != approved_program {
+            approved_program = extracted_scheme;
+            approval_status = "pending";
         }
 
         # Step progression based on real chat facts
         if approval_status == "approved" {
             active_step = 6;
-        } elif len(res_list) > 0 or len(plan_list) > 0 {
+        } elif len(match_list) > 0 or len(plan_steps) > 0 or len(res_list) > 0 {
             active_step = 5;
         } elif found_monthly >= 0 {
             active_step = 4;
