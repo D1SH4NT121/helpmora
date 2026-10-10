@@ -788,14 +788,14 @@ input:focus {
 .gv-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .gv-btn-on { border-color: rgba(255,229,0,0.5) !important; color: #FFE500 !important; }
 .gv-err { padding: 10px 18px; color: #FF6B6B; font-size: 12px; }
-.gv-body { display: grid; grid-template-columns: minmax(0, 1fr) 272px; }
-.gv-canvas { padding: 14px 14px 20px; min-height: 360px; min-width: 0; container-type: inline-size; }
+.gv-body { display: grid; grid-template-columns: minmax(0, 1fr) 272px; align-items: start; }
+.gv-canvas { padding: 14px 14px 20px; min-height: 360px; min-width: 0; overflow-x: auto; container-type: inline-size; }
 .gv-flow { display: grid; align-items: start; }
 .gv-col { min-width: 0; }
 .gv-colhead { height: 24px; font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(255,255,255,0.62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.gv-gcol { padding-top: 24px; min-width: 0; }
-.gv-gutter { display: block; overflow: visible; }
-.gv-line { transition: stroke-opacity 0.16s ease, stroke-width 0.16s ease; }
+.gv-gcol { padding-top: 24px; min-width: 0; pointer-events: none; }
+.gv-gutter { display: block; overflow: visible; pointer-events: none; }
+.gv-line { pointer-events: none; transition: stroke-opacity 0.16s ease; }
 .gv-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: gvDraw 0.42s ease-out forwards; }
 @keyframes gvDraw { to { stroke-dashoffset: 0; } }
 .gv-arc-label { fill: #fff; font-size: 10.5px; font-family: ui-monospace, monospace; paint-order: stroke; stroke: #0b0b0d; stroke-width: 3px; }
@@ -865,7 +865,7 @@ input:focus {
 .gv-empty-flow span { padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.55); font-size: 12px; }
 .gv-empty-flow i { width: 22px; height: 1px; background: rgba(255,255,255,0.2); }
 
-.gv-side { border-left: 0.5px solid rgba(255,255,255,0.06); padding: 16px; display: flex; flex-direction: column; gap: 18px; }
+.gv-side { border-left: 0.5px solid rgba(255,255,255,0.06); padding: 16px; display: flex; flex-direction: column; gap: 18px; position: sticky; top: 0; max-height: calc(100vh - 120px); overflow-y: auto; }
 .gv-detail { font-size: 12px; line-height: 1.55; min-height: 110px; }
 .gv-detail-type { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
 .gv-detail-title { font-size: 14px; font-weight: 650; margin: 4px 0 6px; }
@@ -880,9 +880,9 @@ input:focus {
 .gv-legend-row { display: flex; align-items: center; gap: 7px; }
 .gv-legend-hollow { width: 26px; height: 14px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.35); display: inline-block; }
 
-@media (max-width: 960px) { .gv-body { grid-template-columns: 1fr; } .gv-side { border-left: none; border-top: 0.5px solid rgba(255,255,255,0.06); } }
+@media (max-width: 960px) { .gv-body { grid-template-columns: 1fr; } .gv-side { border-left: none; border-top: 0.5px solid rgba(255,255,255,0.06); position: static; max-height: none; } }
 /* Narrow canvas (phones, split views): one column, no connectors; routes become text. */
-@container (max-width: 700px) {
+@container (max-width: 520px) {
   .gv-flow { display: flex !important; flex-direction: column; align-items: stretch; gap: 14px; }
   .gv-gcol { display: none; }
   .gv-card { height: auto; min-height: 80px; gap: 5px; }

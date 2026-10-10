@@ -220,8 +220,8 @@ impl GraphViz.renderLeft(m: dict) -> JsxElement {
                 <button
                     type="button"
                     className={"gv-you" + (" gv-sel" if selected == "person" else "") + (" gv-cur" if (current == "person" or current == "root") else "") + ("" if isOn("person") else " gv-off")}
-                    onMouseEnter={lambda _e: MouseEvent { hovered = "person"; }}
-                    onMouseLeave={lambda _e: MouseEvent { hovered = ""; }}
+                    onMouseEnter={lambda _e: MouseEvent { if hovered != "person" { hovered = "person"; } }}
+                    onMouseLeave={lambda _e: MouseEvent { if hovered == "person" { hovered = ""; } }}
                     onFocus={lambda _e: Any { hovered = "person"; }}
                     onBlur={lambda _e: Any { hovered = ""; }}
                     onClick={lambda _e: MouseEvent { pick("person"); }}
@@ -237,8 +237,8 @@ impl GraphViz.renderLeft(m: dict) -> JsxElement {
                 {nd and <button
                     type="button"
                     className={"gv-need" + (" gv-sel" if selected == "need" else "") + (" gv-hot" if fid == "need" else "") + (" gv-cur" if current == "need" else "") + ("" if isOn("need") else " gv-off")}
-                    onMouseEnter={lambda _e: MouseEvent { hovered = "need"; }}
-                    onMouseLeave={lambda _e: MouseEvent { hovered = ""; }}
+                    onMouseEnter={lambda _e: MouseEvent { if hovered != "need" { hovered = "need"; } }}
+                    onMouseLeave={lambda _e: MouseEvent { if hovered == "need" { hovered = ""; } }}
                     onFocus={lambda _e: Any { hovered = "need"; }}
                     onBlur={lambda _e: Any { hovered = ""; }}
                     onClick={lambda _e: MouseEvent { pick("need"); }}
@@ -298,8 +298,8 @@ impl GraphViz.renderCard(n: Any, i: int, m: dict) -> JsxElement {
             type="button"
             className={cls}
             style={{"--tier": ti["color"]}}
-            onMouseEnter={lambda _e: MouseEvent { hovered = nid; }}
-            onMouseLeave={lambda _e: MouseEvent { hovered = ""; }}
+            onMouseEnter={lambda _e: MouseEvent { if hovered != nid { hovered = nid; } }}
+            onMouseLeave={lambda _e: MouseEvent { if hovered == nid { hovered = ""; } }}
             onFocus={lambda _e: Any { hovered = nid; }}
             onBlur={lambda _e: Any { hovered = ""; }}
             onClick={lambda _e: MouseEvent { pick(nid); }}
@@ -331,8 +331,8 @@ impl GraphViz.renderRight(m: dict) -> JsxElement {
                     type="button"
                     className={"gv-rcard" + (" gv-sel" if selected == str(r["id"]) else "") + (" gv-hot" if fid == str(r["id"]) else "") + (" gv-faded" if (fid and fid != str(r["id"]) and not m["rel"][str(r["id"])]) else "") + (" gv-cur" if current == str(r["id"]) else "") + ("" if isOn(str(r["id"])) else " gv-off")}
                     style={{"top": str(m["rtop"][str(r["id"])]) + "px"}}
-                    onMouseEnter={lambda _e: MouseEvent { hovered = str(r["id"]); }}
-                    onMouseLeave={lambda _e: MouseEvent { hovered = ""; }}
+                    onMouseEnter={lambda _e: MouseEvent { rid = str(r["id"]); if hovered != rid { hovered = rid; } }}
+                    onMouseLeave={lambda _e: MouseEvent { rid = str(r["id"]); if hovered == rid { hovered = ""; } }}
                     onFocus={lambda _e: Any { hovered = str(r["id"]); }}
                     onBlur={lambda _e: Any { hovered = ""; }}
                     onClick={lambda _e: MouseEvent { pick(str(r["id"])); }}
@@ -453,7 +453,7 @@ impl GraphViz.renderRoutes(m: dict) -> JsxElement {
 }
 
 impl GraphViz.renderDetail(m: dict) -> JsxElement {
-    nid = hovered if hovered else selected;
+    nid = selected if selected else hovered;
     picked: Any = m["byid"][nid] if nid else None;
     if not picked {
         return
