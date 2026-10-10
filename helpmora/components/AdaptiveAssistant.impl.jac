@@ -252,3 +252,50 @@ impl AdaptiveAssistant.togglePrivacy(kind: str) -> None {
         try { window.eval("if (window._cm_speak) { window._cm_speak('Raw voice retention " + state_str + ".'); }"); } except Exception as _e {}
     }
 }
+
+impl AdaptiveAssistant.setScenario(preset: str) -> None {
+    if preset == "clear" {
+        input_text = "";
+        voice_field_val = "₹0";
+        approval_status = "pending";
+        voice_confirmed = False;
+        active_step = 1;
+        agent_state = "idle";
+        try {
+            window.eval("if (window._cm_speak) { window._cm_speak('Case cleared. Type your custom situation or click Speak Field.'); }");
+        } except Exception as _ex {}
+    } elif preset == "single_mother" {
+        input_text = "I lost my job two months ago. I am behind on rent, I have two children, and my monthly income is eight thousand rupees.";
+        voice_field_val = "₹8,000";
+        approved_program = "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)";
+        approval_status = "pending";
+        voice_confirmed = False;
+        active_step = 3;
+        agent_state = "idle";
+        try {
+            window.eval("if (window._cm_speak) { window._cm_speak('Loaded single mother housing and shelter scenario.'); }");
+        } except Exception as _ex {}
+    } elif preset == "senior" {
+        input_text = "I am 72 years old, on a monthly pension of twelve thousand rupees. My landlord is trying to evict me illegally and I need medicines.";
+        voice_field_val = "₹12,000";
+        approved_program = "National Social Assistance & Jan Aushadhi Generic Medicine Scheme";
+        approval_status = "pending";
+        voice_confirmed = False;
+        active_step = 3;
+        agent_state = "idle";
+        try {
+            window.eval("if (window._cm_speak) { window._cm_speak('Loaded senior citizen healthcare and eviction defense scenario.'); }");
+        } except Exception as _ex {}
+    } elif preset == "food" {
+        input_text = "We are a family of four in Delhi. I earn fifteen thousand rupees a month and we need food rations and subsidized grain.";
+        voice_field_val = "₹15,000";
+        approved_program = "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / Free Food Grain)";
+        approval_status = "pending";
+        voice_confirmed = False;
+        active_step = 3;
+        agent_state = "idle";
+        try {
+            window.eval("if (window._cm_speak) { window._cm_speak('Loaded food grain and ration card assistance scenario.'); }");
+        } except Exception as _ex {}
+    }
+}
