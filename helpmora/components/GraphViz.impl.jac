@@ -25,6 +25,17 @@ impl GraphViz.loadSnap -> None {
     loading = False;
 }
 
+impl GraphViz.resetGraph -> None {
+    if not user_id { return; }
+    loading = True;
+    await jacSpawn("ForgetWalker", "", {"user_id": user_id}).catch(
+        lambda e: Any -> dict { return {"reports": []}; }
+    );
+    snap = None;
+    await loadSnap();
+    loading = False;
+}
+
 impl GraphViz.model -> dict {
     # View model over the snapshot: which card each node becomes, the y of
     # every connector endpoint, and what the focused card is related to.

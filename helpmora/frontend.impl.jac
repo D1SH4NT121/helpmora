@@ -228,13 +228,22 @@ impl ClientApp.runPaletteAction(action: Any) -> None {
             window.open("/docs", "_blank");
         } except Exception as _ex {}
     } elif kind == "reset" {
-        # Reset the live walker_events buffer so the graph + telemetry
-        # tabs show a clean slate without forcing a full page reload.
-        walker_events = [];
+        await resetSession();
     }
     palette_open = False;
     palette_query = "";
     palette_idx = 0;
+}
+
+impl ClientApp.resetSession -> None {
+    if user_id {
+        await jacSpawn("ForgetWalker", "", {"user_id": user_id}).catch(lambda e: Any -> dict { return {"reports": []}; });
+    }
+    creds = resetVisitorCreds();
+    walker_events = [];
+    active_case = None;
+    await initAuth();
+    try { window.location.reload(); } except Exception as _ex {}
 }
 
 impl ClientApp.renderPaletteItem(action: Any, idx: int, sel: int) -> JsxElement {

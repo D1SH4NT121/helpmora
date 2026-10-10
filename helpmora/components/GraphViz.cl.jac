@@ -66,6 +66,7 @@ def:pub GraphViz(walker_events: list, user_id: str = "") -> JsxElement {
     def stepReplay(idx: int, order: list) -> None;
     def isOn(nid: str) -> bool;
     def pick(nid: str) -> None;
+    async def resetGraph -> None;
     def renderLeft(m: dict) -> JsxElement;
     def renderCard(n: Any, i: int, m: dict) -> JsxElement;
     def renderRight(m: dict) -> JsxElement;
@@ -102,6 +103,7 @@ def:pub GraphViz(walker_events: list, user_id: str = "") -> JsxElement {
                     <button className={"cm-ghost-btn" + (" gv-btn-on" if schema else "")} aria-pressed={("true" if schema else "false")} onClick={lambda _e: MouseEvent { schema = not schema; }} title="Show the graph schema: node and edge type names">Schema</button>
                     <button className="cm-ghost-btn" onClick={lambda _e: MouseEvent { loadSnap(); }} disabled={loading}>{("Loading…" if loading else "Refresh")}</button>
                     <button className={"cm-ghost-btn" + (" gv-btn-on" if playing else "")} onClick={lambda _e: MouseEvent { startReplay(); }} disabled={empty or playing}>{("Replaying…" if playing else "▶ Replay turn")}</button>
+                    <button className="cm-ghost-btn" style={{"color": "#FFE500", "borderColor": "rgba(255, 229, 0, 0.3)"}} onClick={lambda _e: MouseEvent { resetGraph(); }} disabled={loading} title="Start a fresh case and clear past graph nodes">✨ New Case</button>
                 </div>
             </div>
             {err and <div className="gv-err"><span>{"Couldn't load the graph. " + err}</span><button className="cm-ghost-btn" onClick={lambda _e: MouseEvent { GV_RETRY["n"] = 0; loadSnap(); }} disabled={loading}>{("Loading…" if loading else "Try again")}</button></div>}

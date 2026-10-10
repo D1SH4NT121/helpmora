@@ -122,6 +122,17 @@ impl ChatPane.sendMessage(text_override: str = "", answering: str = "", display:
     # message is lost: wait for the login, and never send without one.
     uid = user_id;
     if auth_ready { uid = (await auth_ready) or user_id; }
+    if not uid {
+        try { uid = localStorage.getItem("cm_uid") or ""; } except Exception as _ex {}
+    }
+    if uid and not jacIsLoggedIn() {
+        try {
+            pw = localStorage.getItem("cm_pw") or "";
+            if pw {
+                await jacLogin(uid, pw);
+            }
+        } except Exception as _ex {}
+    }
     t0 = window.performance.now();
     res: Any = {"reports": [], "spawn_error": "couldn't sign in to the server"};
     if uid and jacIsLoggedIn() {

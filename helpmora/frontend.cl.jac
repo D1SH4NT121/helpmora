@@ -66,6 +66,7 @@ def:pub ClientApp -> JsxElement {
     def goHome -> None;
     def togglePalette -> None;
     def handleCaseUpdate(case_data: Any) -> None;
+    async def resetSession -> None;
     def runPaletteAction(action: Any) -> None;
     def renderPaletteItem(action: Any, idx: int, sel: int) -> JsxElement;
     def renderPalette -> JsxElement;
@@ -208,6 +209,22 @@ def:pub ClientApp -> JsxElement {
                 </nav>
                 <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
                     <button className="cm-back-btn" onClick={lambda _e: MouseEvent { goHome(); }} title="Go back to previous page">← Back</button>
+                    <button
+                        onClick={lambda _e: MouseEvent { resetSession(); }}
+                        title="Start a fresh session with a clean graph and new case"
+                        style={{
+                            "padding": "5px 10px",
+                            "background": "rgba(255, 229, 0, 0.08)",
+                            "border": "0.5px solid rgba(255, 229, 0, 0.25)",
+                            "borderRadius": "8px",
+                            "color": "#FFE500",
+                            "fontSize": "11px",
+                            "fontWeight": "600",
+                            "cursor": "pointer"
+                        }}
+                    >
+                        ✨ New Session
+                    </button>
                     <button className="cm-quick-exit" style={{"display": "none"}} onClick={lambda _e: MouseEvent { quickExit(); }} title="Return to home page (or press Shift three times)">Quick exit</button>
                     <button
                         onClick={lambda _e: MouseEvent { togglePalette(); }}
