@@ -41,7 +41,7 @@ impl AdaptiveAssistant.syncFromChat -> None {
             }
         }
 
-        if found_monthly >= 0 {
+        if not user_overrode_income and found_monthly >= 0 {
             voice_field_val = "₹" + f"{found_monthly:,}";
         }
 
@@ -188,6 +188,11 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
         try {
             window.eval("if (window._cm_current_rec) { try { window._cm_current_rec.abort(); } catch(e) {} }");
             window.eval("if (window._cm_speak) { window._cm_speak('Microphone stopped.'); }");
+            cur_inc = str(window.eval("window._cm_manual_income || ''"));
+            if cur_inc and cur_inc != "undefined" {
+                voice_field_val = cur_inc;
+                user_overrode_income = True;
+            }
         } except Exception as _ex {}
         return;
     }
@@ -204,13 +209,21 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
                             if (stat) { stat.innerText = '🎙️ Heard: "' + text + '"'; }
                             var parsed = window._cm_parse_income ? window._cm_parse_income(text) : null;
                             if (parsed) {
+                                var formatted = '₹' + parsed.toLocaleString();
+                                window._cm_manual_income = formatted;
+                                try { sessionStorage.setItem('cm_manual_income', formatted); } catch(se) {}
                                 var inp = document.getElementById('cm-voice-input');
                                 if (inp) {
-                                    inp.value = '₹' + parsed.toLocaleString();
+                                    try {
+                                        var nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+                                        nativeSetter.call(inp, formatted);
+                                    } catch(pe) {
+                                        inp.value = formatted;
+                                    }
                                     inp.dispatchEvent(new Event('input', { bubbles: true }));
                                     inp.dispatchEvent(new Event('change', { bubbles: true }));
                                 }
-                                if (stat) { stat.innerText = '✓ Recorded ₹' + parsed.toLocaleString() + ' (Heard: "' + text + '")'; }
+                                if (stat) { stat.innerText = '✓ Recorded ' + formatted + ' (Heard: "' + text + '")'; }
                                 if (window._cm_speak) {
                                     window._cm_speak('I recorded ' + parsed.toLocaleString() + ' rupees. Click confirm to save.');
                                 }

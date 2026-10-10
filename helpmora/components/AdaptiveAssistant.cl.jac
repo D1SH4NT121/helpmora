@@ -28,6 +28,7 @@ def:pub AdaptiveAssistant(
         chat_connected: bool = False,
         voice_active: bool = False,
         voice_field_val: str = "₹8,000",
+        user_overrode_income: bool = False,
         voice_field_name: str = "Monthly Family Income",
         voice_confirmed: bool = False,
         field_help_title: str = "",
@@ -655,10 +656,14 @@ def:pub AdaptiveAssistant(
                                         num_digits = "".join([c for c in raw_input if c.isdigit()]);
                                         if num_digits {
                                             voice_field_val = "₹" + f"{int(num_digits):,}";
+                                            user_overrode_income = True;
                                         } else {
                                             voice_field_val = raw_input;
                                         }
                                         voice_confirmed = False;
+                                        try {
+                                            window.eval("window._cm_manual_income = '" + voice_field_val + "'; try { sessionStorage.setItem('cm_manual_income', '" + voice_field_val + "'); } catch(e) {}");
+                                        } except Exception as _ex {}
                                     }}
                                     placeholder="e.g. ₹15,000"
                                     style={{
@@ -678,11 +683,11 @@ def:pub AdaptiveAssistant(
                             </div>
                             <div style={{"display": "flex", "alignItems": "center", "gap": "6px", "marginTop": "8px", "flexWrap": "wrap"}}>
                                 <span style={{"fontSize": fs_xs, "color": txt_dim}}>Quick pick:</span>
-                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹5,000"; voice_confirmed = False; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹5,000</button>
-                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹8,000"; voice_confirmed = False; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹8,000</button>
-                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹12,000"; voice_confirmed = False; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹12,000</button>
-                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹15,000"; voice_confirmed = False; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹15,000</button>
-                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹25,000"; voice_confirmed = False; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹25,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹5,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = '₹5,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹5,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹8,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = '₹8,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹8,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹12,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = '₹12,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹12,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹15,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = '₹15,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹15,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹25,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = '₹25,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹25,000</button>
                             </div>
                         </div>
 
