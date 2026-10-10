@@ -58,10 +58,10 @@ impl AdaptiveAssistant.runLiveAnalysis(text: str) -> None {
                 voice_field_val = "₹" + str(prof["income"]);
             }
 
-            active_step = 4;
+            active_step = 5;
             agent_state = "verified";
             try {
-                window.eval("if (window._cm_speak) { window._cm_speak('Analysis complete. Identified matching program: " + approved_program.replace("'", "") + ". All statutory checks verified.'); }");
+                window.eval("if (window._cm_speak) { window._cm_speak('Analysis complete. Identified matching program: " + approved_program.replace("'", "") + ". All statutory checks verified. Ready for your review and approval.'); }");
             } except Exception as _ex {}
         } else {
             agent_state = "idle";
@@ -90,7 +90,7 @@ impl AdaptiveAssistant.wipeAllMemory -> None {
 impl AdaptiveAssistant.approveAction -> None {
     approval_status = "approved";
     agent_state = "action_complete";
-    active_step = 5;
+    active_step = 6;
     res = await jacSpawn("MemoryWalker", "", {
         "user_id": user_id,
         "mode": "update_status",
@@ -105,10 +105,10 @@ impl AdaptiveAssistant.approveAction -> None {
 
 impl AdaptiveAssistant.confirmVoiceField -> None {
     voice_confirmed = True;
-    active_step = 3;
+    active_step = 4;
     agent_state = "verified";
     try {
-        window.eval("if (window._cm_speak) { window._cm_speak('Income of " + voice_field_val + " confirmed. Running live eligibility check now.'); }");
+        window.eval("if (window._cm_speak) { window._cm_speak('Income of " + voice_field_val + " confirmed. Advancing to Housing Program evaluation.'); }");
     } except Exception as _ex {}
     runLiveAnalysis("My monthly income is " + voice_field_val + ". " + input_text);
 }

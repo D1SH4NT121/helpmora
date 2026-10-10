@@ -17,7 +17,7 @@ import from .HELPmoraLogo { HELPmoraLogo }
 
 def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = None) -> JsxElement {
     has agent_state: str = "idle",
-        active_step: int = 2,
+        active_step: int = 3,
         input_text: str = "I lost my job two months ago. I am behind on rent, I have two children, and my monthly income is eight thousand rupees.",
         voice_active: bool = False,
         voice_field_val: str = "₹8,000",
@@ -146,9 +146,9 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
     lbl_step6 = "6. Check Everything and Agree" if simple_lang else "6. Review & Human Approval";
 
     lbl_voice_title = "Talk Instead of Typing:" if simple_lang else "Voice-to-Form Capture:";
-    lbl_voice_prompt = ("Spoken input: \"" + spoken_transcript + "\"") if spoken_transcript else ("What you said: \"I make 8,000 rupees a month.\"" if simple_lang else "Spoken input: \"My monthly income is eight thousand rupees.\"");
+    lbl_voice_prompt = ("Spoken input: " + chr(34) + spoken_transcript + chr(34)) if spoken_transcript else ("What you said: " + chr(34) + "I make 8,000 rupees a month." + chr(34) if simple_lang else "Spoken input: " + chr(34) + "My monthly income is eight thousand rupees." + chr(34));
     lbl_field_name = "Money Made Each Month" if simple_lang else voice_field_name;
-    lbl_voice_question = ("Field confirmed and saved." if voice_confirmed else ("HELPmora: \"I wrote down " + voice_field_val + " for your monthly money. Does that sound right?\"" if simple_lang else "HELPmora: \"I have entered " + voice_field_val + " for Monthly Income. Is that correct?\""));
+    lbl_voice_question = ("Field confirmed and saved." if voice_confirmed else ("HELPmora: " + chr(34) + "I wrote down " + voice_field_val + " for your monthly money. Does that sound right?" + chr(34) if simple_lang else "HELPmora: " + chr(34) + "I have entered " + voice_field_val + " for Monthly Income. Is that correct?" + chr(34)));
     lbl_recovery_btn = "Don't have your papers?" if simple_lang else "Cannot find document?";
     lbl_recovery_title = "Help: If You Don't Have an Income Paper" if simple_lang else "Guided Recovery: Missing Income Certificate";
     lbl_recovery_sub = "If you don't have an official paper right now, you can still get help:" if simple_lang else "If you do not have a formal income certificate right now, you do not have to start over:";
@@ -408,7 +408,11 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step2}</span>
                         </div>
-                        <div style={{
+                        {active_step > 3 and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
+                            <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step3.replace(" (Current Step)", "") + " (" + voice_field_val + " Verified)"}</span>
+                        </div>}
+                        {active_step == 3 and <div style={{
                             "display": "flex",
                             "alignItems": "center",
                             "gap": "10px",
@@ -419,19 +423,70 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                         }}>
                             <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step3}</span>
-                        </div>
-                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
-                            <span style={{"color": ("#00FF88" if active_step >= 4 else "rgba(255, 255, 255, 0.3)")}}>○</span>
+                        </div>}
+
+                        {active_step > 4 and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
+                            <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step4}</span>
+                        </div>}
+                        {active_step == 4 and <div style={{
+                            "display": "flex",
+                            "alignItems": "center",
+                            "gap": "10px",
+                            "background": "rgba(255, 229, 0, 0.08)",
+                            "padding": "8px 12px",
+                            "borderRadius": "8px",
+                            "borderLeft": "3px solid #FFE500"
+                        }}>
+                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
+                            <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step4 + " (Current Step)"}</span>
+                        </div>}
+                        {active_step < 4 and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step4}</span>
-                        </div>
-                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
-                            <span style={{"color": ("#00FF88" if active_step >= 5 else "rgba(255, 255, 255, 0.3)")}}>○</span>
+                        </div>}
+
+                        {active_step > 5 and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
+                            <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step5}</span>
+                        </div>}
+                        {active_step == 5 and <div style={{
+                            "display": "flex",
+                            "alignItems": "center",
+                            "gap": "10px",
+                            "background": "rgba(255, 229, 0, 0.08)",
+                            "padding": "8px 12px",
+                            "borderRadius": "8px",
+                            "borderLeft": "3px solid #FFE500"
+                        }}>
+                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
+                            <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step5 + " (Current Step)"}</span>
+                        </div>}
+                        {active_step < 5 and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step5}</span>
-                        </div>
-                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
-                            <span style={{"color": ("#00FF88" if approval_status == "approved" else "rgba(255, 255, 255, 0.3)")}}>○</span>
+                        </div>}
+
+                        {(approval_status == "approved" or active_step >= 6) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
+                            <span style={{"fontSize": fs_base, "color": "#00FF88", "fontWeight": "600"}}>{lbl_step6 + " (Approved)"}</span>
+                        </div>}
+                        {(approval_status == "pending" and active_step == 5) and <div style={{
+                            "display": "flex",
+                            "alignItems": "center",
+                            "gap": "10px",
+                            "background": "rgba(255, 229, 0, 0.08)",
+                            "padding": "8px 12px",
+                            "borderRadius": "8px",
+                            "borderLeft": "3px solid #FFE500"
+                        }}>
+                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
+                            <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step6 + " (Ready for Approval)"}</span>
+                        </div>}
+                        {(approval_status == "pending" and active_step < 5) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step6}</span>
-                        </div>
+                        </div>}
                     </div>
 
                     <div style={{
@@ -521,7 +576,7 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                                     "cursor": "pointer"
                                 }}
                             >
-                                Yes, Confirm ₹8,000
+                                {"Yes, Confirm " + voice_field_val}
                             </button>
                             <button
                                 onClick={lambda _e: MouseEvent { toggleRecovery(); }}
