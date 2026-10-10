@@ -155,6 +155,58 @@ A directed acyclic graph (DAG) of 6 specialized autonomous agents coordinates ca
 
 ---
 
+## 🛠️ Required Hackathon Resource Implementations
+
+HELPmora strictly implements and integrates all three designated hackathon technologies across its architecture:
+
+### 1. Omi (Wearable & Voice Ingestion)
+- **Documentation & References:**
+  - [Main Documentation](https://docs.omi.me/?utm_medium=referral&utm_source=hidevs&utm_campaign=hackathon_month&utm_content=platform_hidevs)
+  - [App Development Guide](https://docs.omi.me/doc/developer/apps/Introduction?utm_medium=referral&utm_source=hidevs&utm_campaign=hackathon_month&utm_content=platform_hidevs)
+  - [GitHub Repository](https://github.com/BasedHardware/omi?utm_medium=referral&utm_source=hidevs&utm_campaign=hackathon_month&utm_content=platform_hidevs)
+- **Implementation in HELPmora (`helpmora/integrations/omi/`):**
+  - **Webhook Ingestion & Normalization (`adapter.py`):** Ingests raw audio and conversation transcripts from Omi wearables or mobile clients. Handles missing headers, malformed text, and timestamp normalization.
+  - **Security & Replay Protection:** Enforces HMAC SHA-256 signature verification and token-based authentication. Implements SHA-256 event fingerprinting with a 10-minute sliding deduplication cache (`compute_event_fingerprint`).
+  - **Standard Endpoints (`helpmora/integrations/api.py`):**
+    - `POST /api/omi/events`: Authoritative webhook entrypoint for Omi device events.
+    - `POST /omi/conversation`: Hackathon-standard memory creation trigger fired upon conversation completion.
+    - `POST /omi/realtime`: Real-time streaming transcript handler for chunked voice processing.
+    - `POST /ask`: Context-aware Q&A endpoint retrieving Qdrant memories before invoking the pipeline.
+  - **Frontend Experience (`ChatPane.cl.jac` & `AdaptiveAssistant.cl.jac`):** Features a dedicated `⚡ Omi` voice launcher with browser microphone recording, live transcript streaming, and pre-loaded authentic Indian civic audio scenarios (Hindi, English, Telugu).
+
+---
+
+### 2. Lyzr (Enterprise Multi-Agent SuperFlow)
+- **Documentation & References:**
+  - [Documentation](https://docs.lyzr.ai/introduction?utm_medium=referral&utm_source=hidevs&utm_campaign=hackathon_month&utm_content=platform_hidevs)
+  - [Studio Website](https://studio.lyzr.ai/?utm_medium=referral&utm_source=hidevs&utm_campaign=hackathon_month&utm_content=platform_hidevs)
+  - [GitHub Repository](https://github.com/LyzrCore/lyzr-framework?utm_medium=referral&utm_source=hackathon_month&utm_content=platform_hidevs)
+- **Implementation in HELPmora (`helpmora/integrations/lyzr/` & `helpmora/orchestration/`):**
+  - **Lyzr Multi-Agent DAG (`agents.py`):** Deploys 6 coordinated specialized agents following Lyzr agent contracts:
+    1. **`ContextAgent`:** Enriches citizen profiles using conversation history retrieved from Qdrant.
+    2. **`ResourceAgent`:** Queries the pre-seeded statutory catalog of 40 Indian welfare programs.
+    3. **`EligibilityAgent`:** Executes deterministic closed-form mathematical eligibility checks (`score.jac`).
+    4. **`PathfinderAgent`:** Dynamically traverses 26 `leads_to` transition graph edges to synthesize recovery pathways when direct eligibility is blocked.
+    5. **`VerificationAgent`:** Enforces a rigid verification gate to guarantee 0 hallucinations.
+    6. **`ActionAgent`:** Synthesizes actionable plain-language next steps, offline office channels, and documentation requirements.
+  - **Lyzr Client (`client.py`):** Provides seamless integration with `lyzr-agent-api` cloud endpoints with automatic fallback to zero-credential local deterministic execution.
+  - **Deterministic Crisis Safety Gate (`check_crisis_safety_gate`):** Intercepts acute distress keywords (abuse, violence, hunger, fraud) and immediately routes citizens to verified national helplines (112, 181, 1098, 14416) with zero LLM latency.
+
+---
+
+### 3. Qdrant (Episodic Vector Memory & Multi-Tenant Isolation)
+- **Documentation & References:**
+  - [Qdrant Website](http://qdrant.tech/?utm_medium=referral&utm_source=stars&utm_campaign=devrel&utm_content=deepak-chawla)
+  - [Qdrant Documentation](https://qdrant.tech/documentation/?utm_medium=referral&utm_source=stars&utm_campaign=devrel&utm_content=deepak-chawla)
+  - [Qdrant Cloud Signup](https://cloud.qdrant.io/signup?utm_medium=referral&utm_source=stars&utm_campaign=devrel&utm_content=deepak-chawla)
+- **Implementation in HELPmora (`helpmora/integrations/qdrant/`):**
+  - **Persistent Vector Memory Store (`memory.py`):** Maintains the `helpmora_memory` vector collection for semantic case history and program discovery. Supports remote cloud clusters (`QDRANT_URL`), local persistent disk storage (`QDRANT_STORAGE_PATH`), and in-memory embedded vector storage.
+  - **Strict Multi-Tenant Privacy Isolation:** Enforces deterministic payload filtering (`user_id == current_user_id`). Visitors never see or retrieve another citizen's data.
+  - **Typed Memory Records (`schemas.py`):** Manages 8 distinct schemas: `CitizenProfile`, `SchemeResult`, `ApplicationHistory`, `AppealRecord`, `FollowUpReminder`, `DocumentCheck`, `ConversationMemory`, and `RealtimeTranscript`.
+  - **Citizen Memory Governance UI (`AdaptiveAssistant.cl.jac`):** Provides transparent privacy toggles and a 1-click **"Wipe Qdrant Memories"** button fulfilling the citizen's Right to be Forgotten.
+
+---
+
 ## The Adaptive Assistant
 
 HELPmora's **Adaptive Assistant** is specifically engineered for inclusive, accessible, and high-trust civic navigation. It features:
