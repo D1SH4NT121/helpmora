@@ -186,7 +186,7 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
         voice_active = False;
         agent_state = "reasoning";
         try {
-            window.eval("if (window._cm_current_rec) { window._cm_current_rec.stop(); }");
+            window.eval("if (window._cm_current_rec) { try { window._cm_current_rec.abort(); } catch(e) {} }");
             window.eval("if (window._cm_speak) { window._cm_speak('Microphone stopped.'); }");
         } except Exception as _ex {}
         return;
@@ -195,25 +195,43 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
     voice_active = True;
     agent_state = "listening";
     try {
-        window.eval("if (window._cm_speak) { window._cm_speak('Microphone listening. Please speak your monthly family income now.'); }");
         window.eval("""
-            if (window._cm_listen_field) {
-                window._cm_current_rec = window._cm_listen_field(
-                    function(text) {
-                        var digits = (text || '').replace(/[^0-9]/g, '');
-                        if (digits) {
-                            var el = document.getElementById('cm-voice-val');
-                            if (el) el.innerText = '₹' + digits;
-                            if (window._cm_speak) {
-                                window._cm_speak('I heard ' + digits + ' rupees. Click confirm to save.');
+            var startListening = function() {
+                if (window._cm_listen_field) {
+                    window._cm_current_rec = window._cm_listen_field(
+                        function(text) {
+                            var stat = document.getElementById('cm-voice-live-status');
+                            if (stat) { stat.innerText = '🎙️ Heard: "' + text + '"'; }
+                            var parsed = window._cm_parse_income ? window._cm_parse_income(text) : null;
+                            if (parsed) {
+                                var inp = document.getElementById('cm-voice-input');
+                                if (inp) {
+                                    inp.value = '₹' + parsed.toLocaleString();
+                                    inp.dispatchEvent(new Event('input', { bubbles: true }));
+                                    inp.dispatchEvent(new Event('change', { bubbles: true }));
+                                }
+                                if (stat) { stat.innerText = '✓ Recorded ₹' + parsed.toLocaleString() + ' (Heard: "' + text + '")'; }
+                                if (window._cm_speak) {
+                                    window._cm_speak('I recorded ' + parsed.toLocaleString() + ' rupees. Click confirm to save.');
+                                }
+                            }
+                        },
+                        function() {
+                            var stopBtn = document.getElementById('cm-voice-toggle-btn');
+                            if (stopBtn && stopBtn.innerText.includes('Stop')) {
+                                stopBtn.click();
                             }
                         }
-                    },
-                    function() {
-                        var btn = document.getElementById('cm-voice-btn');
-                        if (btn) btn.click();
-                    }
-                );
+                    );
+                }
+            };
+
+            if (window._cm_speak) {
+                window._cm_speak('Please speak your monthly family income.', function() {
+                    startListening();
+                });
+            } else {
+                startListening();
             }
         """);
     } except Exception as _ex {

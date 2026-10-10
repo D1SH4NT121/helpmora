@@ -62,38 +62,85 @@ def:pub AdaptiveAssistant(
     can with entry {
         try {
             window.eval("""
-                window._cm_speak = function(text) {
+                window._cm_speak = function(text, onDone) {
                     try {
-                        if ('speechSynthesis' in window) {
-                            window.speechSynthesis.cancel();
-                            var utt = new SpeechSynthesisUtterance(text);
-                            utt.lang = 'en-IN';
-                            utt.rate = 1.0;
-                            utt.pitch = 1.0;
-                            window._current_utt = utt;
-                            utt.onend = function() { window._current_utt = null; };
-                            utt.onerror = function() { window._current_utt = null; };
-                            window.speechSynthesis.speak(utt);
-                        }
-                    } catch(e) {}
+                        if (!('speechSynthesis' in window)) { if (onDone) onDone(); return; }
+                        window.speechSynthesis.cancel();
+                        setTimeout(function() {
+                            try {
+                                var utt = new SpeechSynthesisUtterance(text);
+                                utt.rate = 1.0;
+                                utt.pitch = 1.0;
+                                var voices = window.speechSynthesis.getVoices();
+                                if (voices && voices.length > 0) {
+                                    var v = voices.find(function(x) { return x.lang && (x.lang.includes('en-IN') || x.lang.includes('en-US') || x.lang.startsWith('en')); });
+                                    if (v) utt.voice = v;
+                                }
+                                utt.onend = function() { window._current_utt = null; if (onDone) onDone(); };
+                                utt.onerror = function() { window._current_utt = null; if (onDone) onDone(); };
+                                window._current_utt = utt;
+                                window.speechSynthesis.resume();
+                                window.speechSynthesis.speak(utt);
+                            } catch(ie) { if (onDone) onDone(); }
+                        }, 50);
+                    } catch(e) { if (onDone) onDone(); }
                 };
+
+                window._cm_parse_income = function(text) {
+                    if (!text) return null;
+                    var t = String(text).toLowerCase().trim();
+                    var numMatch = t.match(/[0-9]+([0-9,]*[0-9])?/);
+                    if (numMatch) {
+                        var clean = numMatch[0].replace(/,/g, '');
+                        var n = parseInt(clean, 10);
+                        if (!isNaN(n) && n > 0) return n;
+                    }
+                    var words = {
+                        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9,
+                        'ten': 10, 'eleven': 11, 'twelve': 12, 'thirteen': 13, 'fourteen': 14, 'fifteen': 15, 'sixteen': 16, 'seventeen': 17, 'eighteen': 18, 'nineteen': 19,
+                        'twenty': 20, 'thirty': 30, 'forty': 40, 'fifty': 50, 'sixty': 60, 'seventy': 70, 'eighty': 80, 'ninety': 90
+                    };
+                    var mults = { 'hundred': 100, 'thousand': 1000, 'lakh': 100000, 'lac': 100000, 'lakhs': 100000, 'crore': 10000000 };
+                    var total = 0, current = 0, found = false;
+                    var toks = t.replace(/[^a-z0-9]/g, ' ').split(/\s+/);
+                    for (var i = 0; i < toks.length; i++) {
+                        var w = toks[i];
+                        if (words[w] !== undefined) {
+                            current += words[w];
+                            found = true;
+                        } else if (mults[w] !== undefined) {
+                            current = (current === 0 ? 1 : current) * mults[w];
+                            total += current;
+                            current = 0;
+                            found = true;
+                        }
+                    }
+                    total += current;
+                    return (found && total > 0) ? total : null;
+                };
+
                 window._cm_listen_field = function(onText, onDone) {
                     try {
                         var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-                        if (!SR) return null;
+                        if (!SR) {
+                            if (window._cm_speak) window._cm_speak('Speech recognition is not supported in this browser. Please use Chrome or Edge.');
+                            if (onDone) onDone();
+                            return null;
+                        }
                         var rec = new SR();
                         rec.continuous = false;
                         rec.interimResults = true;
+                        rec.maxAlternatives = 1;
                         rec.lang = 'en-IN';
                         rec.onresult = function(e) {
-                            var t = '';
+                            var full = '';
                             for (var i = 0; i < e.results.length; i++) {
-                                t += e.results[i][0].transcript;
+                                full += e.results[i][0].transcript;
                             }
-                            if (onText) onText(t);
+                            if (onText && full) onText(full);
                         };
                         rec.onend = function() { if (onDone) onDone(); };
-                        rec.onerror = function() { if (onDone) onDone(); };
+                        rec.onerror = function(err) { if (onDone) onDone(); };
                         rec.start();
                         return rec;
                     } catch(e) { if (onDone) onDone(); return null; }
@@ -544,6 +591,7 @@ def:pub AdaptiveAssistant(
                         <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "marginBottom": "10px"}}>
                             <span style={{"fontSize": fs_sm, "fontWeight": "600", "color": txt_main}}>{lbl_voice_title}</span>
                             <button
+                                id="cm-voice-toggle-btn"
                                 onClick={lambda _e: MouseEvent { triggerVoiceInput(); }}
                                 style={{
                                     "padding": ("6px 14px" if voice_first else "4px 10px"),
@@ -574,7 +622,7 @@ def:pub AdaptiveAssistant(
                             "marginBottom": "12px"
                         }}>
                             <span style={{"fontSize": "16px"}}>🎙️</span>
-                            <span>Microphone Listening... Speak your monthly income (e.g. "8000 rupees")</span>
+                            <span id="cm-voice-live-status">Microphone Listening... Speak your monthly income (e.g. "8000 rupees" or "fifteen thousand")</span>
                         </div>}
 
                         <div style={{"fontSize": fs_sm, "fontStyle": "italic", "color": txt_dim, "marginBottom": "12px"}}>
@@ -599,6 +647,7 @@ def:pub AdaptiveAssistant(
                             </div>
                             <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "flexWrap": "wrap"}}>
                                 <input
+                                    id="cm-voice-input"
                                     type="text"
                                     value={voice_field_val}
                                     onChange={lambda e: ChangeEvent {
