@@ -155,41 +155,46 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
 }
 
 impl AdaptiveAssistant.toggleVoiceFirst -> None {
-    voice_first = not voice_first;
+    new_val = not voice_first;
+    voice_first = new_val;
     try {
-        msg = "Voice-First mode turned on. Voice input is prioritized." if voice_first else "Voice-First mode turned off.";
+        msg = "Voice-First mode turned on. Voice input is prioritized." if new_val else "Voice-First mode turned off.";
         window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
     } except Exception as _ex {}
 }
 
 impl AdaptiveAssistant.toggleLargeText -> None {
-    large_text = not large_text;
+    new_val = not large_text;
+    large_text = new_val;
     try {
-        msg = "Large Text mode turned on. Fonts enlarged." if large_text else "Large Text mode turned off.";
+        msg = "Large Text mode turned on. Fonts enlarged." if new_val else "Large Text mode turned off.";
         window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
     } except Exception as _ex {}
 }
 
 impl AdaptiveAssistant.toggleHighContrast -> None {
-    high_contrast = not high_contrast;
+    new_val = not high_contrast;
+    high_contrast = new_val;
     try {
-        msg = "High Contrast mode turned on. Maximum visibility active." if high_contrast else "High Contrast mode turned off.";
+        msg = "High Contrast mode turned on. Maximum visibility active." if new_val else "High Contrast mode turned off.";
         window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
     } except Exception as _ex {}
 }
 
 impl AdaptiveAssistant.toggleReducedMotion -> None {
-    reduced_motion = not reduced_motion;
+    new_val = not reduced_motion;
+    reduced_motion = new_val;
     try {
-        msg = "Reduced Motion turned on. Animations disabled." if reduced_motion else "Reduced Motion turned off. Animations enabled.";
+        msg = "Reduced Motion turned on. Animations disabled." if new_val else "Reduced Motion turned off. Animations enabled.";
         window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
     } except Exception as _ex {}
 }
 
 impl AdaptiveAssistant.toggleSimpleLanguage -> None {
-    simple_lang = not simple_lang;
+    new_val = not simple_lang;
+    simple_lang = new_val;
     try {
-        msg = "Simple Language turned on. Complex rules translated to plain English." if simple_lang else "Simple Language turned off. Showing statutory terms.";
+        msg = "Simple Language turned on. Complex rules translated to plain English." if new_val else "Simple Language turned off. Showing statutory terms.";
         window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
     } except Exception as _ex {}
 }
@@ -213,32 +218,37 @@ impl AdaptiveAssistant.closeFieldHelp -> None {
 }
 
 impl AdaptiveAssistant.toggleRecovery -> None {
-    recovery_open = not recovery_open;
+    new_val = not recovery_open;
+    recovery_open = new_val;
     try {
-        msg = "Guided recovery opened. Showing alternative documents." if recovery_open else "Guided recovery closed.";
+        msg = "Guided recovery opened. Showing alternative documents." if new_val else "Guided recovery closed.";
         window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
     } except Exception as _ex {}
 }
 
 impl AdaptiveAssistant.togglePrivacy(kind: str) -> None {
     if kind == "conv" {
-        conv_memory_on = not conv_memory_on;
-        state_str = "enabled" if conv_memory_on else "disabled";
+        new_val = not conv_memory_on;
+        conv_memory_on = new_val;
+        state_str = "enabled" if new_val else "disabled";
         try { window.eval("if (window._cm_speak) { window._cm_speak('Conversation memory " + state_str + ".'); }"); } except Exception as _e {}
     }
     if kind == "app" {
-        app_history_on = not app_history_on;
-        state_str = "enabled" if app_history_on else "disabled";
+        new_val = not app_history_on;
+        app_history_on = new_val;
+        state_str = "enabled" if new_val else "disabled";
         try { window.eval("if (window._cm_speak) { window._cm_speak('Application history retention " + state_str + ".'); }"); } except Exception as _e {}
     }
     if kind == "docs" {
-        docs_on = not docs_on;
-        state_str = "enabled" if docs_on else "disabled";
+        new_val = not docs_on;
+        docs_on = new_val;
+        state_str = "enabled" if new_val else "disabled";
         try { window.eval("if (window._cm_speak) { window._cm_speak('Document retention " + state_str + ".'); }"); } except Exception as _e {}
     }
     if kind == "voice" {
-        raw_voice_on = not raw_voice_on;
-        state_str = "enabled" if raw_voice_on else "disabled";
+        new_val = not raw_voice_on;
+        raw_voice_on = new_val;
+        state_str = "enabled" if new_val else "disabled";
         try { window.eval("if (window._cm_speak) { window._cm_speak('Raw voice retention " + state_str + ".'); }"); } except Exception as _e {}
     }
 }
