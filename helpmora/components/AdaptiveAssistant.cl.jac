@@ -62,6 +62,10 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                             var utt = new SpeechSynthesisUtterance(text);
                             utt.lang = 'en-IN';
                             utt.rate = 1.0;
+                            utt.pitch = 1.0;
+                            window._current_utt = utt;
+                            utt.onend = function() { window._current_utt = null; };
+                            utt.onerror = function() { window._current_utt = null; };
                             window.speechSynthesis.speak(utt);
                         }
                     } catch(e) {}
@@ -97,6 +101,10 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
     def confirmVoiceField -> None;
     def triggerVoiceInput -> None;
     def toggleVoiceFirst -> None;
+    def toggleLargeText -> None;
+    def toggleHighContrast -> None;
+    def toggleReducedMotion -> None;
+    def toggleSimpleLanguage -> None;
     def showFieldHelp(title: str, text: str) -> None;
     def closeFieldHelp -> None;
     def toggleRecovery -> None;
@@ -224,7 +232,7 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                     {"Voice-First: " + ("ON" if voice_first else "OFF")}
                 </button>
                 <button
-                    onClick={lambda _e: MouseEvent { large_text = not large_text; }}
+                    onClick={lambda _e: MouseEvent { toggleLargeText(); }}
                     style={{
                         "padding": "5px 12px",
                         "borderRadius": "8px",
@@ -240,7 +248,7 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                     {"Large Text: " + ("ON" if large_text else "OFF")}
                 </button>
                 <button
-                    onClick={lambda _e: MouseEvent { high_contrast = not high_contrast; }}
+                    onClick={lambda _e: MouseEvent { toggleHighContrast(); }}
                     style={{
                         "padding": "5px 12px",
                         "borderRadius": "8px",
@@ -256,7 +264,7 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                     {"High Contrast: " + ("ON" if high_contrast else "OFF")}
                 </button>
                 <button
-                    onClick={lambda _e: MouseEvent { reduced_motion = not reduced_motion; }}
+                    onClick={lambda _e: MouseEvent { toggleReducedMotion(); }}
                     style={{
                         "padding": "5px 12px",
                         "borderRadius": "8px",
@@ -272,7 +280,7 @@ def:pub AdaptiveAssistant(user_id: str = "anonymous", on_walker_event: Any = Non
                     {"Reduced Motion: " + ("ON" if reduced_motion else "OFF")}
                 </button>
                 <button
-                    onClick={lambda _e: MouseEvent { simple_lang = not simple_lang; }}
+                    onClick={lambda _e: MouseEvent { toggleSimpleLanguage(); }}
                     style={{
                         "padding": "5px 12px",
                         "borderRadius": "8px",

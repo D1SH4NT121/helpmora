@@ -1,9 +1,13 @@
-"""Async and walker-backed real-time logic for AdaptiveAssistant."""
+"""Async and walker-backed real-time logic for AdaptiveAssistant with accurate voice narration."""
 
 impl AdaptiveAssistant.runLiveAnalysis(text: str) -> None {
     if not text { return; }
     is_loading = True;
     agent_state = "reasoning";
+    try {
+        window.eval("if (window._cm_speak) { window._cm_speak('Analyzing your case across 40 welfare schemes with Lyzr multi-agent team.'); }");
+    } except Exception as _ex {}
+
     res = await jacSpawn("IntegratedPipelineWalker", "", {
         "input_text": text,
         "user_id": user_id
@@ -56,8 +60,14 @@ impl AdaptiveAssistant.runLiveAnalysis(text: str) -> None {
 
             active_step = 4;
             agent_state = "verified";
+            try {
+                window.eval("if (window._cm_speak) { window._cm_speak('Analysis complete. Identified matching program: " + approved_program.replace("'", "") + ". All statutory checks verified.'); }");
+            } except Exception as _ex {}
         } else {
             agent_state = "idle";
+            try {
+                window.eval("if (window._cm_speak) { window._cm_speak('Analysis finished. Please specify income and family size for exact program matches.'); }");
+            } except Exception as _ex {}
         }
     } except Exception as _ex {
         agent_state = "idle";
@@ -72,6 +82,9 @@ impl AdaptiveAssistant.wipeAllMemory -> None {
         {"badge": "PRIVACY", "title": "Memory Purged", "status": "completed", "detail": "All vectors and profile data deleted"}
     ];
     agent_state = "idle";
+    try {
+        window.eval("if (window._cm_speak) { window._cm_speak('All saved memory, documents, and vector records have been permanently deleted.'); }");
+    } except Exception as _ex {}
 }
 
 impl AdaptiveAssistant.approveAction -> None {
@@ -86,7 +99,7 @@ impl AdaptiveAssistant.approveAction -> None {
     }).catch(lambda e: Any -> dict { return {"reports": []}; });
 
     try {
-        window.eval("if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance('Application approved and permanently saved.'); u.lang='en-IN'; window.speechSynthesis.speak(u); }");
+        window.eval("if (window._cm_speak) { window._cm_speak('Application for " + approved_program.replace("'", "") + " approved and permanently saved.'); }");
     } except Exception as _ex {}
 }
 
@@ -95,7 +108,7 @@ impl AdaptiveAssistant.confirmVoiceField -> None {
     active_step = 3;
     agent_state = "verified";
     try {
-        window.eval("if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance('Income confirmed. Running live policy analysis.'); u.lang='en-IN'; window.speechSynthesis.speak(u); }");
+        window.eval("if (window._cm_speak) { window._cm_speak('Income of " + voice_field_val + " confirmed. Running live eligibility check now.'); }");
     } except Exception as _ex {}
     runLiveAnalysis("My monthly income is " + voice_field_val + ". " + input_text);
 }
@@ -106,6 +119,7 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
         agent_state = "reasoning";
         try {
             window.eval("if (window._cm_current_rec) { window._cm_current_rec.stop(); }");
+            window.eval("if (window._cm_speak) { window._cm_speak('Microphone stopped.'); }");
         } except Exception as _ex {}
         return;
     }
@@ -113,6 +127,7 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
     voice_active = True;
     agent_state = "listening";
     try {
+        window.eval("if (window._cm_speak) { window._cm_speak('Microphone listening. Please speak your monthly family income now.'); }");
         window.eval("""
             if (window._cm_listen_field) {
                 window._cm_current_rec = window._cm_listen_field(
@@ -121,6 +136,9 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
                         if (digits) {
                             var el = document.getElementById('cm-voice-val');
                             if (el) el.innerText = '₹' + digits;
+                            if (window._cm_speak) {
+                                window._cm_speak('I heard ' + digits + ' rupees. Click confirm to save.');
+                            }
                         }
                     },
                     function() {
@@ -138,30 +156,89 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
 
 impl AdaptiveAssistant.toggleVoiceFirst -> None {
     voice_first = not voice_first;
-    if voice_first {
-        try {
-            window.eval("if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance('Voice-First mode activated. Click Speak Field to talk into your microphone.'); u.lang='en-IN'; window.speechSynthesis.speak(u); }");
-        } except Exception as _ex {}
-    }
+    try {
+        msg = "Voice-First mode turned on. Voice input is prioritized." if voice_first else "Voice-First mode turned off.";
+        window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
+    } except Exception as _ex {}
+}
+
+impl AdaptiveAssistant.toggleLargeText -> None {
+    large_text = not large_text;
+    try {
+        msg = "Large Text mode turned on. Fonts enlarged." if large_text else "Large Text mode turned off.";
+        window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
+    } except Exception as _ex {}
+}
+
+impl AdaptiveAssistant.toggleHighContrast -> None {
+    high_contrast = not high_contrast;
+    try {
+        msg = "High Contrast mode turned on. Maximum visibility active." if high_contrast else "High Contrast mode turned off.";
+        window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
+    } except Exception as _ex {}
+}
+
+impl AdaptiveAssistant.toggleReducedMotion -> None {
+    reduced_motion = not reduced_motion;
+    try {
+        msg = "Reduced Motion turned on. Animations disabled." if reduced_motion else "Reduced Motion turned off. Animations enabled.";
+        window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
+    } except Exception as _ex {}
+}
+
+impl AdaptiveAssistant.toggleSimpleLanguage -> None {
+    simple_lang = not simple_lang;
+    try {
+        msg = "Simple Language turned on. Complex rules translated to plain English." if simple_lang else "Simple Language turned off. Showing statutory terms.";
+        window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
+    } except Exception as _ex {}
 }
 
 impl AdaptiveAssistant.showFieldHelp(title: str, text: str) -> None {
     field_help_title = title;
     field_help_body = text;
+    try {
+        clean_text = text.replace("'", " ").replace('"', " ");
+        clean_title = title.replace("'", " ").replace('"', " ");
+        window.eval("if (window._cm_speak) { window._cm_speak('Help for " + clean_title + ": " + clean_text + "'); }");
+    } except Exception as _ex {}
 }
 
 impl AdaptiveAssistant.closeFieldHelp -> None {
     field_help_title = "";
     field_help_body = "";
+    try {
+        window.eval("if (window._cm_speak) { window._cm_speak('Help closed.'); }");
+    } except Exception as _ex {}
 }
 
 impl AdaptiveAssistant.toggleRecovery -> None {
     recovery_open = not recovery_open;
+    try {
+        msg = "Guided recovery opened. Showing alternative documents." if recovery_open else "Guided recovery closed.";
+        window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
+    } except Exception as _ex {}
 }
 
 impl AdaptiveAssistant.togglePrivacy(kind: str) -> None {
-    if kind == "conv" { conv_memory_on = not conv_memory_on; }
-    if kind == "app" { app_history_on = not app_history_on; }
-    if kind == "docs" { docs_on = not docs_on; }
-    if kind == "voice" { raw_voice_on = not raw_voice_on; }
+    if kind == "conv" {
+        conv_memory_on = not conv_memory_on;
+        state_str = "enabled" if conv_memory_on else "disabled";
+        try { window.eval("if (window._cm_speak) { window._cm_speak('Conversation memory " + state_str + ".'); }"); } except Exception as _e {}
+    }
+    if kind == "app" {
+        app_history_on = not app_history_on;
+        state_str = "enabled" if app_history_on else "disabled";
+        try { window.eval("if (window._cm_speak) { window._cm_speak('Application history retention " + state_str + ".'); }"); } except Exception as _e {}
+    }
+    if kind == "docs" {
+        docs_on = not docs_on;
+        state_str = "enabled" if docs_on else "disabled";
+        try { window.eval("if (window._cm_speak) { window._cm_speak('Document retention " + state_str + ".'); }"); } except Exception as _e {}
+    }
+    if kind == "voice" {
+        raw_voice_on = not raw_voice_on;
+        state_str = "enabled" if raw_voice_on else "disabled";
+        try { window.eval("if (window._cm_speak) { window._cm_speak('Raw voice retention " + state_str + ".'); }"); } except Exception as _e {}
+    }
 }
