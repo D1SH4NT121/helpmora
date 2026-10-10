@@ -13,9 +13,16 @@ def:pub TelemetryPanel(walker_events: list, user_id: str = "") -> JsxElement {
     # ReflectionReadWalker on mount and whenever walker_events grows
     # (i.e. when a new chat turn writes a fresh SessionInsight).
     has reflections: list = [],
-        reflections_loading: bool = False;
+        reflections_loading: bool = False,
+        selected_walker: str = "ALL",
+        selected_event_idx: int = -1,
+        pinging: bool = False,
+        ping_result: str = "";
 
     async def loadReflections -> None;
+    async def runDiagnosticPing -> None;
+    def selectWalker(name: str) -> None;
+    def toggleEventDetail(idx: int) -> None;
     def renderReflectionTimeline -> JsxElement;
     def renderReflectionRow(ins: Any, idx: int) -> JsxElement;
 
@@ -147,6 +154,8 @@ def:pub TelemetryPanel(walker_events: list, user_id: str = "") -> JsxElement {
             </div>;
     }
 
+    filtered_events: list = [walker_events[j] for j in range(total_events) if (selected_walker == "ALL" or str(walker_events[j]["walker"]) == selected_walker)];
+
     return
         <div>
             <div
@@ -156,18 +165,46 @@ def:pub TelemetryPanel(walker_events: list, user_id: str = "") -> JsxElement {
                     "marginBottom": "12px",
                     "display": "flex",
                     "alignItems": "center",
-                    "gap": "6px"
+                    "justifyContent": "space-between",
+                    "gap": "10px",
+                    "flexWrap": "wrap"
                 }}
             >
-                <span
-                    style={{
-                        "width": "6px", "height": "6px",
-                        "borderRadius": "50%",
-                        "background": "#00FF88",
-                        "display": "inline-block"
-                    }}
-                />
-                Live data — {str(total_events)} walker events captured this session.
+                <div style={{"display": "flex", "alignItems": "center", "gap": "7px"}}>
+                    <span
+                        style={{
+                            "width": "7px", "height": "7px",
+                            "borderRadius": "50%",
+                            "background": "#00FF88",
+                            "boxShadow": "0 0 8px #00FF88",
+                            "display": "inline-block"
+                        }}
+                    />
+                    <span>Live data — {str(total_events)} walker events captured this session.</span>
+                </div>
+                <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
+                    {ping_result and <span style={{"color": "#00FF88", "fontSize": "11px", "fontFamily": "ui-monospace, monospace"}}>{ping_result}</span>}
+                    <button
+                        onClick={lambda _e: MouseEvent { runDiagnosticPing(); }}
+                        disabled={pinging}
+                        style={{
+                            "padding": "5px 12px",
+                            "borderRadius": "7px",
+                            "background": "rgba(255, 229, 0, 0.08)",
+                            "border": "0.5px solid rgba(255, 229, 0, 0.3)",
+                            "color": "#FFE500",
+                            "fontSize": "11px",
+                            "fontWeight": "600",
+                            "cursor": "pointer",
+                            "display": "flex",
+                            "alignItems": "center",
+                            "gap": "5px"
+                        }}
+                    >
+                        <span>{("⏳" if pinging else "⚡")}</span>
+                        <span>{("Pinging pipeline..." if pinging else "Diagnostic Pipeline Ping")}</span>
+                    </button>
+                </div>
             </div>
 
             <div
@@ -194,7 +231,7 @@ def:pub TelemetryPanel(walker_events: list, user_id: str = "") -> JsxElement {
                         {str(total_events)}
                     </div>
                     <div style={{"fontSize": "11px", "color": "rgba(255,255,255,0.62)", "marginTop": "3px"}}>
-                        Walker events
+                        Walker events captured
                     </div>
                 </div>
                 <div
@@ -210,7 +247,7 @@ def:pub TelemetryPanel(walker_events: list, user_id: str = "") -> JsxElement {
                 >
                     <div style={{"fontSize": "20px", "marginBottom": "5px"}}>🤖</div>
                     <div style={{"fontSize": "22px", "fontWeight": "600", "color": "#FFE500"}}>
-                        {str(len([w for w in walker_order if triggered[w]]))}
+                        {str(len([w for w in walker_order if triggered[w]])) + " / " + str(len(walker_order))}
                     </div>
                     <div style={{"fontSize": "11px", "color": "rgba(255,255,255,0.62)", "marginTop": "3px"}}>
                         Walkers triggered
@@ -228,11 +265,11 @@ def:pub TelemetryPanel(walker_events: list, user_id: str = "") -> JsxElement {
                     }}
                 >
                     <div style={{"fontSize": "20px", "marginBottom": "5px"}}>⚡</div>
-                    <div style={{"fontSize": "22px", "fontWeight": "600", "color": "#FFE500"}}>
+                    <div style={{"fontSize": "20px", "fontWeight": "600", "color": "#FFE500"}}>
                         gpt-oss-20b · Gemma 4
                     </div>
                     <div style={{"fontSize": "11px", "color": "rgba(255,255,255,0.62)", "marginTop": "3px"}}>
-                        Active model
+                        Active model · Deterministic-first
                     </div>
                 </div>
             </div>
@@ -254,10 +291,19 @@ def:pub TelemetryPanel(walker_events: list, user_id: str = "") -> JsxElement {
                         "fontSize": "10px",
                         "color": "rgba(255,255,255,0.62)",
                         "textTransform": "uppercase",
-                        "letterSpacing": "0.06em"
+                        "letterSpacing": "0.06em",
+                        "display": "flex",
+                        "justifyContent": "space-between",
+                        "alignItems": "center"
                     }}
                 >
-                    Walker activity
+                    <span>Walker activity (Click row to inspect / filter)</span>
+                    {selected_walker != "ALL" and <button
+                        onClick={lambda _e: MouseEvent { selectWalker("ALL"); }}
+                        style={{"background": "none", "border": "none", "color": "#FFE500", "fontSize": "10px", "cursor": "pointer", "textDecoration": "underline"}}
+                    >
+                        {"Clear filter (" + selected_walker + ")"}
+                    </button>}
                 </div>
                 {[renderWalkerRow(walker_order[i]) for i in range(len(walker_order))]}
             </div>
@@ -272,16 +318,55 @@ def:pub TelemetryPanel(walker_events: list, user_id: str = "") -> JsxElement {
                 }}
             >
                 <div style={{"fontSize": "11px", "color": "rgba(255,255,255,0.62)", "marginBottom": "14px", "textTransform": "uppercase", "letterSpacing": "0.06em"}}>
-                    Walker call tree — parent → child invocation
+                    Walker call tree — parent → child invocation (Click to inspect)
                 </div>
-                <div style={{"display": "flex", "alignItems": "center", "overflowX": "auto", "gap": "0"}}>
+                <div style={{"display": "flex", "alignItems": "center", "overflowX": "auto", "gap": "0", "padding": "4px 0"}}>
                     {[renderChainNode(walker_order[i], bool(triggered[walker_order[i]]), int(counts[walker_order[i]])) for i in range(len(walker_order))]}
                 </div>
-                <div style={{"marginTop": "14px", "paddingTop": "12px", "borderTop": "0.5px solid rgba(255,255,255,0.06)"}}>
-                    <div style={{"fontSize": "10px", "color": "rgba(255,255,255,0.62)", "marginBottom": "7px", "textTransform": "uppercase", "letterSpacing": "0.06em"}}>
-                        Recent events
+                <div style={{"marginTop": "16px", "paddingTop": "14px", "borderTop": "0.5px solid rgba(255,255,255,0.06)"}}>
+                    <div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "center", "marginBottom": "10px", "flexWrap": "wrap", "gap": "8px"}}>
+                        <div style={{"fontSize": "10px", "color": "rgba(255,255,255,0.62)", "textTransform": "uppercase", "letterSpacing": "0.06em"}}>
+                            {"Recent events (" + str(len(filtered_events)) + " displayed)"}
+                        </div>
+                        <div style={{"display": "flex", "gap": "5px", "flexWrap": "wrap"}}>
+                            <button
+                                onClick={lambda _e: MouseEvent { selectWalker("ALL"); }}
+                                style={{
+                                    "padding": "2px 7px",
+                                    "borderRadius": "5px",
+                                    "border": ("1px solid #FFE500" if selected_walker == "ALL" else "0.5px solid rgba(255,255,255,0.1)"),
+                                    "background": ("rgba(255,229,0,0.15)" if selected_walker == "ALL" else "rgba(255,255,255,0.02)"),
+                                    "color": ("#FFE500" if selected_walker == "ALL" else "rgba(255,255,255,0.6)"),
+                                    "fontSize": "10px",
+                                    "cursor": "pointer"
+                                }}
+                            >
+                                All
+                            </button>
+                            {[
+                                <button
+                                    key={"flt-" + str(w)}
+                                    onClick={lambda _e: MouseEvent { selectWalker(w); }}
+                                    style={{
+                                        "padding": "2px 7px",
+                                        "borderRadius": "5px",
+                                        "border": ("1px solid " + str(walker_meta[w]["color"]) if selected_walker == w else "0.5px solid rgba(255,255,255,0.1)"),
+                                        "background": (str(walker_meta[w]["color"]) + "20" if selected_walker == w else "rgba(255,255,255,0.02)"),
+                                        "color": (str(walker_meta[w]["color"]) if selected_walker == w else "rgba(255,255,255,0.6)"),
+                                        "fontSize": "10px",
+                                        "cursor": "pointer"
+                                    }}
+                                >
+                                    {str(walker_meta[w]["icon"]) + " " + w}
+                                </button>
+                                for w in walker_order
+                            ]}
+                        </div>
                     </div>
-                    {[renderEvent(walker_events[j], j) for j in range(max(0, total_events - 8), total_events)]}
+                    {len(filtered_events) == 0 and <div style={{"fontSize": "11px", "color": "rgba(255,255,255,0.45)", "padding": "8px 0"}}>
+                        {"No events matching filter " + selected_walker + ". Click 'All' to view all events."}
+                    </div>}
+                    {[renderEvent(filtered_events[j], j) for j in range(max(0, len(filtered_events) - 10), len(filtered_events))]}
                 </div>
             </div>
 

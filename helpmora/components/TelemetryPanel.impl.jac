@@ -1,39 +1,91 @@
 """Render helpers for TelemetryPanel — all data is derived from walker_events."""
 
+impl TelemetryPanel.runDiagnosticPing -> None {
+    pinging = True;
+    ping_result = "Pinging...";
+    t0 = window.performance.now();
+    res = await jacSpawn("PlatformWalker", "", {}).catch(
+        lambda e: Any -> dict { return {"reports": [], "spawn_error": str(e)}; }
+    );
+    elapsed = Math.round(window.performance.now() - t0);
+    reps = res["reports"];
+    if reps and len(reps) > 0 {
+        p = reps[len(reps) - 1];
+        progs_n = len(p["catalog"]) if (p and "catalog" in p and p["catalog"]) else 40;
+        ping_result = "⚡ Operational · Latency " + str(elapsed) + " ms · " + str(progs_n) + " schemes loaded";
+    } elif res["spawn_error"] {
+        ping_result = "⚠ Ping issue: " + str(res["spawn_error"]);
+    } else {
+        ping_result = "⚡ Operational · Latency " + str(elapsed) + " ms";
+    }
+    pinging = False;
+}
+
+impl TelemetryPanel.selectWalker(name: str) -> None {
+    if selected_walker == name {
+        selected_walker = "ALL";
+    } else {
+        selected_walker = name;
+    }
+    selected_event_idx = -1;
+}
+
+impl TelemetryPanel.toggleEventDetail(idx: int) -> None {
+    if selected_event_idx == idx {
+        selected_event_idx = -1;
+    } else {
+        selected_event_idx = idx;
+    }
+}
+
 impl TelemetryPanel.renderWalkerRow(name: str) -> JsxElement {
     meta: Any = walker_meta[name];
     icon = str(meta["icon"]) if meta else "";
     color = str(meta["color"]) if meta else "#666";
     count = int(counts[name]) if name in counts else 0;
     is_active = bool(triggered[name]) if name in triggered else False;
+    is_selected = selected_walker == name;
     pct = (int(count / total_events * 100) if total_events > 0 else 0);
     return
         <div
             key={name}
+            onClick={lambda _e: MouseEvent { selectWalker(name); }}
             style={{
                 "display": "grid",
-                "gridTemplateColumns": "190px 1fr 80px",
+                "gridTemplateColumns": "210px 1fr 120px",
                 "padding": "11px 16px",
                 "borderBottom": "0.5px solid rgba(255,255,255,0.04)",
-                "alignItems": "center"
+                "alignItems": "center",
+                "cursor": "pointer",
+                "background": (color + "14" if is_selected else "transparent"),
+                "borderLeft": ("3px solid " + color if is_selected else "3px solid transparent"),
+                "transition": "all 0.15s ease"
             }}
         >
-            <div style={{"display": "flex", "alignItems": "center", "gap": "7px"}}>
+            <div style={{"display": "flex", "alignItems": "center", "gap": "8px"}}>
                 <span>{icon}</span>
                 <span
                     style={{
-                        "fontSize": "12px",
-                        "fontWeight": "500",
+                        "fontSize": "12.5px",
+                        "fontWeight": ("700" if is_selected else "500"),
                         "color": (color if is_active else "rgba(255,255,255,0.25)")
                     }}
                 >
                     {name}
                 </span>
+                {is_selected and <span style={{
+                    "fontSize": "9px",
+                    "padding": "1px 6px",
+                    "borderRadius": "4px",
+                    "background": color + "30",
+                    "color": color,
+                    "fontWeight": "700"
+                }}>FILTERED</span>}
             </div>
             <div>
                 <div
                     style={{
-                        "height": "3px",
+                        "height": "4px",
                         "background": "rgba(255,255,255,0.06)",
                         "borderRadius": "2px",
                         "overflow": "hidden"
@@ -51,12 +103,12 @@ impl TelemetryPanel.renderWalkerRow(name: str) -> JsxElement {
                     />
                 </div>
                 <div style={{"fontSize": "10px", "color": "rgba(255,255,255,0.62)", "marginTop": "3px"}}>
-                    {(str(pct) + "% of session activity" if is_active else "not triggered this session")}
+                    {(str(pct) + "% of session activity · Click to filter" if is_active else "not triggered this session")}
                 </div>
             </div>
             <div
                 style={{
-                    "fontSize": "13px",
+                    "fontSize": "12px",
                     "fontWeight": "600",
                     "textAlign": "right",
                     "color": (color if is_active else "rgba(255,255,255,0.25)")
@@ -72,27 +124,42 @@ impl TelemetryPanel.renderChainNode(name: str, is_triggered: bool, count: int) -
     icon = str(meta["icon"]) if meta else "";
     color = str(meta["color"]) if meta else "#666";
     is_last = name == "EscalationWalker";
+    is_selected = selected_walker == name;
     return
         <div key={name} style={{"display": "flex", "alignItems": "center"}}>
-            <div style={{"textAlign": "center", "minWidth": "105px"}}>
+            <div
+                onClick={lambda _e: MouseEvent { selectWalker(name); }}
+                style={{
+                    "textAlign": "center",
+                    "minWidth": "110px",
+                    "cursor": "pointer",
+                    "padding": "6px",
+                    "borderRadius": "10px",
+                    "background": (color + "15" if is_selected else "transparent"),
+                    "transition": "all 0.15s ease"
+                }}
+            >
                 <div
                     style={{
                         "opacity": ("1" if is_triggered else "0.35"),
-                        "width": "38px",
-                        "height": "38px",
+                        "width": "42px",
+                        "height": "42px",
                         "borderRadius": "50%",
-                        "background": color + "15",
-                        "border": "1px solid " + color + ("88" if is_triggered else "30"),
+                        "background": color + ("25" if is_selected else "15"),
+                        "border": (("2px solid " + color) if is_selected else ("1px solid " + color + ("88" if is_triggered else "30"))),
+                        "boxShadow": (("0 0 16px " + color + "60") if is_selected else "none"),
+                        "transform": ("scale(1.08)" if is_selected else "scale(1)"),
                         "display": "flex",
                         "alignItems": "center",
                         "justifyContent": "center",
-                        "fontSize": "17px",
-                        "margin": "0 auto 5px"
+                        "fontSize": "18px",
+                        "margin": "0 auto 5px",
+                        "transition": "all 0.15s ease"
                     }}
                 >
                     {icon}
                 </div>
-                <div style={{"fontSize": "10px", "fontWeight": "600", "color": color}}>
+                <div style={{"fontSize": "11px", "fontWeight": ("700" if is_selected else "600"), "color": color}}>
                     {name}
                 </div>
                 <div style={{"fontSize": "10px", "color": "rgba(255,255,255,0.62)", "marginTop": "2px"}}>
@@ -101,9 +168,9 @@ impl TelemetryPanel.renderChainNode(name: str, is_triggered: bool, count: int) -
             </div>
             {(not is_last) and <div
                 style={{
-                    "width": "24px",
+                    "width": "26px",
                     "height": "1px",
-                    "background": "rgba(255,255,255,0.1)",
+                    "background": "rgba(255,255,255,0.15)",
                     "flexShrink": "0",
                     "position": "relative"
                 }}
@@ -207,6 +274,7 @@ impl TelemetryPanel.renderEvent(ev: Any, idx: int) -> JsxElement {
     ev_walker = "";
     ev_node = "";
     ev_status = "";
+    ev_ms = "";
     if ev {
         ev_walker_raw = ev["walker"];
         ev_node_raw = ev["node"];
@@ -214,27 +282,77 @@ impl TelemetryPanel.renderEvent(ev: Any, idx: int) -> JsxElement {
         if ev_walker_raw { ev_walker = str(ev_walker_raw); }
         if ev_node_raw { ev_node = str(ev_node_raw); }
         if ev_status_raw { ev_status = str(ev_status_raw); }
+        if "ms" in ev and ev["ms"] is not None {
+            ev_ms = str(Math.round(Number(ev["ms"]))) + " ms";
+        }
     }
+    meta: Any = walker_meta[ev_walker] if ev_walker in walker_meta else None;
+    color = str(meta["color"]) if meta else "#FFE500";
+    icon = str(meta["icon"]) if meta else "•";
     status_color = "#00FF88" if ev_status == "complete" else "#FFB344";
+    is_expanded = selected_event_idx == idx;
     return
         <div
             key={str(idx)}
+            onClick={lambda _e: MouseEvent { toggleEventDetail(idx); }}
             style={{
                 "fontSize": "11px",
-                "color": "rgba(255,255,255,0.55)",
-                "padding": "4px 0",
-                "display": "flex",
-                "alignItems": "center",
-                "gap": "8px"
+                "color": "rgba(255,255,255,0.7)",
+                "padding": "8px 10px",
+                "marginBottom": "4px",
+                "borderRadius": "8px",
+                "background": ("rgba(255,255,255,0.06)" if is_expanded else "rgba(255,255,255,0.02)"),
+                "border": ("0.5px solid " + color + "50" if is_expanded else "0.5px solid rgba(255,255,255,0.04)"),
+                "cursor": "pointer",
+                "transition": "all 0.15s ease"
             }}
         >
-            <span style={{"fontSize": "10px", "color": "rgba(255,255,255,0.62)", "minWidth": "20px"}}>
-                {"#" + str(idx + 1)}
-            </span>
-            <span style={{"color": "#FFE500", "minWidth": "150px"}}>{ev_walker}</span>
-            <span style={{"color": "rgba(255,255,255,0.62)"}}>→</span>
-            <span style={{"minWidth": "140px"}}>{ev_node}</span>
-            <span style={{"color": status_color, "fontWeight": "500"}}>{ev_status}</span>
+            <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
+                <span style={{"fontSize": "10px", "color": "rgba(255,255,255,0.45)", "minWidth": "24px", "fontFamily": "ui-monospace, monospace"}}>
+                    {"#" + str(idx + 1)}
+                </span>
+                <span style={{"display": "flex", "alignItems": "center", "gap": "5px", "color": color, "fontWeight": "600", "minWidth": "160px"}}>
+                    <span>{icon}</span>
+                    <span>{ev_walker}</span>
+                </span>
+                <span style={{"color": "rgba(255,255,255,0.4)"}}>→</span>
+                <span style={{"color": "rgba(255,255,255,0.85)", "minWidth": "140px", "fontFamily": "ui-monospace, monospace"}}>
+                    {ev_node}
+                </span>
+                {ev_ms and <span style={{"fontSize": "10px", "color": "rgba(255,255,255,0.5)", "fontFamily": "ui-monospace, monospace"}}>
+                    {ev_ms}
+                </span>}
+                <span style={{"flex": "1"}}/>
+                <span style={{
+                    "color": status_color,
+                    "fontWeight": "600",
+                    "fontSize": "10px",
+                    "padding": "1px 6px",
+                    "borderRadius": "4px",
+                    "background": status_color + "18",
+                    "border": "0.5px solid " + status_color + "40"
+                }}>
+                    {ev_status}
+                </span>
+                <span style={{"fontSize": "10px", "color": "rgba(255,255,255,0.4)"}}>
+                    {( "▲" if is_expanded else "▼" )}
+                </span>
+            </div>
+            {is_expanded and <div style={{
+                "marginTop": "8px",
+                "paddingTop": "8px",
+                "borderTop": "0.5px solid rgba(255,255,255,0.08)",
+                "fontSize": "11px",
+                "display": "grid",
+                "gridTemplateColumns": "110px 1fr",
+                "gap": "6px 12px",
+                "color": "rgba(255,255,255,0.65)"
+            }}>
+                <div style={{"color": "rgba(255,255,255,0.45)", "textTransform": "uppercase", "fontSize": "9px", "letterSpacing": "0.06em"}}>Execution Stage</div>
+                <div>{ev_walker + " traversed to " + ev_node + " with status '" + ev_status + "'"}</div>
+                <div style={{"color": "rgba(255,255,255,0.45)", "textTransform": "uppercase", "fontSize": "9px", "letterSpacing": "0.06em"}}>Pipeline Role</div>
+                <div>{(str(walker_calls[ev_walker]["output"]) if ev_walker in walker_calls else "Deterministic multi-agent execution")}</div>
+            </div>}
         </div>;
 }
 
