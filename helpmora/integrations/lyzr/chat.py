@@ -93,6 +93,22 @@ def query_lyzr_agent(message: str, user_id: str = "futurexprime21@gmail.com", se
     except Exception:
         pass
 
+    # 0b. Intercept revert / step back / change requests
+    try:
+        from helpmora.engine.guardrails import is_revert_intent, REVERT_WELCOME_REPLY
+        if is_revert_intent(msg_clean):
+            return {
+                "ok": True,
+                "agent_id": agent_id,
+                "response": REVERT_WELCOME_REPLY,
+                "error": "",
+                "user_id": uid,
+                "session_id": sid,
+                "latency_ms": round((time.perf_counter() - t0) * 1000, 1),
+            }
+    except Exception:
+        pass
+
     # 1. Intercept out-of-context queries
     try:
         from helpmora.engine.guardrails import is_out_of_context, OUT_OF_CONTEXT_REPLY

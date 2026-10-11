@@ -48,17 +48,27 @@ IN_SCOPE_TERMS = [
     "eligibility", "portal", "help me", "need help", "apply"
 ]
 
+REVERT_WELCOME_REPLY = (
+    "I have reverted your submission! You can now freely change your details step by step. "
+    "Please tell me what you'd like to update (your income, household members, location, or welfare category), "
+    "or navigate through the steps directly in the Guided Welfare Workflow tab."
+)
+
 CONVERSATIONAL = [
     "hi", "hello", "hey", "namaste", "namaskar", "good morning", "good afternoon", "good evening",
     "how are you", "help", "help me", "who are you", "what can you do", "what is helpmora",
     "thank you", "thanks", "dhanyawad", "shukriya", "bye", "goodbye", "yes", "no", "ok", "okay",
-    "sure", "start", "clear", "reset"
+    "sure", "start", "clear", "reset", "revert", "undo", "back", "cancel", "change"
 ]
 
 GREETING_PATTERNS = [
     r"^(?:hi+|hey+|hello+|namaste|namaskar|pranam|hola|yo)(?:\s+(?:there|helpmora|assistant|friend))?[\s!.,?]*$",
     r"^(?:(?:hi+|hey+|hello+|namaste)[\s,]+)?(?:who\s+are\s+you|what\s+(?:is\s+helpmora|can\s+you\s+do|do\s+you\s+do|are\s+you)|how\s+can\s+you\s+help(?:\s+me)?|what\s+is\s+this|tell\s+me\s+about\s+yourself|how\s+does\s+this\s+work)[\s!?.]*$",
     r"^(?:good\s+(?:morning|afternoon|evening|day)|greetings)[\s!.,?]*$",
+]
+
+REVERT_PATTERNS = [
+    r"\b(?:revert|undo|go\s+back|step\s+back|change\s+(?:my\s+)?(?:idea|mind|details|income|submission)|cancel\s+(?:approval|submission)|modify\s+(?:submission|details|application))\b",
 ]
 
 OUT_OF_SCOPE_REGEX = [
@@ -83,14 +93,22 @@ def is_greeting(text: str) -> bool:
     return any(bool(re.search(pat, s)) for pat in GREETING_PATTERNS)
 
 
+def is_revert_intent(text: str) -> bool:
+    """Check if citizen wants to revert, step back, or change their idea."""
+    s = str(text or "").strip().lower()
+    if not s:
+        return False
+    return any(bool(re.search(pat, s)) for pat in REVERT_PATTERNS)
+
+
 def is_out_of_context(text: str) -> bool:
     """Check if message is outside HELPmora's Indian welfare & legal-aid domain."""
     t = str(text or "").strip().lower()
     if not t:
         return False
 
-    # 1. Greetings & conversational inputs are in context
-    if is_greeting(t):
+    # 1. Greetings, revert requests & conversational inputs are in context
+    if is_greeting(t) or is_revert_intent(t):
         return False
 
     clean_t = re.sub(r"[^\w\s]", "", t).strip()

@@ -53,6 +53,7 @@ def:pub AdaptiveAssistant(
         raw_voice_on: bool = False,
         memory_wiped: bool = False,
         spoken_transcript: str = "",
+        user_navigated_step: bool = False,
         run_id: str = "",
         is_loading: bool = False,
         trace_events: list = [
@@ -158,6 +159,7 @@ def:pub AdaptiveAssistant(
     async def runLiveAnalysis(text: str) -> None;
     async def wipeAllMemory -> None;
     async def approveAction -> None;
+    async def revertApproval(target_step: int = 3) -> None;
     def confirmStep1 -> None;
     def confirmStep2 -> None;
     def confirmStep4 -> None;
@@ -511,7 +513,7 @@ def:pub AdaptiveAssistant(
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step1 + " (Current Step)"}</span>
                         </div>}
 
-                        {(step2_confirmed or (active_step > 2 and (chat_household > 1 or chat_children > 0))) and <div onClick={lambda _e: MouseEvent { active_step = 2; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
+                        {(step2_confirmed or (active_step > 2 and (chat_household > 1 or chat_children > 0))) and <div onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 2; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step2.replace(" (Current Step)", "")}</span>
                         </div>}
@@ -527,12 +529,12 @@ def:pub AdaptiveAssistant(
                             <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step2 + " (Current Step)"}</span>
                         </div>}
-                        {(active_step < 2 or (not step2_confirmed and chat_household <= 1 and chat_children == 0 and active_step != 2)) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(active_step < 2 or (not step2_confirmed and chat_household <= 1 and chat_children == 0 and active_step != 2)) and <div onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 2; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step2}</span>
                         </div>}
 
-                        {(voice_field_val and (active_step > 3 or approval_status == "approved")) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(voice_field_val and (active_step > 3 or approval_status == "approved")) and <div onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 3; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step3.replace(" (Current Step)", "") + " (" + voice_field_val + " Verified)"}</span>
                         </div>}
@@ -548,12 +550,12 @@ def:pub AdaptiveAssistant(
                             <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step3}</span>
                         </div>}
-                        {(active_step < 3 or (not voice_field_val and active_step != 3 and approval_status != "approved")) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(active_step < 3 or (not voice_field_val and active_step != 3 and approval_status != "approved")) and <div onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 3; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{"3. Income Verification"}</span>
                         </div>}
 
-                        {(approved_program and (active_step > 4 or approval_status == "approved")) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(approved_program and (active_step > 4 or approval_status == "approved")) and <div onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 4; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step4.replace(" (Current Step)", "")}</span>
                         </div>}
@@ -569,12 +571,12 @@ def:pub AdaptiveAssistant(
                             <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step4 + " (Current Step)"}</span>
                         </div>}
-                        {(active_step < 4 and approval_status != "approved") and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(active_step < 4 and approval_status != "approved") and <div onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 4; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step4 if approved_program else "4. Matched Scheme (Pending Need & Income)"}</span>
                         </div>}
 
-                        {(approved_program and voice_field_val and (active_step > 5 or approval_status == "approved")) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(approved_program and voice_field_val and (active_step > 5 or approval_status == "approved")) and <div onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 5; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step5.replace(" (Current Step)", "") + " (Verified)"}</span>
                         </div>}
@@ -590,28 +592,29 @@ def:pub AdaptiveAssistant(
                             <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step5 + " (Current Step)"}</span>
                         </div>}
-                        {(active_step < 5 and approval_status != "approved") and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(active_step < 5 and approval_status != "approved") and <div onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 5; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step5}</span>
                         </div>}
 
-                        {(approval_status == "approved") and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(approval_status == "approved") and <div onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 6; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": "#00FF88", "fontWeight": "600"}}>{lbl_step6 + " (Approved)"}</span>
                         </div>}
-                        {(approval_status != "approved" and active_step >= 5 and approved_program and voice_field_val) and <div style={{
+                        {(approval_status != "approved" and active_step >= 5 and approved_program and voice_field_val) and <div onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 6; }} style={{
                             "display": "flex",
                             "alignItems": "center",
                             "gap": "10px",
                             "background": "rgba(255, 229, 0, 0.08)",
                             "padding": "8px 12px",
                             "borderRadius": "8px",
-                            "borderLeft": "3px solid #FFE500"
+                            "borderLeft": "3px solid #FFE500",
+                            "cursor": "pointer"
                         }}>
                             <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step6 + " (Awaiting Your Approval)"}</span>
                         </div>}
-                        {(approval_status != "approved" and not (active_step >= 5 and approved_program and voice_field_val)) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(approval_status != "approved" and not (active_step >= 5 and approved_program and voice_field_val)) and <div onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 6; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step6}</span>
                         </div>}
@@ -933,21 +936,20 @@ def:pub AdaptiveAssistant(
                             >
                                 {"Yes, Confirm " + voice_field_val}
                             </button>
+                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "marginTop": "14px", "flexWrap": "wrap"}}>
                             <button
-                                onClick={lambda _e: MouseEvent { toggleRecovery(); }}
-                                style={{
-                                    "padding": "7px 14px",
-                                    "background": "rgba(255, 255, 255, 0.06)",
-                                    "color": txt_main,
-                                    "borderRadius": "8px",
-                                    "border": inner_border,
-                                    "fontSize": fs_xs,
-                                    "cursor": "pointer"
-                                }}
+                                onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 2; }}
+                                style={{"padding": "6px 12px", "background": "rgba(255,255,255,0.06)", "color": txt_muted, "borderRadius": "6px", "border": inner_border, "fontSize": fs_xs, "cursor": "pointer"}}
                             >
-                                {lbl_recovery_btn}
+                                {"← Back to Step 2 (Household)"}
                             </button>
-                        </div>}
+                            <button
+                                onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 4; }}
+                                style={{"padding": "6px 14px", "background": "rgba(255,229,0,0.15)", "color": "#FFE500", "borderRadius": "6px", "border": "1px solid #FFE500", "fontWeight": "600", "fontSize": fs_xs, "cursor": "pointer"}}
+                            >
+                                {"Proceed to Step 4 (Matched Scheme) →"}
+                            </button>
+                        </div>
                     </div>}
 
                     {active_step == 4 and <div style={{
@@ -974,21 +976,81 @@ def:pub AdaptiveAssistant(
                         <div style={{"fontSize": fs_sm, "color": txt_muted, "marginBottom": "14px", "lineHeight": "1.5"}}>
                             {"Evaluated for family of " + str(chat_household) + " with monthly earnings of " + voice_field_val + ". All 2026 statutory income limits passed."}
                         </div>
-                        <button
-                            onClick={lambda _e: MouseEvent { confirmStep4(); }}
-                            style={{
-                                "padding": "8px 18px",
-                                "background": "#FFE500",
-                                "color": "#0A0A0A",
-                                "borderRadius": "8px",
-                                "border": "none",
-                                "fontWeight": "700",
-                                "fontSize": fs_sm,
-                                "cursor": "pointer"
-                            }}
-                        >
-                            {"Review Required Documents & Proceed →"}
-                        </button>
+                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "flexWrap": "wrap"}}>
+                            <button
+                                onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 3; }}
+                                style={{"padding": "8px 14px", "background": "rgba(255,255,255,0.06)", "color": txt_muted, "borderRadius": "8px", "border": inner_border, "fontSize": fs_xs, "cursor": "pointer"}}
+                            >
+                                {"← Back to Step 3 (Income)"}
+                            </button>
+                            <button
+                                onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 5; }}
+                                style={{
+                                    "padding": "8px 18px",
+                                    "background": "#FFE500",
+                                    "color": "#0A0A0A",
+                                    "borderRadius": "8px",
+                                    "border": "none",
+                                    "fontWeight": "700",
+                                    "fontSize": fs_sm,
+                                    "cursor": "pointer"
+                                }}
+                            >
+                                {"Review Required Documents (Step 5) →"}
+                            </button>
+                        </div>
+                    </div>}
+
+                    {active_step == 5 and <div style={{
+                        "background": inner_card_bg,
+                        "borderRadius": "12px",
+                        "padding": "18px",
+                        "border": "1px solid #00FF88",
+                        "marginBottom": "20px"
+                    }}>
+                        <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "marginBottom": "10px"}}>
+                            <span style={{"fontSize": fs_sm, "fontWeight": "600", "color": "#00FF88"}}>
+                                {"Step 5: Required Documents Checklist"}
+                            </span>
+                            <button
+                                onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 4; }}
+                                style={{"background": "none", "border": "none", "color": txt_dim, "fontSize": fs_xs, "cursor": "pointer"}}
+                            >
+                                {"← Back to Scheme"}
+                            </button>
+                        </div>
+                        <div style={{"fontSize": fs_sm, "color": txt_dim, "marginBottom": "12px"}}>
+                            {"The following official documents will be submitted with your application for " + approved_program + ":"}
+                        </div>
+                        <ul style={{"margin": "0 0 16px 18px", "padding": "0", "fontSize": fs_sm, "color": txt_muted, "lineHeight": "1.7"}}>
+                            <li>{"✓ Identity Proof: Aadhaar Card / Voter ID"}</li>
+                            <li>{"✓ Income Verification: Pension passbook / Bank statement (" + voice_field_val + "/month verified)"}</li>
+                            <li>{"✓ Residence Proof: Tenancy agreement / Municipal electricity bill in " + location_city}</li>
+                            <li>{"✓ Relevant Case Records: Landlord notice / complaint letter"}</li>
+                        </ul>
+                        <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "flexWrap": "wrap"}}>
+                            <button
+                                onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 3; }}
+                                style={{"padding": "8px 14px", "background": "rgba(255,255,255,0.06)", "color": txt_muted, "borderRadius": "8px", "border": inner_border, "fontSize": fs_xs, "cursor": "pointer"}}
+                            >
+                                {"↩ Revert to Income (Step 3)"}
+                            </button>
+                            <button
+                                onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 6; }}
+                                style={{
+                                    "padding": "8px 18px",
+                                    "background": "#00FF88",
+                                    "color": "#0A0A0A",
+                                    "borderRadius": "8px",
+                                    "border": "none",
+                                    "fontWeight": "700",
+                                    "fontSize": fs_sm,
+                                    "cursor": "pointer"
+                                }}
+                            >
+                                {"Proceed to Review & Approval (Step 6) →"}
+                            </button>
+                        </div>
                     </div>}
 
                     {recovery_open and <div style={{
@@ -1074,16 +1136,75 @@ def:pub AdaptiveAssistant(
                             {lbl_gate_btn}
                         </button>}
 
-                        {approval_status == "approved" and <div style={{
-                            "padding": "10px 16px",
-                            "background": ("#000000" if high_contrast else "rgba(0, 255, 136, 0.12)"),
-                            "border": ("2px solid #00FF88" if high_contrast else "0.5px solid rgba(0, 255, 136, 0.35)"),
-                            "borderRadius": "8px",
-                            "color": "#00FF88",
-                            "fontWeight": "600",
-                            "fontSize": fs_base
-                        }}>
-                            {lbl_gate_approved}
+                        {approval_status == "approved" and <div>
+                            <div style={{
+                                "padding": "10px 16px",
+                                "background": ("#000000" if high_contrast else "rgba(0, 255, 136, 0.12)"),
+                                "border": ("2px solid #00FF88" if high_contrast else "0.5px solid rgba(0, 255, 136, 0.35)"),
+                                "borderRadius": "8px",
+                                "color": "#00FF88",
+                                "fontWeight": "600",
+                                "fontSize": fs_base,
+                                "marginBottom": "12px",
+                                "display": "flex",
+                                "alignItems": "center",
+                                "justifyContent": "space-between",
+                                "flexWrap": "wrap",
+                                "gap": "10px"
+                            }}>
+                                <span>{lbl_gate_approved}</span>
+                                <span style={{"fontSize": fs_xs, "color": "#00FF88", "background": "rgba(0, 255, 136, 0.15)", "padding": "2px 8px", "borderRadius": "4px"}}>
+                                    {"Saved in Qdrant Memory"}
+                                </span>
+                            </div>
+                            <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "flexWrap": "wrap"}}>
+                                <button
+                                    onClick={lambda _e: MouseEvent { revertApproval(3); }}
+                                    style={{
+                                        "padding": "8px 16px",
+                                        "background": "rgba(255, 229, 0, 0.15)",
+                                        "color": "#FFE500",
+                                        "border": "1px solid #FFE500",
+                                        "borderRadius": "8px",
+                                        "fontWeight": "700",
+                                        "fontSize": fs_sm,
+                                        "cursor": "pointer",
+                                        "display": "flex",
+                                        "alignItems": "center",
+                                        "gap": "6px"
+                                    }}
+                                >
+                                    <span>{"↩ Revert & Modify Income / Idea"}</span>
+                                </button>
+                                <button
+                                    onClick={lambda _e: MouseEvent { revertApproval(1); }}
+                                    style={{
+                                        "padding": "8px 14px",
+                                        "background": "rgba(255, 255, 255, 0.06)",
+                                        "color": txt_main,
+                                        "border": inner_border,
+                                        "borderRadius": "8px",
+                                        "fontSize": fs_xs,
+                                        "cursor": "pointer"
+                                    }}
+                                >
+                                    <span>{"← Go to Step 1 (Personal Info)"}</span>
+                                </button>
+                                <button
+                                    onClick={lambda _e: MouseEvent { revertApproval(2); }}
+                                    style={{
+                                        "padding": "8px 14px",
+                                        "background": "rgba(255, 255, 255, 0.06)",
+                                        "color": txt_main,
+                                        "border": inner_border,
+                                        "borderRadius": "8px",
+                                        "fontSize": fs_xs,
+                                        "cursor": "pointer"
+                                    }}
+                                >
+                                    <span>{"← Go to Step 2 (Household)"}</span>
+                                </button>
+                            </div>
                         </div>}
                     </div>}
                 </div>

@@ -107,6 +107,16 @@ def quiet_summary(profile: dict, lang: str, pending: str) -> dict {
             "ui": ui_labels(ui_lang), "facts": ""
         };
     }
+    if profile.get("revert_intent") {
+        rev_msg = "Your previous submission has been reverted. You can now modify your details. Tell me your updated income, household size, or welfare needs here, or navigate step-by-step in the Guided Welfare Workflow tab.";
+        return {
+            "reply": rev_msg, "reply_language": "en", "reply_en": rev_msg,
+            "question": {"key": "need", "text": "What would you like to update?", "affects": 0, "gain": 0.0, "affects_label": "", "options": ["Update my income", "Change household members", "Change location", "Switch program"]},
+            "matches": [], "tiers": {"likely": 0, "possible": 0, "needs_info": 0, "unlikely": 0}, "near_misses": [],
+            "plan": {"steps": []}, "routes": [], "escalation": {}, "chips": ["Update income", "Change household", "Food rations", "Housing schemes"], "chip_labels": [],
+            "ui": ui_labels(ui_lang), "facts": "", "reverted": True
+        };
+    }
     small_talk = bool(profile.get("small_talk"));
     key = pending if (small_talk and profile.get("category") and pending and pending != "need") else "need";
     replies: dict = {};

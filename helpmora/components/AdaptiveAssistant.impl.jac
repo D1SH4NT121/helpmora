@@ -124,32 +124,44 @@ impl AdaptiveAssistant.syncFromChat -> None {
         has_household = has_stated_household or step2_confirmed;
         has_scheme = bool(approved_program);
 
+        # Check if chat explicitly requested revert
+        revert_in_chat = False;
+        try {
+            revert_in_chat = bool(c.get("reverted") or sessionStorage.getItem("cm_reverted") == "1");
+            if revert_in_chat {
+                approval_status = "pending";
+                sessionStorage.removeItem("cm_reverted");
+            }
+        } except Exception as _rx {}
+
         # Step progression based ONLY on real facts provided by citizen:
-        if approval_status == "approved" {
-            active_step = 6;
-            step1_confirmed = True;
-            step2_confirmed = True;
-        } elif has_scheme and has_income and has_household {
-            active_step = 5;
-            step1_confirmed = True;
-            step2_confirmed = True;
-        } elif has_scheme and not has_income {
-            # Scheme matched from need, but income is required to verify statutory limits
-            active_step = 3;
-            step1_confirmed = True;
-        } elif has_scheme and not has_household {
-            active_step = 2;
-            step1_confirmed = True;
-        } elif has_income and not has_scheme {
-            active_step = 4;
-            step1_confirmed = True;
-        } elif chat_category {
-            active_step = 2;
-            step1_confirmed = True;
-        } elif chat_connected and chat_user_text {
-            active_step = 1;
-        } else {
-            active_step = 1;
+        if not user_navigated_step {
+            if approval_status == "approved" {
+                active_step = 6;
+                step1_confirmed = True;
+                step2_confirmed = True;
+            } elif has_scheme and has_income and has_household {
+                active_step = 5;
+                step1_confirmed = True;
+                step2_confirmed = True;
+            } elif has_scheme and not has_income {
+                # Scheme matched from need, but income is required to verify statutory limits
+                active_step = 3;
+                step1_confirmed = True;
+            } elif has_scheme and not has_household {
+                active_step = 2;
+                step1_confirmed = True;
+            } elif has_income and not has_scheme {
+                active_step = 4;
+                step1_confirmed = True;
+            } elif chat_category {
+                active_step = 2;
+                step1_confirmed = True;
+            } elif chat_connected and chat_user_text {
+                active_step = 1;
+            } else {
+                active_step = 1;
+            }
         }
 
         # Dynamic Live Observable Execution Trace based on real chat data
@@ -292,6 +304,34 @@ impl AdaptiveAssistant.approveAction -> None {
     for te in trace_events {
         if te["badge"] == "WORKFLOW" {
             new_trace.append({"badge": "WORKFLOW", "title": "Adaptive Assistant", "status": "completed", "detail": "Application approved by user & submitted"});
+        } else {
+            new_trace.append(te);
+        }
+    }
+    trace_events = new_trace;
+}
+
+impl AdaptiveAssistant.revertApproval(target_step: int = 3) -> None {
+    approval_status = "pending";
+    agent_state = "reasoning";
+    active_step = target_step;
+    user_navigated_step = True;
+    if approved_program and user_id and jacIsLoggedIn() {
+        await jacSpawn("MemoryWalker", "", {
+            "user_id": user_id,
+            "mode": "update_status",
+            "resource_name": approved_program,
+            "new_status": "pending"
+        }).catch(lambda e: Any -> dict { return {"reports": []}; });
+    }
+    try {
+        sessionStorage.setItem("cm_reverted", "1");
+        window.eval("if (window._cm_speak) { window._cm_speak('Application submission reverted. You can now modify your details step by step.'); }");
+    } except Exception as _ex {}
+    new_trace = [];
+    for te in trace_events {
+        if te["badge"] == "WORKFLOW" {
+            new_trace.append({"badge": "WORKFLOW", "title": "Adaptive Assistant", "status": "active", "detail": "Submission reverted by user — editing Step " + str(target_step)});
         } else {
             new_trace.append(te);
         }

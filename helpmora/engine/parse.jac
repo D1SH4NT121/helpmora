@@ -23,7 +23,7 @@ Output contract (plain dict so it serialises straight into walker reports):
 """
 
 import re;
-import from engine.guardrails { is_out_of_context }
+import from engine.guardrails { is_out_of_context, is_revert_intent }
 import from engine.i18n { detect_script, detect_latin_other, route_i18n, negated, need_focus, LATIN_MARKERS, NEG_RIGHT, is_small_talk }
 import from engine.facts_i18n { facts_i18n, place_i18n }
 
@@ -887,8 +887,9 @@ def parse_intake(text: str) -> dict {
     llm_reason = "";
     # "hi", "thanks", "how are you": nothing to route (IntakeWalker answers it
     # without guessing a need).
-    small_talk = is_small_talk(raw);
-    out_of_context = is_out_of_context(raw) and not small_talk;
+    revert_intent = is_revert_intent(raw);
+    small_talk = is_small_talk(raw) or revert_intent;
+    out_of_context = is_out_of_context(raw) and not small_talk and not revert_intent;
     if out_of_context {
         top_cat = "";
         secondary = [];
@@ -925,6 +926,7 @@ def parse_intake(text: str) -> dict {
         "needs_llm": needs_llm,
         "llm_reason": llm_reason,
         "small_talk": small_talk,
-        "out_of_context": out_of_context
+        "out_of_context": out_of_context,
+        "revert_intent": revert_intent
     };
 }
