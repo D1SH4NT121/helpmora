@@ -394,9 +394,9 @@ def:pub ChatPane(
                             "padding": "5px 10px",
                             "cursor": "pointer"
                         }}
-                        title="Lyzr Studio Agent"
+                        title="HELPmora Assistant (Powered by Lyzr)"
                     >
-                        {"🤖 Lyzr Agent: " + ("ON" if lyzr_mode else "OFF")}
+                        {"🤖 HELPmora Assistant: " + ("ON" if lyzr_mode else "OFF")}
                     </button>
                     <button className="cm-ghost-btn" onClick={lambda _e: MouseEvent { resetCase(); }} title="Start a new case">New case</button>
                 </div>

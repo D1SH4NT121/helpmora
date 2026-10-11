@@ -681,7 +681,7 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
             <div className="cm-result">
                 {(narr and narr["status"] == "ok") and <div className={"cm-narration" + (" cm-narration-main" if foreign else "")} lang={lang}>
                     {narr["is_lyzr"] and <div style={{"display": "flex", "alignItems": "center", "gap": "6px", "marginBottom": "6px", "color": "#FFE500", "fontSize": "11px", "fontWeight": "700", "textTransform": "uppercase", "letterSpacing": "0.05em"}}>
-                        <span>{"🤖 Lyzr Studio Agent"}</span>
+                        <span>{"🤖 HELPmora Assistant"}</span>
                     </div>}
                     {not narr["is_lyzr"] and <span className="cm-spark">✦</span>}
                     <span>
@@ -689,7 +689,7 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
                         {renderRich(str(narr["message"]))}
                     </span>
                 </div>}
-                {(narr and narr["status"] == "pending") and <div className="cm-narration cm-narration-pending">{(("🤖 Lyzr Agent thinking…" if narr["is_lyzr"] else ("✦ Writing this in " + str(lname[1]) + "…")) if foreign else ("🤖 Lyzr Agent thinking…" if narr["is_lyzr"] else "✦ Writing a personalized summary…"))}</div>}
+                {(narr and narr["status"] == "pending") and <div className="cm-narration cm-narration-pending">{(("🤖 HELPmora Assistant thinking…" if narr["is_lyzr"] else ("✦ Writing this in " + str(lname[1]) + "…")) if foreign else ("🤖 HELPmora Assistant thinking…" if narr["is_lyzr"] else "✦ Writing a personalized summary…"))}</div>}
                 {(foreign and narr and narr["status"] == "failed") and <div className="cm-narration cm-narration-pending">{"Couldn't reach the translator just now — here is the answer in English."}</div>}
                 {interp_tier and renderInterpreter(card, True)}
                 {(loc_t and loc_t["status"] == "ok") and <div className="cm-bubble cm-bubble-translated" lang={lang}>
@@ -749,7 +749,7 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
                     <span className="cm-hud-fast">{"⚡ " + fmtMs(trace["total_ms"]) + " engine"}</span>
                     <span>{("1 LLM call (routing)" if llm["sync_used"] else "0 LLM calls on the critical path")}</span>
                     {Number(msg["rtt_ms"]) > 0 and <span>{"round trip " + fmtMs(msg["rtt_ms"])}</span>}
-                    {(narr and narr["status"] == "ok" and narr["is_lyzr"]) and <span className="cm-hud-llm">{"🤖 Lyzr Agent: " + fmtMs(narr["ms"])}</span>}
+                    {(narr and narr["status"] == "ok" and narr["is_lyzr"]) and <span className="cm-hud-llm">{"🤖 HELPmora Assistant: " + fmtMs(narr["ms"])}</span>}
                     {(narr and narr["status"] == "ok" and not narr["is_lyzr"]) and <span className="cm-hud-llm">{"✦ narrated in " + fmtMs(narr["ms"]) + " · facts guard passed"}</span>}
                     {(narr and narr["status"] == "failed") and <span className="cm-muted" title={str(narr["error"] or "")}>{"LLM narration unavailable — engine answer shown"}</span>}
                     {(d["privacy"] and d["privacy"]["private_turn"]) and <span className="cm-hud-private">{"Not sent to any AI model"}</span>}
