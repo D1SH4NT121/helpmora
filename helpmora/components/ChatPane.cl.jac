@@ -341,6 +341,7 @@ def:pub ChatPane(
     async def narrate(msg_id: str, data: Any, user_text: str) -> None;
     async def findLocal(msg_id: str, data: Any) -> None;
     async def localize(msg_id: str, data: Any) -> None;
+    async def fetchLyzr(bot_id: str, lz_task: Any, user_text: str, uid: str, data: Any, rtt: float) -> None;
     def renderInterpreter(card: Any, open_default: bool) -> JsxElement;
     def renderLangPicker -> JsxElement;
     def renderLocal(loc: Any) -> JsxElement;

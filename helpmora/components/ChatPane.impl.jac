@@ -213,41 +213,11 @@ impl ChatPane.sendMessage(text_override: str = "", answering: str = "", display:
     } except Exception as _ce {}
     is_loading = False;
 
-    lyzr_done = False;
     if lyzr_mode and uid and jacIsLoggedIn() {
         narrations[bot_id] = {"status": "pending", "is_lyzr": True};
         narr_tick = Math.random();
-        try {
-            lz_res = None;
-            if lz_task {
-                lz_res = await lz_task;
-            } else {
-                lz_res = await safeSpawn("LyzrChatWalker", {
-                    "message": user_text,
-                    "user_id": (uid if uid else "futurexprime21@gmail.com"),
-                    "session_id": ("lyzr-" + str(uid))
-                });
-            }
-            lz_reps = lz_res["reports"] if (lz_res and lz_res["reports"]) else [];
-            if len(lz_reps) > 0 and lz_reps[0] and lz_reps[0]["ok"] and lz_reps[0]["response"] {
-                lz_text = str(lz_reps[0]["response"]).trim();
-                if lz_text {
-                    narrations[bot_id] = {
-                        "status": "ok",
-                        "message": lz_text,
-                        "chips": (data["chips"] if (data and data["chips"]) else []),
-                        "ms": (lz_reps[0]["latency_ms"] if ("latency_ms" in lz_reps[0]) else rtt),
-                        "server_ms": (lz_reps[0]["latency_ms"] if ("latency_ms" in lz_reps[0]) else rtt),
-                        "is_lyzr": True
-                    };
-                    narr_tick = Math.random();
-                    lyzr_done = True;
-                }
-            }
-        } except Exception as _lze {}
-    }
-
-    if not lyzr_done {
+        fetchLyzr(bot_id, lz_task, user_text, uid, data, rtt);
+    } elif not lyzr_mode {
         llm = data["llm"];
         if llm and llm["narrate"] {
             narrate(bot_id, data, user_text);
@@ -266,6 +236,42 @@ impl ChatPane.sendMessage(text_override: str = "", answering: str = "", display:
     cat = str(prof["category"]) if prof else "";
     if prof and prof["state"] and (cat == "housing" or cat == "healthcare" or cat == "legal") {
         findLocal(bot_id, data);
+    }
+}
+
+impl ChatPane.fetchLyzr(bot_id: str, lz_task: Any, user_text: str, uid: str, data: Any, rtt: float) -> None {
+    try {
+        lz_res = None;
+        if lz_task {
+            lz_res = await lz_task;
+        } else {
+            lz_res = await safeSpawn("LyzrChatWalker", {
+                "message": user_text,
+                "user_id": (uid if uid else "futurexprime21@gmail.com"),
+                "session_id": ("lyzr-" + str(uid))
+            });
+        }
+        lz_reps = lz_res["reports"] if (lz_res and lz_res["reports"]) else [];
+        if len(lz_reps) > 0 and lz_reps[0] and lz_reps[0]["ok"] and lz_reps[0]["response"] {
+            lz_text = str(lz_reps[0]["response"]).trim();
+            if lz_text {
+                narrations[bot_id] = {
+                    "status": "ok",
+                    "message": lz_text,
+                    "chips": (data["chips"] if (data and data["chips"]) else []),
+                    "ms": (lz_reps[0]["latency_ms"] if ("latency_ms" in lz_reps[0]) else rtt),
+                    "server_ms": (lz_reps[0]["latency_ms"] if ("latency_ms" in lz_reps[0]) else rtt),
+                    "is_lyzr": True
+                };
+                narr_tick = Math.random();
+                return;
+            }
+        }
+        narrations[bot_id] = {"status": "failed", "is_lyzr": True};
+        narr_tick = Math.random();
+    } except Exception as _lze {
+        narrations[bot_id] = {"status": "failed", "is_lyzr": True};
+        narr_tick = Math.random();
     }
 }
 
@@ -730,7 +736,7 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
                     <span>{"The full translation into " + str(lname[1]) + " didn't arrive in time — the answer below is in English. "}</span>
                     <button className="cm-why" onClick={lambda _e: MouseEvent { localize(msg["id"], d); }}>Try again</button>
                 </div>}
-                {(not (narr and narr["is_lyzr"]) or len(matches) > 0) and <div className={"cm-bubble" + (" cm-bubble-en" if foreign else "")} lang={reply_lang} dir="auto">
+                {((narr and narr["status"] == "pending") or not (narr and narr["is_lyzr"]) or len(matches) > 0) and <div className={"cm-bubble" + (" cm-bubble-en" if foreign else "")} lang={reply_lang} dir="auto">
                     {foreign and <div className="cm-muted cm-bubble-label">Engine answer · English</div>}
                     {interp_tier and <div className="cm-muted cm-bubble-label">{"Answer in " + ("Spanish" if lang == "es" else "English") + " — text translation for " + str(linfo["name"]) + " isn't reliable yet"}</div>}
                     {renderRich(str(d["reply"]))}
