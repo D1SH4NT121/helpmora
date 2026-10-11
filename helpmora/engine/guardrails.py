@@ -13,6 +13,17 @@ OUT_OF_CONTEXT_REPLY = (
     "Please ask me about welfare programs, subsidies, pensions, housing, healthcare, rations, or legal support in India."
 )
 
+GREETING_WELCOME_REPLY = (
+    "Hello and welcome! I am HELPmora, your digital assistant for Indian social welfare schemes and free legal aid.\n\n"
+    "Here is how I can help you:\n"
+    "• Food & Rations: Find NFSA ration cards, Antyodaya Anna Yojana, and grain subsidies.\n"
+    "• Housing & Shelter: Check eligibility for Pradhan Mantri Awas Yojana (PMAY) and shelter homes.\n"
+    "• Healthcare: Navigate free hospital treatment under Ayushman Bharat (PM-JAY).\n"
+    "• Pensions & Income: Explore NSAP old age/widow pensions, PM-KISAN farmer support, and MGNREGA work.\n"
+    "• Free Legal Aid: Connect with NALSA/DLSA legal aid lawyers, consumer redressal, and human rights aid.\n\n"
+    "Tell me about your situation or what support you are looking for, and I will find the right programs for you!"
+)
+
 IN_SCOPE_TERMS = [
     # Food / Nutrition
     "food", "ration", "rations", "rashan", "nfsa", "bhojan", "khana", "hungry", "hunger", "grain", "rice", "wheat",
@@ -44,6 +55,12 @@ CONVERSATIONAL = [
     "sure", "start", "clear", "reset"
 ]
 
+GREETING_PATTERNS = [
+    r"^(?:hi+|hey+|hello+|namaste|namaskar|pranam|hola|yo)(?:\s+(?:there|helpmora|assistant|friend))?[\s!.,?]*$",
+    r"^(?:(?:hi+|hey+|hello+|namaste)[\s,]+)?(?:who\s+are\s+you|what\s+(?:is\s+helpmora|can\s+you\s+do|do\s+you\s+do|are\s+you)|how\s+can\s+you\s+help(?:\s+me)?|what\s+is\s+this|tell\s+me\s+about\s+yourself|how\s+does\s+this\s+work)[\s!?.]*$",
+    r"^(?:good\s+(?:morning|afternoon|evening|day)|greetings)[\s!.,?]*$",
+]
+
 OUT_OF_SCOPE_REGEX = [
     r"\b(?:what is|who is|where is|tell me about)\s+(?:the\s+)?capital\b",
     r"\b(?:capital of|currency of|population of|president of|prime minister of)\b",
@@ -58,6 +75,14 @@ OUT_OF_SCOPE_REGEX = [
 ]
 
 
+def is_greeting(text: str) -> bool:
+    """Check if message is a greeting or introductory inquiry."""
+    s = str(text or "").strip().lower()
+    if not s:
+        return False
+    return any(bool(re.search(pat, s)) for pat in GREETING_PATTERNS)
+
+
 def is_out_of_context(text: str) -> bool:
     """Check if message is outside HELPmora's Indian welfare & legal-aid domain."""
     t = str(text or "").strip().lower()
@@ -65,6 +90,9 @@ def is_out_of_context(text: str) -> bool:
         return False
 
     # 1. Greetings & conversational inputs are in context
+    if is_greeting(t):
+        return False
+
     clean_t = re.sub(r"[^\w\s]", "", t).strip()
     if clean_t in CONVERSATIONAL:
         return False

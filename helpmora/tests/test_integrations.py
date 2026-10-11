@@ -426,7 +426,9 @@ class TestIntegrations(unittest.TestCase):
 
     # 6. Domain Context Guardrail
     def test_out_of_context_guardrail(self):
-        from helpmora.engine.guardrails import is_out_of_context, OUT_OF_CONTEXT_REPLY
+        from helpmora.engine.guardrails import (
+            is_out_of_context, is_greeting, OUT_OF_CONTEXT_REPLY, GREETING_WELCOME_REPLY
+        )
         from helpmora.integrations.lyzr.chat import query_lyzr_agent
 
         # Out-of-context trivia and non-welfare requests must be flagged
@@ -441,6 +443,16 @@ class TestIntegrations(unittest.TestCase):
         self.assertFalse(is_out_of_context("I am a widow and need pension support"))
         self.assertFalse(is_out_of_context("Hello how are you"))
         self.assertFalse(is_out_of_context("Namaste"))
+
+        # Greetings & capability queries must be recognized and not flagged
+        for g in ["hi", "hii", "hiii", "hello", "hey", "namaste", "what can you do", "what do you do", "who are you"]:
+            self.assertTrue(is_greeting(g), f"Expected {g} to be recognized as greeting")
+            self.assertFalse(is_out_of_context(g), f"Expected {g} to not be out of context")
+
+        # Querying lyzr agent with greetings must welcome the user
+        greet_res = query_lyzr_agent("hii")
+        self.assertTrue(greet_res["ok"])
+        self.assertEqual(greet_res["response"], GREETING_WELCOME_REPLY)
 
         # Querying lyzr agent with out-of-context question must return guardrail refusal
         res = query_lyzr_agent("what is the capital of india")

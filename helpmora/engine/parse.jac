@@ -888,7 +888,7 @@ def parse_intake(text: str) -> dict {
     # "hi", "thanks", "how are you": nothing to route (IntakeWalker answers it
     # without guessing a need).
     small_talk = is_small_talk(raw);
-    out_of_context = is_out_of_context(raw);
+    out_of_context = is_out_of_context(raw) and not small_talk;
     if out_of_context {
         top_cat = "";
         secondary = [];

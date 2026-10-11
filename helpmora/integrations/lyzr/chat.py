@@ -41,7 +41,24 @@ def query_lyzr_agent(message: str, user_id: str = "futurexprime21@gmail.com", se
     uid = user_id or "futurexprime21@gmail.com"
     sid = session_id or f"{agent_id}-default"
 
-    # 0. Intercept out-of-context queries
+    # 0. Intercept greetings with a welcoming message and overview of capabilities
+    try:
+        from helpmora.engine.guardrails import is_greeting, GREETING_WELCOME_REPLY
+        if is_greeting(message):
+            logger.info("Greeting intercepted: %s", message)
+            return {
+                "ok": True,
+                "agent_id": agent_id,
+                "response": GREETING_WELCOME_REPLY,
+                "error": "",
+                "user_id": uid,
+                "session_id": sid,
+                "latency_ms": round((time.perf_counter() - t0) * 1000, 1),
+            }
+    except Exception:
+        pass
+
+    # 1. Intercept out-of-context queries
     try:
         from helpmora.engine.guardrails import is_out_of_context, OUT_OF_CONTEXT_REPLY
         if is_out_of_context(message):
@@ -65,9 +82,12 @@ def query_lyzr_agent(message: str, user_id: str = "futurexprime21@gmail.com", se
     }
     context_preamble = (
         "[System Guardrail: You are HELPmora, specialized exclusively in Indian social welfare schemes, "
-        "government subsidies, and legal aid. Answer ONLY questions related to this project. If the question "
-        "is general trivia, geography, or unrelated to welfare and legal aid, reply: 'I don't have knowledge of those things. "
-        "I am HELPmora, specialized exclusively in Indian social welfare schemes, government assistance programs, and free legal aid navigation.']\n\n"
+        "government subsidies, and legal aid. When greeted (e.g., 'hi', 'hello', 'who are you'), warmly welcome the user, "
+        "introduce yourself as HELPmora, and explain what you do (navigating Indian welfare schemes and legal aid). "
+        "However, if the question is off-topic general trivia, geography, coding, pop culture, or unrelated to welfare and legal aid, "
+        "reply strictly: 'I don't have knowledge of those things. I am HELPmora, specialized exclusively in Indian social welfare "
+        "schemes, government assistance programs, and free legal aid navigation. Please ask me about welfare programs, subsidies, "
+        "pensions, housing, healthcare, rations, or legal support in India.']\n\n"
     )
     payload = {
         "user_id": uid,
