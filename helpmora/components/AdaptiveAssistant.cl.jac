@@ -936,6 +936,22 @@ def:pub AdaptiveAssistant(
                             >
                                 {"Yes, Confirm " + voice_field_val}
                             </button>
+                            <button
+                                onClick={lambda _e: MouseEvent { toggleRecovery(); }}
+                                style={{
+                                    "padding": "7px 14px",
+                                    "background": "rgba(255, 255, 255, 0.06)",
+                                    "color": txt_main,
+                                    "borderRadius": "8px",
+                                    "border": inner_border,
+                                    "fontSize": fs_xs,
+                                    "cursor": "pointer"
+                                }}
+                            >
+                                {lbl_recovery_btn}
+                            </button>
+                        </div>}
+
                         <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "marginTop": "14px", "flexWrap": "wrap"}}>
                             <button
                                 onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 2; }}
