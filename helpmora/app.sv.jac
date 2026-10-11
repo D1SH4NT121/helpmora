@@ -26,6 +26,7 @@ import from walkers.local_help { LocalHelpWalker }
 import from walkers.localize { LocalizeWalker }
 import from walkers.forget { ForgetWalker }
 import from walkers.integrated_pipeline { IntegratedPipelineWalker }
+import from walkers.lyzr_chat { LyzrChatWalker }
 
 # Last: every walker module is loaded, so their `report` can stop echoing
 # answers (with the user's words in them) into the server logs. The leading

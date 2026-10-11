@@ -189,9 +189,40 @@ impl ChatPane.sendMessage(text_override: str = "", answering: str = "", display:
     } except Exception as _ce {}
     is_loading = False;
 
-    llm = data["llm"];
-    if llm and llm["narrate"] {
-        narrate(bot_id, data, user_text);
+    lyzr_done = False;
+    if lyzr_mode and uid and jacIsLoggedIn() {
+        narrations[bot_id] = {"status": "pending", "is_lyzr": True};
+        narr_tick = Math.random();
+        try {
+            lz_res = await safeSpawn("LyzrChatWalker", {
+                "message": user_text,
+                "user_id": (uid if uid else "futurexprime21@gmail.com"),
+                "session_id": ("lyzr-" + str(uid))
+            });
+            lz_reps = lz_res["reports"] if (lz_res and lz_res["reports"]) else [];
+            if len(lz_reps) > 0 and lz_reps[0] and lz_reps[0]["ok"] and lz_reps[0]["response"] {
+                lz_text = str(lz_reps[0]["response"]).trim();
+                if lz_text {
+                    narrations[bot_id] = {
+                        "status": "ok",
+                        "message": lz_text,
+                        "chips": (data["chips"] if (data and data["chips"]) else []),
+                        "ms": (lz_reps[0]["latency_ms"] if ("latency_ms" in lz_reps[0]) else rtt),
+                        "server_ms": (lz_reps[0]["latency_ms"] if ("latency_ms" in lz_reps[0]) else rtt),
+                        "is_lyzr": True
+                    };
+                    narr_tick = Math.random();
+                    lyzr_done = True;
+                }
+            }
+        } except Exception as _lze {}
+    }
+
+    if not lyzr_done {
+        llm = data["llm"];
+        if llm and llm["narrate"] {
+            narrate(bot_id, data, user_text);
+        }
     }
     li = data["language_info"];
     code = str(li["code"]) if li else "";
@@ -649,13 +680,16 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
             <div className="cm-avatar">CM</div>
             <div className="cm-result">
                 {(narr and narr["status"] == "ok") and <div className={"cm-narration" + (" cm-narration-main" if foreign else "")} lang={lang}>
-                    <span className="cm-spark">✦</span>
+                    {narr["is_lyzr"] and <div style={{"display": "flex", "alignItems": "center", "gap": "6px", "marginBottom": "6px", "color": "#FFE500", "fontSize": "11px", "fontWeight": "700", "textTransform": "uppercase", "letterSpacing": "0.05em"}}>
+                        <span>{"🤖 Lyzr Studio Agent (6acb17ec038b7bf79ea36a00)"}</span>
+                    </div>}
+                    {not narr["is_lyzr"] and <span className="cm-spark">✦</span>}
                     <span>
                         {foreign and <span className="cm-lang-tag">{str(lname[1])}</span>}
-                        {str(narr["message"])}
+                        {renderRich(str(narr["message"]))}
                     </span>
                 </div>}
-                {(narr and narr["status"] == "pending") and <div className="cm-narration cm-narration-pending">{("✦ Writing this in " + str(lname[1]) + "…") if foreign else "✦ Writing a personalized summary…"}</div>}
+                {(narr and narr["status"] == "pending") and <div className="cm-narration cm-narration-pending">{(("🤖 Lyzr Agent thinking…" if narr["is_lyzr"] else ("✦ Writing this in " + str(lname[1]) + "…")) if foreign else ("🤖 Lyzr Agent thinking…" if narr["is_lyzr"] else "✦ Writing a personalized summary…"))}</div>}
                 {(foreign and narr and narr["status"] == "failed") and <div className="cm-narration cm-narration-pending">{"Couldn't reach the translator just now — here is the answer in English."}</div>}
                 {interp_tier and renderInterpreter(card, True)}
                 {(loc_t and loc_t["status"] == "ok") and <div className="cm-bubble cm-bubble-translated" lang={lang}>
@@ -667,7 +701,7 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
                     <span>{"The full translation into " + str(lname[1]) + " didn't arrive in time — the answer below is in English. "}</span>
                     <button className="cm-why" onClick={lambda _e: MouseEvent { localize(msg["id"], d); }}>Try again</button>
                 </div>}
-                <div className={"cm-bubble" + (" cm-bubble-en" if foreign else "")} lang={reply_lang} dir="auto">
+                {(not (narr and narr["is_lyzr"]) or len(matches) > 0) and <div className={"cm-bubble" + (" cm-bubble-en" if foreign else "")} lang={reply_lang} dir="auto">
                     {foreign and <div className="cm-muted cm-bubble-label">Engine answer · English</div>}
                     {interp_tier and <div className="cm-muted cm-bubble-label">{"Answer in " + ("Spanish" if lang == "es" else "English") + " — text translation for " + str(linfo["name"]) + " isn't reliable yet"}</div>}
                     {renderRich(str(d["reply"]))}
@@ -715,7 +749,8 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
                     <span className="cm-hud-fast">{"⚡ " + fmtMs(trace["total_ms"]) + " engine"}</span>
                     <span>{("1 LLM call (routing)" if llm["sync_used"] else "0 LLM calls on the critical path")}</span>
                     {Number(msg["rtt_ms"]) > 0 and <span>{"round trip " + fmtMs(msg["rtt_ms"])}</span>}
-                    {(narr and narr["status"] == "ok") and <span className="cm-hud-llm">{"✦ narrated in " + fmtMs(narr["ms"]) + " · facts guard passed"}</span>}
+                    {(narr and narr["status"] == "ok" and narr["is_lyzr"]) and <span className="cm-hud-llm">{"🤖 Lyzr Agent: " + fmtMs(narr["ms"])}</span>}
+                    {(narr and narr["status"] == "ok" and not narr["is_lyzr"]) and <span className="cm-hud-llm">{"✦ narrated in " + fmtMs(narr["ms"]) + " · facts guard passed"}</span>}
                     {(narr and narr["status"] == "failed") and <span className="cm-muted" title={str(narr["error"] or "")}>{"LLM narration unavailable — engine answer shown"}</span>}
                     {(d["privacy"] and d["privacy"]["private_turn"]) and <span className="cm-hud-private">{"Not sent to any AI model"}</span>}
                     {(d["privacy"] and d["privacy"]["words_sent_to_model"]) and <span className="cm-hud-private">{"The engine couldn't place this, so an AI model read it (identifiers removed first)"}</span>}

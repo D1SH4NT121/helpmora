@@ -12,6 +12,7 @@ real timing from the last turn's trace.
 sv import from walkers.intake { IntakeWalker }
 sv import from walkers.narrate { NarrateWalker }
 sv import from walkers.forget { ForgetWalker }
+sv import from walkers.lyzr_chat { LyzrChatWalker }
 import from "@jac/runtime" { jacSpawn, jacIsLoggedIn }
 
 # The id of the chat request waiting for an answer (see sendMessage).
@@ -55,7 +56,8 @@ def:pub ChatPane(
         private_on: bool = False,
         is_listening: bool = False,
         voice_status: str = "",
-        voice_modal_open: bool = False;
+        voice_modal_open: bool = False,
+        lyzr_mode: bool = True;
 
     can with entry {
         seed = [{
@@ -380,6 +382,22 @@ def:pub ChatPane(
                     </div>
                     {is_loading and <div className="cm-badge badge-glow"><span className="cm-dot-live"/>Scoring 40 programs…</div>}
                     {renderLangPicker()}
+                    <button
+                        className="cm-ghost-btn"
+                        onClick={lambda _e: MouseEvent { lyzr_mode = not lyzr_mode; }}
+                        style={{
+                            "background": ("rgba(255, 229, 0, 0.15)" if lyzr_mode else "rgba(255, 255, 255, 0.04)"),
+                            "color": ("#FFE500" if lyzr_mode else "rgba(255, 255, 255, 0.6)"),
+                            "border": ("1px solid rgba(255, 229, 0, 0.4)" if lyzr_mode else "0.5px solid rgba(255, 255, 255, 0.1)"),
+                            "fontWeight": "600",
+                            "fontSize": "11px",
+                            "padding": "5px 10px",
+                            "cursor": "pointer"
+                        }}
+                        title="Deployed Lyzr Studio Agent (6acb17ec038b7bf79ea36a00)"
+                    >
+                        {"🤖 Lyzr Agent: " + ("ON" if lyzr_mode else "OFF")}
+                    </button>
                     <button className="cm-ghost-btn" onClick={lambda _e: MouseEvent { resetCase(); }} title="Start a new case">New case</button>
                 </div>
                 <div className="cm-thread" role="log" aria-live="polite" aria-relevant="additions" aria-label="Conversation" aria-busy={is_loading} tabIndex={0}>

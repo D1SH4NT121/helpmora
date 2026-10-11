@@ -55,6 +55,7 @@ PUBLIC_WALKERS = {
     "PlatformWalker": "light",
     "ReflectionReadWalker": "light",
     "IntegratedPipelineWalker": "chat",
+    "LyzrChatWalker": "chat",
 }
 API_CLASSES = {"register", "login", "me", "chat", "model", "external", "light", "seed", "forget"}
 AUTH_CLASSES = {"me", "chat", "model", "external", "light", "seed", "forget"}
