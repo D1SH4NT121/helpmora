@@ -26,26 +26,34 @@ GREETING_WELCOME_REPLY = (
 
 IN_SCOPE_TERMS = [
     # Food / Nutrition
-    "food", "ration", "rations", "rashan", "nfsa", "bhojan", "khana", "hungry", "hunger", "grain", "rice", "wheat",
-    # Housing / Shelter
-    "housing", "house", "shelter", "rent", "rental", "evict", "eviction", "pmay", "sra", "slum", "jhuggi", "chawl",
-    "homeless", "night shelter", "arhc", "accommodation", "room", "kiraya", "makaan", "ghar",
+    "food", "ration", "rations", "rashan", "nfsa", "aay", "pmgkay", "pm-gkay", "bhojan", "khana", "hungry", "hunger",
+    "grain", "grains", "rice", "wheat", "meal", "meals", "grocer", "grocery", "pantry",
+    # Housing / Shelter / Hostels
+    "housing", "house", "shelter", "hostel", "sakhi niwas", "working women", "working women hostel", "rent", "rental",
+    "evict", "eviction", "pmay", "sra", "slum", "jhuggi", "chawl", "homeless", "night shelter", "arhc",
+    "accommodation", "room", "kiraya", "makaan", "ghar", "kamra", "basti", "stay", "stay tonight", "nowhere to stay",
     # Healthcare / Medical
-    "health", "healthcare", "hospital", "doctor", "medicine", "medical", "treatment", "surgery", "ayushman", "pmjay",
-    "disability", "disabled", "handicap", "divyang", "pregnant", "pregnancy", "mental health", "clinic",
+    "health", "healthcare", "hospital", "doctor", "medicine", "medicines", "medication", "medical", "treatment",
+    "surgery", "ayushman", "pmjay", "pm-jay", "esanjeevani", "ran", "disability", "disabled", "handicap", "divyang",
+    "pregnant", "pregnancy", "mental health", "clinic", "dawai", "ilaj", "aspataal", "sick", "illness",
     # Finance / Livelihood / Pensions
     "pension", "subsidy", "subsidies", "income", "poor", "poverty", "mgnrega", "nrega", "wage", "wages", "labor",
-    "labour", "kisan", "pm-kisan", "farmer", "svanidhi", "street vendor", "jan dhan", "dbt", "nsap", "widow",
-    "destitute", "bpl", "ews", "antyodaya", "unemployed", "employment", "job", "work",
+    "labour", "kisan", "pm-kisan", "farmer", "farmers", "svanidhi", "street vendor", "jan dhan", "dbt", "nsap",
+    "widow", "destitute", "bpl", "ews", "antyodaya", "unemployed", "employment", "job", "work", "rozgar", "rupees", "rupee",
     # Legal Aid & Citizen Rights
-    "legal", "lawyer", "court", "justice", "nalsa", "dlsa", "slsa", "police", "fir", "complaint", "domestic violence",
-    "human rights", "nhrc", "consumer court", "daakhil", "advocate", "tenant", "bail", "dispute", "harassment",
-    # Education & Family
-    "school", "scholarship", "education", "rte", "anganwadi", "children", "child", "kids", "single mother",
-    # Identity & Documents
-    "aadhaar", "aadhar", "voter id", "pan card", "caste certificate", "income certificate", "domicile", "scheme",
-    "schemes", "program", "programs", "welfare", "assistance", "support", "qualify", "benefit", "benefits",
-    "eligibility", "portal", "help me", "need help", "apply"
+    "legal", "legal help", "legal aid", "free legal aid", "lawyer", "court", "justice", "nalsa", "dlsa", "slsa",
+    "police", "fir", "complaint", "domestic violence", "human rights", "nhrc", "consumer court", "daakhil", "advocate",
+    "vakil", "kanoon", "nyay", "tenant", "bail", "dispute", "harassment", "wage theft", "fraud",
+    # Education & Family & Loans
+    "school", "scholarship", "scholarships", "education", "study", "loan", "study loan", "education loan", "student loan",
+    "college loan", "student", "students", "college", "university", "tuition", "fee", "fees", "admission", "coaching",
+    "degree", "vidyalaxmi", "vidya lakshmi", "nsp", "padhai", "shiksha", "chhatravritti", "cgfsel", "higher education",
+    "rte", "anganwadi", "children", "child", "kids", "single mother",
+    # Identity, Citizenship & Documents
+    "citizen", "citizenship", "indian citizen", "indian resident", "resident", "aadhaar", "aadhar", "voter id", "pan card",
+    "caste certificate", "income certificate", "domicile", "scheme", "schemes", "program", "programs", "welfare",
+    "assistance", "support", "qualify", "benefit", "benefits", "eligibility", "eligible", "portal", "help me",
+    "need help", "apply", "how do i apply", "how to apply", "documents", "document", "no documents", "id card"
 ]
 
 REVERT_WELCOME_REPLY = (
@@ -115,28 +123,38 @@ def is_out_of_context(text: str) -> bool:
     if clean_t in CONVERSATIONAL:
         return False
 
-    # 2. Intake follow-up answers (income numbers, family counts, age, Indian states/cities)
-    if re.search(r"(?:₹|rs\.?|inr|\$)\s*\d+|\b\d{3,7}\b", t):
+    # 2. Intake follow-up answers (income numbers, family counts, age, Indian states/cities, citizenship)
+    if re.search(r"(?:₹|rs\.?|inr|\$)\s*\d+|\b\d{1,7}\b", t):
         return False
-    if re.search(r"\b(?:alone|single|myself|\d+\s*(?:members?|people|kids|children)|family of \d+)\b", t):
+    if re.search(r"\b(?:alone|single|myself|just me|live alone|\d+\s*(?:members?|people|kids|children)|family(?: of \d+)?|household(?: of \d+)?)\b", t):
         return False
     if re.search(r"\b(?:age\s*\d+|\d+\s*years?\s*old)\b", t):
         return False
     if re.search(r"\b(?:delhi|mumbai|bangalore|bengaluru|kolkata|chennai|hyderabad|pune|lucknow|patna|bhopal|jaipur|uttar pradesh|bihar|maharashtra|karnataka|rajasthan|gujarat|punjab|haryana|mp|up)\b", t):
         return False
+    if re.search(r"\b(?:citizen|citizenship|indian|resident|aadhaar|aadhar|ration|rashan|documents?|no documents|refugee|immigrant)\b", t):
+        return False
 
-    # 3. Check explicit out-of-scope patterns (trivia, coding, math, recipes, entertainment, etc.)
+    # 3. Check for presence of any in-scope welfare / legal / citizen assistance term
+    has_welfare = any(re.search(rf"\b{re.escape(w)}\b", t) for w in IN_SCOPE_TERMS)
+
+    # 4. Check explicit out-of-scope patterns (trivia, coding, math, recipes, entertainment, etc.)
     for pat in OUT_OF_SCOPE_REGEX:
         if re.search(pat, t):
-            has_welfare = any(re.search(rf"\b{re.escape(w)}\b", t) for w in IN_SCOPE_TERMS)
             if not has_welfare:
                 return True
 
-    # 4. Check for presence of any in-scope welfare / legal / citizen assistance term
-    has_welfare = any(re.search(rf"\b{re.escape(w)}\b", t) for w in IN_SCOPE_TERMS)
     if has_welfare:
         return False
 
-    # 5. Queries with no welfare, legal, or intake content are out of context
+    # 5. Check encyclopedic questions without welfare context (e.g., "what is photosynthesis")
+    if re.search(r"^(?:what|who|where|when|why|how)\s+(?:is|are|was|were|do|does|did)\s+(?:the\s+)?[a-z0-9\s]+[?]?$", t):
+        return True
+
+    # 6. Check generic off-topic action requests
+    if re.search(r"\b(?:birthday|party|cake|pizza|music|song|lyrics|joke|story|poem|poetry|essay|game|cricket|football|movie|actor|film)\b", t):
+        return True
+
+    # 7. Queries with no welfare, legal, or intake content are out of context
     return True
 

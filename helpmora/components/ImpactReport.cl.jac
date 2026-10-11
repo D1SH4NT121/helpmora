@@ -215,7 +215,7 @@ def:pub ImpactReport(walker_events: list = []) -> JsxElement {
                             HELPmora · Impact Report
                         </div>
                         <div style={{"fontSize": "22px", "fontWeight": "700", "letterSpacing": "-0.02em", "marginTop": "4px"}}>
-                            {str(banner_turns) + " turns served · " + str(banner_visitors) + " visitors · " + str(banner_langs) + " languages"}
+                            {str(banner_turns) + " turns served · " + str(banner_visitors) + (" visitor · " if banner_visitors == 1 else " visitors · ") + str(banner_langs) + " languages"}
                         </div>
                         <div style={{"fontSize": "12px", "color": "rgba(255,255,255,0.5)", "marginTop": "4px", "lineHeight": "1.5"}}>
                             {"Platform: anonymous in-process counters across all visitors. Your case: read from your own private graph."}

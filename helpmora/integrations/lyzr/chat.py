@@ -65,6 +65,15 @@ FAST_DOMAIN_ANSWERS = {
         "I'm HELPmora. Under the **National Social Assistance Programme (NSAP)**, the Indira Gandhi National Old Age Pension Scheme (IGNOAPS) provides monthly financial support "
         "to senior citizens aged 60 and above living below the poverty line. Applications can be submitted through your local Gram Panchayat or Municipal office."
     ),
+    "citizenship": (
+        "Understood! As an Indian citizen or resident with valid identity documentation (such as Aadhaar or Ration Card), "
+        "you are eligible to access Central and State government welfare schemes, healthcare subsidies, and citizen services. "
+        "Please select the welfare category or tell me what assistance you need."
+    ),
+    "hostel": (
+        "Under the **Working Women Hostel Scheme (Sakhi Niwas)**, safe and affordable hostel accommodation is provided to working women, "
+        "including women undergoing job training. You can apply directly through the Ministry of Women and Child Development or your local urban development authority."
+    ),
 }
 
 
@@ -137,14 +146,18 @@ def query_lyzr_agent(message: str, user_id: str = "futurexprime21@gmail.com", se
         fast_resp = FAST_DOMAIN_ANSWERS["food"]
     elif any(k in msg_lower for k in ["doctor", "health", "ayushman", "esanjeevani", "hospital", "medicine"]):
         fast_resp = FAST_DOMAIN_ANSWERS["health"]
-    elif any(k in msg_lower for k in ["housing", "shelter", "pmay", "house", "evict", "rent"]):
+    elif any(k in msg_lower for k in ["hostel", "sakhi niwas", "working women hostel"]):
+        fast_resp = FAST_DOMAIN_ANSWERS["hostel"]
+    elif any(k in msg_lower for k in ["housing", "shelter", "pmay", "house", "evict", "rent", "stay tonight", "nowhere to stay"]):
         fast_resp = FAST_DOMAIN_ANSWERS["housing"]
     elif any(k in msg_lower for k in ["lawyer", "legal", "nalsa", "dlsa", "court", "attorney"]):
         fast_resp = FAST_DOMAIN_ANSWERS["legal"]
     elif any(k in msg_lower for k in ["pension", "old age", "elderly", "ignaps", "senior citizen"]):
         fast_resp = FAST_DOMAIN_ANSWERS["pension"]
-    elif any(k in msg_lower for k in ["study loan", "education loan", "vidyalaxmi", "college loan"]):
+    elif any(k in msg_lower for k in ["study loan", "education loan", "vidyalaxmi", "college loan", "education", "study", "scholarship", "loan"]):
         fast_resp = FAST_DOMAIN_ANSWERS["education"]
+    elif any(k in msg_lower for k in ["indian citizen", "citizen", "citizenship", "aadhaar", "aadhar card", "ration card"]):
+        fast_resp = FAST_DOMAIN_ANSWERS["citizenship"]
 
     if fast_resp and len(msg_clean) < 60:
         result = {

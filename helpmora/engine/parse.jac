@@ -118,7 +118,8 @@ glob CATEGORY_LEXICON: dict = {
         ("coaching", 1.5), ("degree", 1.5), ("admission", 1.5),
         ("padhai", 2.5), ("shiksha", 2.5), ("chhatravritti", 3.0),
         ("padhai ke liye (?:loan|paise|madad)", 3.0), ("padhai loan", 3.0),
-        ("loan for study", 3.0), ("loan for college", 3.0), ("loan for education", 3.0)
+        ("loan for study", 3.0), ("loan for college", 3.0), ("loan for education", 3.0),
+        ("education", 2.5), ("loan", 1.5)
     ]
 };
 

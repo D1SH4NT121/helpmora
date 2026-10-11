@@ -463,6 +463,30 @@ class TestIntegrations(unittest.TestCase):
         self.assertTrue(res["ok"])
         self.assertEqual(res["response"], OUT_OF_CONTEXT_REPLY)
 
+        # Intake options, chips, and follow-ups must NEVER be flagged as out-of-context
+        self.assertFalse(is_out_of_context("Indian citizen"))
+        self.assertFalse(is_out_of_context("I am an Indian citizen"))
+        self.assertFalse(is_out_of_context("Aadhaar card"))
+        self.assertFalse(is_out_of_context("I have a ration card"))
+        self.assertFalse(is_out_of_context("No documents yet"))
+        self.assertFalse(is_out_of_context("Education & Study Loan"))
+        self.assertFalse(is_out_of_context("I need a study loan"))
+        self.assertFalse(is_out_of_context("Working Women Hostel Scheme (Sakhi Niwas)"))
+        self.assertFalse(is_out_of_context("How do I apply for Working Women Hostel Scheme?"))
+        self.assertFalse(is_out_of_context("We have nowhere to stay tonight"))
+        self.assertFalse(is_out_of_context("What documents do I need for PMAY housing?"))
+
+        # Querying lyzr agent with valid chip responses must answer informatively
+        citizen_res = query_lyzr_agent("Indian citizen")
+        self.assertTrue(citizen_res["ok"])
+        self.assertNotEqual(citizen_res["response"], OUT_OF_CONTEXT_REPLY)
+        self.assertIn("Indian citizen", citizen_res["response"])
+
+        edu_res = query_lyzr_agent("Education & Study Loan")
+        self.assertTrue(edu_res["ok"])
+        self.assertNotEqual(edu_res["response"], OUT_OF_CONTEXT_REPLY)
+        self.assertIn("PM Vidyalaxmi", edu_res["response"])
+
 
 if __name__ == "__main__":
     unittest.main()
