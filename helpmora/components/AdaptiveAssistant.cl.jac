@@ -1,4 +1,4 @@
-"""Track 4 Adaptive Assistant Component.
+﻿"""Track 4 Adaptive Assistant Component.
 
 Provides:
 - Step-by-step guided welfare workflow (Personal -> Household -> Income -> Category -> Documents -> Review)
@@ -219,7 +219,7 @@ def:pub AdaptiveAssistant(
     lbl_gate_title = "Your Final Permission (No Send Without You)" if simple_lang else "Human Approval Gate (External Action)";
     lbl_gate_desc = "HELPmora will never send your form to the government without asking you first. Please check if this looks good." if simple_lang else "HELPmora will never submit external welfare applications without your explicit consent. Please review the statutory data before approval.";
     lbl_gate_btn = "Yes, Send My Help Request" if simple_lang else "Approve Application Submission";
-    lbl_gate_approved = "✓ You Approved It! Saved safely in your private memory." if simple_lang else "✓ Application Approved by User & Saved to Qdrant Memory!";
+    lbl_gate_approved = "âœ“ You Approved It! Saved safely in your private memory." if simple_lang else "âœ“ Application Approved by User & Saved to Qdrant Memory!";
 
     lbl_trace_title = "What the Helper AI is Doing Behind the Scenes" if simple_lang else "Live Observable Execution Trace";
     lbl_privacy_title = "Your Privacy & Saved Memory Controls" if simple_lang else "Privacy & Qdrant Memory Governance";
@@ -376,8 +376,8 @@ def:pub AdaptiveAssistant(
                 "flexWrap": "wrap"
             }}>
                 <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
-                    <span style={{"fontSize": fs_lg}}>🎙️</span>
-                    <span>Voice-First Mode Active: Voice input is prioritized. Click "🎙️ Speak Field Now" to talk into your microphone.</span>
+                    <span style={{"fontSize": fs_lg}}>ðŸŽ™ï¸</span>
+                    <span>Voice-First Mode Active: Voice input is prioritized. Click "ðŸŽ™ï¸ Speak Field Now" to talk into your microphone.</span>
                 </div>
                 <button
                     onClick={lambda _e: MouseEvent { triggerVoiceInput(); }}
@@ -392,7 +392,7 @@ def:pub AdaptiveAssistant(
                         "cursor": "pointer"
                     }}
                 >
-                    {("Stop Recording" if voice_active else "🎙️ Speak Field Now")}
+                    {("Stop Recording" if voice_active else "ðŸŽ™ï¸ Speak Field Now")}
                 </button>
             </div>}
 
@@ -409,7 +409,7 @@ def:pub AdaptiveAssistant(
                 "gap": "12px"
             }}>
                 <div style={{"display": "flex", "alignItems": "center", "gap": "12px"}}>
-                    <span style={{"fontSize": "22px"}}>💬</span>
+                    <span style={{"fontSize": "22px"}}>ðŸ’¬</span>
                     <div>
                         <div style={{"fontSize": fs_xs, "color": "#FFE500", "fontWeight": "700", "textTransform": "uppercase", "letterSpacing": "0.06em"}}>
                             {"Live Synced with Real-Time Chat"}
@@ -445,13 +445,13 @@ def:pub AdaptiveAssistant(
                 "gap": "14px"
             }}>
                 <div style={{"display": "flex", "alignItems": "center", "gap": "12px"}}>
-                    <span style={{"fontSize": "22px"}}>💬</span>
+                    <span style={{"fontSize": "22px"}}>ðŸ’¬</span>
                     <div>
                         <div style={{"fontSize": fs_xs, "color": "#FFE500", "fontWeight": "700", "textTransform": "uppercase", "letterSpacing": "0.06em"}}>
                             {"Real-Time Chat Connection"}
                         </div>
                         <div style={{"fontSize": fs_sm, "color": txt_muted, "marginTop": "2px"}}>
-                            {"Chat your situation in the Chat Panel — your crisis, family, and income will automatically guide this workflow in real time."}
+                            {"Chat your situation in the Chat Panel â€” your crisis, family, and income will automatically guide this workflow in real time."}
                         </div>
                     </div>
                 </div>
@@ -473,7 +473,7 @@ def:pub AdaptiveAssistant(
                         "cursor": "pointer"
                     }}
                 >
-                    💬 Go to Chat Panel
+                    ðŸ’¬ Go to Chat Panel
                 </button>
             </div>}
 
@@ -495,8 +495,8 @@ def:pub AdaptiveAssistant(
 
                     <div style={{"display": "flex", "flexDirection": "column", "gap": "8px", "marginBottom": "20px"}}>
                         {(active_step > 1 or step1_confirmed or chat_connected) and <div onClick={lambda _e: MouseEvent { active_step = 1; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
-                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
-                            <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step1.replace(" (Current Step)", "") + " (" + citizen_name + " · " + location_city + ")"}</span>
+                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>âœ“</span>
+                            <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step1.replace(" (Current Step)", "") + " (" + citizen_name + " Â· " + location_city + ")"}</span>
                         </div>}
                         {active_step == 1 and (not step1_confirmed and not chat_connected) and <div style={{
                             "display": "flex",
@@ -507,12 +507,12 @@ def:pub AdaptiveAssistant(
                             "borderRadius": "8px",
                             "borderLeft": "3px solid #FFE500"
                         }}>
-                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
+                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>â†’</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step1 + " (Current Step)"}</span>
                         </div>}
 
                         {(active_step > 2 or step2_confirmed or (chat_household > 0 and chat_connected)) and <div onClick={lambda _e: MouseEvent { active_step = 2; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
-                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
+                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>âœ“</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step2.replace(" (Current Step)", "")}</span>
                         </div>}
                         {active_step == 2 and <div style={{
@@ -524,15 +524,15 @@ def:pub AdaptiveAssistant(
                             "borderRadius": "8px",
                             "borderLeft": "3px solid #FFE500"
                         }}>
-                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
+                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>â†’</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step2 + " (Current Step)"}</span>
                         </div>}
                         {active_step < 2 and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
-                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
+                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>â—‹</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step2}</span>
                         </div>}
                         {active_step > 3 and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
-                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
+                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>âœ“</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step3.replace(" (Current Step)", "") + " (" + voice_field_val + " Verified)"}</span>
                         </div>}
                         {active_step == 3 and <div style={{
@@ -544,12 +544,12 @@ def:pub AdaptiveAssistant(
                             "borderRadius": "8px",
                             "borderLeft": "3px solid #FFE500"
                         }}>
-                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
+                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>â†’</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step3}</span>
                         </div>}
 
                         {(active_step > 4 or approval_status == "approved") and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
-                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
+                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>âœ“</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step4.replace(" (Current Step)", "")}</span>
                         </div>}
                         {(active_step == 4 and approval_status != "approved") and <div style={{
@@ -561,16 +561,16 @@ def:pub AdaptiveAssistant(
                             "borderRadius": "8px",
                             "borderLeft": "3px solid #FFE500"
                         }}>
-                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
+                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>â†’</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step4 + " (Current Step)"}</span>
                         </div>}
                         {(active_step < 4 and approval_status != "approved") and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
-                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
+                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>â—‹</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step4}</span>
                         </div>}
 
                         {(active_step > 5 or approval_status == "approved") and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
-                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
+                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>âœ“</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step5.replace(" (Current Step)", "") + " (Verified)"}</span>
                         </div>}
                         {(active_step == 5 and approval_status != "approved") and <div style={{
@@ -582,16 +582,16 @@ def:pub AdaptiveAssistant(
                             "borderRadius": "8px",
                             "borderLeft": "3px solid #FFE500"
                         }}>
-                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
+                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>â†’</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step5 + " (Current Step)"}</span>
                         </div>}
                         {(active_step < 5 and approval_status != "approved") and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
-                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
+                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>â—‹</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step5}</span>
                         </div>}
 
                         {(approval_status == "approved" or active_step >= 6) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
-                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
+                            <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>âœ“</span>
                             <span style={{"fontSize": fs_base, "color": "#00FF88", "fontWeight": "600"}}>{lbl_step6 + " (Approved)"}</span>
                         </div>}
                         {(approval_status != "approved" and active_step >= 5) and <div style={{
@@ -603,11 +603,11 @@ def:pub AdaptiveAssistant(
                             "borderRadius": "8px",
                             "borderLeft": "3px solid #FFE500"
                         }}>
-                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
+                            <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>â†’</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step6 + " (Awaiting Your Approval)"}</span>
                         </div>}
                         {(approval_status != "approved" and active_step < 5) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
-                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
+                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>â—‹</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step6}</span>
                         </div>}
                     </div>
@@ -692,7 +692,7 @@ def:pub AdaptiveAssistant(
                                 "cursor": "pointer"
                             }}
                         >
-                            {"Confirm Personal Info & Proceed to Household Details →"}
+                            {"Confirm Personal Info & Proceed to Household Details â†’"}
                         </button>
                     </div>}
 
@@ -711,7 +711,7 @@ def:pub AdaptiveAssistant(
                                 onClick={lambda _e: MouseEvent { active_step = 1; }}
                                 style={{"background": "none", "border": "none", "color": txt_dim, "fontSize": fs_xs, "cursor": "pointer"}}
                             >
-                                {"← Back to Step 1"}
+                                {"â† Back to Step 1"}
                             </button>
                         </div>
                         <div style={{"fontSize": fs_sm, "color": txt_dim, "marginBottom": "14px"}}>
@@ -791,7 +791,7 @@ def:pub AdaptiveAssistant(
                                 "cursor": "pointer"
                             }}
                         >
-                            {"Confirm Household & Proceed to Income Verification →"}
+                            {"Confirm Household & Proceed to Income Verification â†’"}
                         </button>
                     </div>}
 
@@ -819,7 +819,7 @@ def:pub AdaptiveAssistant(
                                     "fontWeight": "600"
                                 }}
                             >
-                                {("Stop Recording" if voice_active else ("🎙️ Speak Field Now" if voice_first else "Speak Field"))}
+                                {("Stop Recording" if voice_active else ("ðŸŽ™ï¸ Speak Field Now" if voice_first else "Speak Field"))}
                             </button>
                         </div>
 
@@ -836,7 +836,7 @@ def:pub AdaptiveAssistant(
                             "fontWeight": "600",
                             "marginBottom": "12px"
                         }}>
-                            <span style={{"fontSize": "16px"}}>🎙️</span>
+                            <span style={{"fontSize": "16px"}}>ðŸŽ™ï¸</span>
                             <span id="cm-voice-live-status">Microphone Listening... Speak your monthly income (e.g. "8000 rupees" or "fifteen thousand")</span>
                         </div>}
 
@@ -854,7 +854,7 @@ def:pub AdaptiveAssistant(
                             <div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "marginBottom": "8px"}}>
                                 <span style={{"fontSize": fs_xs, "color": txt_dim}}>{lbl_field_name + " (Editable):"}</span>
                                 <button
-                                    onClick={lambda _e: MouseEvent { showFieldHelp("Income Verification", "Total gross earnings of all adult members. Under PMAY-U EWS rules, this must be under ₹3,00,000 annually (₹25,000/month)."); }}
+                                    onClick={lambda _e: MouseEvent { showFieldHelp("Income Verification", "Total gross earnings of all adult members. Under PMAY-U EWS rules, this must be under â‚¹3,00,000 annually (â‚¹25,000/month)."); }}
                                     style={{"background": "none", "border": "none", "color": "#FFE500", "fontSize": fs_xs, "cursor": "pointer", "padding": "0", "textDecoration": "underline"}}
                                 >
                                     Ask HELPmora
@@ -871,15 +871,18 @@ def:pub AdaptiveAssistant(
                                         voice_confirmed = False;
                                     }}
                                     onBlur={lambda _e: FocusEvent {
-                                        num_digits = "".join([c for c in voice_field_val if c.isdigit()]);
-                                        if num_digits {
-                                            voice_field_val = "₹" + f"{int(num_digits):,}";
+                                        num_digits = "";
+                                        try {
+                                            num_digits = str(window.eval("String('" + voice_field_val.replace("'", "") + "').replace(/[^0-9]/g, '')"));
+                                        } except Exception as _ex {}
+                                        if num_digits and len(num_digits) > 0 {
+                                            voice_field_val = "â‚¹" + f"{int(num_digits):,}";
                                         }
                                         try {
                                             window.eval("window._cm_manual_income = '" + voice_field_val + "'; try { sessionStorage.setItem('cm_manual_income', '" + voice_field_val + "'); } catch(e) {}");
                                         } except Exception as _ex {}
                                     }}
-                                    placeholder="e.g. ₹15,000"
+                                    placeholder="e.g. â‚¹15,000"
                                     style={{
                                         "fontSize": fs_xl,
                                         "fontWeight": "700",
@@ -893,15 +896,15 @@ def:pub AdaptiveAssistant(
                                         "boxSizing": "border-box"
                                     }}
                                 />
-                                <span style={{"fontSize": fs_xs, "color": txt_dim}}>✏️ Click to edit or type any amount</span>
+                                <span style={{"fontSize": fs_xs, "color": txt_dim}}>âœï¸ Click to edit or type any amount</span>
                             </div>
                             <div style={{"display": "flex", "alignItems": "center", "gap": "6px", "marginTop": "8px", "flexWrap": "wrap"}}>
                                 <span style={{"fontSize": fs_xs, "color": txt_dim}}>Quick pick:</span>
-                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹5,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = '₹5,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹5,000</button>
-                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹8,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = '₹8,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹8,000</button>
-                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹12,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = '₹12,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹12,000</button>
-                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹15,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = '₹15,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹15,000</button>
-                                <button onClick={lambda _e: MouseEvent { voice_field_val = "₹25,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = '₹25,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>₹25,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "â‚¹5,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = 'â‚¹5,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>â‚¹5,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "â‚¹8,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = 'â‚¹8,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>â‚¹8,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "â‚¹12,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = 'â‚¹12,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>â‚¹12,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "â‚¹15,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = 'â‚¹15,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>â‚¹15,000</button>
+                                <button onClick={lambda _e: MouseEvent { voice_field_val = "â‚¹25,000"; user_overrode_income = True; voice_confirmed = False; try { window.eval("window._cm_manual_income = 'â‚¹25,000';"); } except Exception as _ex {} }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>â‚¹25,000</button>
                             </div>
                         </div>
 
@@ -957,7 +960,7 @@ def:pub AdaptiveAssistant(
                                 onClick={lambda _e: MouseEvent { active_step = 3; }}
                                 style={{"background": "none", "border": "none", "color": txt_dim, "fontSize": fs_xs, "cursor": "pointer"}}
                             >
-                                {"← Back to Income"}
+                                {"â† Back to Income"}
                             </button>
                         </div>
                         <div style={{"fontSize": fs_base, "fontWeight": "700", "color": txt_main, "marginBottom": "6px"}}>
@@ -979,7 +982,7 @@ def:pub AdaptiveAssistant(
                                 "cursor": "pointer"
                             }}
                         >
-                            {"Review Required Documents & Proceed →"}
+                            {"Review Required Documents & Proceed â†’"}
                         </button>
                     </div>}
 
@@ -1029,7 +1032,7 @@ def:pub AdaptiveAssistant(
                         "color": txt_dim,
                         "fontSize": fs_xs
                     }}>
-                        <span style={{"fontSize": "16px"}}>🔒</span>
+                        <span style={{"fontSize": "16px"}}>ðŸ”’</span>
                         <span>{"Steps 5 & 6 (Documents & Approval Gate) will unlock after confirming Step " + str(active_step) + " above."}</span>
                     </div>}
 
@@ -1132,7 +1135,7 @@ def:pub AdaptiveAssistant(
                                     </div>
                                 </div>
                                 <span style={{"color": ("#00FF88" if trace_events[i]["status"] == "completed" else "#FFE500"), "fontSize": fs_sm, "fontWeight": "bold"}}>
-                                    {("✓" if trace_events[i]["status"] == "completed" else "●")}
+                                    {("âœ“" if trace_events[i]["status"] == "completed" else "â—")}
                                 </span>
                             </div> for i in range(len(trace_events))]}
                         </div>
@@ -1296,3 +1299,4 @@ def:pub AdaptiveAssistant(
             </div>}
         </div>;
 }
+

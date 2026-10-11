@@ -1,4 +1,4 @@
-"""Async and walker-backed real-time logic for AdaptiveAssistant with accurate voice narration."""
+﻿"""Async and walker-backed real-time logic for AdaptiveAssistant with accurate voice narration."""
 
 impl AdaptiveAssistant.syncFromChat -> None {
     has_chat: bool = False;
@@ -41,20 +41,17 @@ impl AdaptiveAssistant.syncFromChat -> None {
         } elif prof and ("monthly_income" in prof) and prof["monthly_income"] is not None and int(prof["monthly_income"]) >= 0 {
             found_monthly = int(prof["monthly_income"]);
         } elif chat_user_text {
-            tokens = chat_user_text.replace(",", "").replace("₹", " ").replace("rs.", " ").replace("rs", " ").replace("rupees", " ").replace("/", " ").split(" ");
-            for tok in tokens {
-                digits_tok = "".join([ch for ch in tok if ch.isdigit()]);
-                if len(digits_tok) >= 3 and len(digits_tok) <= 7 {
-                    parsed_int = int(digits_tok);
-                    if parsed_int >= 500 and parsed_int <= 1000000 {
-                        found_monthly = parsed_int;
-                    }
-                }
+            parsed_from_text = 0;
+            try {
+                parsed_from_text = int(window.eval("(function(t){ if(!t) return 0; if(window._cm_parse_income){ var p = window._cm_parse_income(t); if(p) return p; } var m = String(t).replace(/,/g,'').match(/[0-9]{3,7}/); return m ? parseInt(m[0], 10) : 0; })('" + chat_user_text.replace("'", " ").replace("\n", " ") + "')"));
+            } except Exception as _ex {}
+            if parsed_from_text >= 500 and parsed_from_text <= 1000000 {
+                found_monthly = parsed_from_text;
             }
         }
 
         if not user_overrode_income and found_monthly >= 0 {
-            voice_field_val = "₹" + f"{found_monthly:,}";
+            voice_field_val = "â‚¹" + f"{found_monthly:,}";
         }
 
         # Household and children from profile or chat text
@@ -218,7 +215,7 @@ impl AdaptiveAssistant.runLiveAnalysis(text: str) -> None {
 
             prof: Any = cs["profile"] if cs["profile"] else {};
             if prof and prof["income"] {
-                voice_field_val = "₹" + str(prof["income"]);
+                voice_field_val = "â‚¹" + str(prof["income"]);
             }
 
             active_step = 5;
@@ -335,10 +332,10 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
                     window._cm_current_rec = window._cm_listen_field(
                         function(text) {
                             var stat = document.getElementById('cm-voice-live-status');
-                            if (stat) { stat.innerText = '🎙️ Heard: "' + text + '"'; }
+                            if (stat) { stat.innerText = 'ðŸŽ™ï¸ Heard: "' + text + '"'; }
                             var parsed = window._cm_parse_income ? window._cm_parse_income(text) : null;
                             if (parsed) {
-                                var formatted = '₹' + parsed.toLocaleString();
+                                var formatted = 'â‚¹' + parsed.toLocaleString();
                                 window._cm_manual_income = formatted;
                                 try { sessionStorage.setItem('cm_manual_income', formatted); } catch(se) {}
                                 var inp = document.getElementById('cm-voice-input');
@@ -352,7 +349,7 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
                                     inp.dispatchEvent(new Event('input', { bubbles: true }));
                                     inp.dispatchEvent(new Event('change', { bubbles: true }));
                                 }
-                                if (stat) { stat.innerText = '✓ Recorded ' + formatted + ' (Heard: "' + text + '")'; }
+                                if (stat) { stat.innerText = 'âœ“ Recorded ' + formatted + ' (Heard: "' + text + '")'; }
                                 if (window._cm_speak) {
                                     window._cm_speak('I recorded ' + parsed.toLocaleString() + ' rupees. Click confirm to save.');
                                 }
@@ -480,3 +477,4 @@ impl AdaptiveAssistant.togglePrivacy(kind: str) -> None {
         try { window.eval("if (window._cm_speak) { window._cm_speak('Raw voice retention " + state_str + ".'); }"); } except Exception as _e {}
     }
 }
+
