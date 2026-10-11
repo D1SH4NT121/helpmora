@@ -394,7 +394,7 @@ def:pub ChatPane(
                             "padding": "5px 10px",
                             "cursor": "pointer"
                         }}
-                        title="Deployed Lyzr Studio Agent (6acb17ec038b7bf79ea36a00)"
+                        title="Lyzr Studio Agent"
                     >
                         {"🤖 Lyzr Agent: " + ("ON" if lyzr_mode else "OFF")}
                     </button>

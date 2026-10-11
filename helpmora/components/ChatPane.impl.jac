@@ -681,7 +681,7 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
             <div className="cm-result">
                 {(narr and narr["status"] == "ok") and <div className={"cm-narration" + (" cm-narration-main" if foreign else "")} lang={lang}>
                     {narr["is_lyzr"] and <div style={{"display": "flex", "alignItems": "center", "gap": "6px", "marginBottom": "6px", "color": "#FFE500", "fontSize": "11px", "fontWeight": "700", "textTransform": "uppercase", "letterSpacing": "0.05em"}}>
-                        <span>{"🤖 Lyzr Studio Agent (6acb17ec038b7bf79ea36a00)"}</span>
+                        <span>{"🤖 Lyzr Studio Agent"}</span>
                     </div>}
                     {not narr["is_lyzr"] and <span className="cm-spark">✦</span>}
                     <span>
