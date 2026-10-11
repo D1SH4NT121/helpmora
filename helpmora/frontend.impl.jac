@@ -87,11 +87,11 @@ impl ClientApp.goHome -> None {
 }
 
 impl ClientApp.pushWalkerEvent(events: list) -> None {
-    # Receives the FULL accumulated events list each call (not a delta).
-    # This sidesteps React closure staleness when sendMessage fires many
-    # updates in one synchronous burst — each call sets walker_events to
-    # the full known list, so the last winner contains everything.
-    walker_events = events;
+    if not events or len(events) == 0 {
+        walker_events = [];
+    } else {
+        walker_events = walker_events + events;
+    }
 }
 
 impl ClientApp.handleCaseUpdate(case_data: Any) -> None {
