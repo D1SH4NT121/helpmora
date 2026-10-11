@@ -1,6 +1,15 @@
 """Impl helpers + ImpactWalker spawn for ImpactReport."""
 
 impl ImpactReport.loadImpact -> None {
+    has_chat: bool = False;
+    try {
+        has_chat = bool(sessionStorage.getItem("cm_chat_started") == "1");
+    } except Exception as _ex {}
+    if not has_chat {
+        summary = None;
+        loading = False;
+        return;
+    }
     if not jacIsLoggedIn() {
         loading = False;
         return;

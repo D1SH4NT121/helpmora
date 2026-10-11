@@ -303,7 +303,7 @@ def:pub ClientApp -> JsxElement {
                     <TelemetryPanel walker_events={walker_events} user_id={user_id}/>
                 </div>
                 <div style={{"display": ("block" if active_tab == "impact" else "none")}}>
-                    <ImpactReport/>
+                    <ImpactReport walker_events={walker_events}/>
                 </div>
             </main>
             <footer

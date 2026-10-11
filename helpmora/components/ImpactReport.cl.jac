@@ -15,12 +15,16 @@ no mocks.
 sv import from walkers.impact { ImpactWalker }
 import from "@jac/runtime" { jacSpawn, jacIsLoggedIn }
 
-def:pub ImpactReport -> JsxElement {
+def:pub ImpactReport(walker_events: list = []) -> JsxElement {
     has summary: Any = None,
         loading: bool = True,
         err: str = "";
 
     can with entry {
+        loadImpact();
+    }
+
+    can with [walker_events] entry {
         loadImpact();
     }
 
@@ -30,6 +34,26 @@ def:pub ImpactReport -> JsxElement {
     def renderResourceBar(name: str, count: int, max_count: int) -> JsxElement;
     def renderLanguageChip(lang: str, count: int) -> JsxElement;
     def renderTopNeedCard(cat_lookup: Any) -> JsxElement;
+
+    has_chat: bool = False;
+    try {
+        has_chat = bool(len(walker_events) > 0 or (sessionStorage.getItem("cm_chat_started") == "1"));
+    } except Exception as _ex {}
+
+    if not has_chat {
+        return
+            <div style={{"padding": "48px 32px", "textAlign": "center", "color": "rgba(255,255,255,0.7)", "fontSize": "14px"}}>
+                <div style={{"width": "48px", "height": "48px", "borderRadius": "12px", "background": "rgba(255,229,0,0.08)", "border": "1px solid rgba(255,229,0,0.3)", "display": "flex", "alignItems": "center", "justifyContent": "center", "margin": "0 auto 16px auto"}}>
+                    <span style={{"fontSize": "22px"}}>📊</span>
+                </div>
+                <div style={{"fontSize": "16px", "fontWeight": "600", "marginBottom": "8px", "color": "#FFE500"}}>
+                    No impact activity yet
+                </div>
+                <div style={{"fontSize": "13px", "color": "rgba(255,255,255,0.55)", "maxWidth": "540px", "margin": "0 auto", "lineHeight": "1.6"}}>
+                    Impact metrics, application outcomes, and welfare program distributions are generated live as you converse in the Chat Panel. Start a conversation in the Chat Panel to see your real-time impact metrics here.
+                </div>
+            </div>;
+    }
 
     if loading {
         return
@@ -45,8 +69,6 @@ def:pub ImpactReport -> JsxElement {
             </div>;
     }
 
-    # Defensively unpack summary fields. Any field may be missing on a
-    # cold-start graph, so each accessor wraps in `if` rather than crashing.
     total_users = 0;
     total_apps = 0;
     approval_rate = 0;
