@@ -70,7 +70,7 @@ impl AdaptiveAssistant.syncFromChat -> None {
         has_stated_household = False;
         if prof and ("household_size" in prof) and prof["household_size"] is not None and int(prof["household_size"]) > 0 {
             chat_household = int(prof["household_size"]);
-            has_stated_household = bool(prof.get("household_stated")) or (chat_household > 1);
+            has_stated_household = bool("household_stated" in prof and prof["household_stated"]) or (chat_household > 1);
         } elif chat_user_text {
             lower_txt = chat_user_text.lower();
             if "alone" in lower_txt or "single" in lower_txt or "myself" in lower_txt {
@@ -127,7 +127,7 @@ impl AdaptiveAssistant.syncFromChat -> None {
         # Check if chat explicitly requested revert
         revert_in_chat = False;
         try {
-            revert_in_chat = bool(c.get("reverted") or sessionStorage.getItem("cm_reverted") == "1");
+            revert_in_chat = bool(("reverted" in c and c["reverted"]) or (sessionStorage.getItem("cm_reverted") == "1"));
             if revert_in_chat {
                 approval_status = "pending";
                 sessionStorage.removeItem("cm_reverted");
