@@ -895,6 +895,8 @@ def parse_intake(text: str) -> dict {
         secondary = [];
         cat_conf = 0.0;
         scores = {};
+        flags = [];
+        evidence = [];
     }
     # The LLM is consulted only when nothing could be routed. A language
     # outside the lexicon no longer forces it: the narration call writes

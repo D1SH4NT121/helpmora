@@ -436,6 +436,10 @@ class TestIntegrations(unittest.TestCase):
         self.assertTrue(is_out_of_context("who is the president of usa"))
         self.assertTrue(is_out_of_context("how to make biryani"))
         self.assertTrue(is_out_of_context("write a python script to solve math"))
+        self.assertTrue(is_out_of_context("i want a cake"))
+        self.assertTrue(is_out_of_context("give me ideas for a birthday party"))
+        self.assertTrue(is_out_of_context("play music"))
+        self.assertTrue(is_out_of_context("output of ideas"))
 
         # In-context welfare queries must NOT be flagged
         self.assertFalse(is_out_of_context("I need housing assistance under PMAY"))

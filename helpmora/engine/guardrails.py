@@ -63,7 +63,7 @@ CONVERSATIONAL = [
 
 GREETING_PATTERNS = [
     r"^(?:hi+|hey+|hello+|namaste|namaskar|pranam|hola|yo)(?:\s+(?:there|helpmora|assistant|friend))?[\s!.,?]*$",
-    r"^(?:(?:hi+|hey+|hello+|namaste)[\s,]+)?(?:who\s+are\s+you|what\s+(?:is\s+helpmora|can\s+you\s+do|do\s+you\s+do|are\s+you)|how\s+can\s+you\s+help(?:\s+me)?|what\s+is\s+this|tell\s+me\s+about\s+yourself|how\s+does\s+this\s+work)[\s!?.]*$",
+    r"^(?:(?:hi+|hey+|hello+|namaste)[\s,]+)?(?:how\s+are\s+you|who\s+are\s+you|what\s+(?:is\s+helpmora|can\s+you\s+do|do\s+you\s+do|are\s+you)|how\s+can\s+you\s+help(?:\s+me)?|what\s+is\s+this|tell\s+me\s+about\s+yourself|how\s+does\s+this\s+work)[\s!?.]*$",
     r"^(?:good\s+(?:morning|afternoon|evening|day)|greetings)[\s!.,?]*$",
 ]
 
@@ -115,17 +115,28 @@ def is_out_of_context(text: str) -> bool:
     if clean_t in CONVERSATIONAL:
         return False
 
-    # 2. Check explicit out-of-scope patterns (trivia, coding, math, recipes, etc.)
+    # 2. Intake follow-up answers (income numbers, family counts, age, Indian states/cities)
+    if re.search(r"(?:₹|rs\.?|inr|\$)\s*\d+|\b\d{3,7}\b", t):
+        return False
+    if re.search(r"\b(?:alone|single|myself|\d+\s*(?:members?|people|kids|children)|family of \d+)\b", t):
+        return False
+    if re.search(r"\b(?:age\s*\d+|\d+\s*years?\s*old)\b", t):
+        return False
+    if re.search(r"\b(?:delhi|mumbai|bangalore|bengaluru|kolkata|chennai|hyderabad|pune|lucknow|patna|bhopal|jaipur|uttar pradesh|bihar|maharashtra|karnataka|rajasthan|gujarat|punjab|haryana|mp|up)\b", t):
+        return False
+
+    # 3. Check explicit out-of-scope patterns (trivia, coding, math, recipes, entertainment, etc.)
     for pat in OUT_OF_SCOPE_REGEX:
         if re.search(pat, t):
             has_welfare = any(re.search(rf"\b{re.escape(w)}\b", t) for w in IN_SCOPE_TERMS)
             if not has_welfare:
                 return True
 
-    # 3. Check general fact questions without any welfare or distress terms
-    if re.search(r"\b(?:what is|who is|where is|how does|why is|tell me about)\b", t):
-        has_welfare = any(re.search(rf"\b{re.escape(w)}\b", t) for w in IN_SCOPE_TERMS)
-        if not has_welfare:
-            return True
+    # 4. Check for presence of any in-scope welfare / legal / citizen assistance term
+    has_welfare = any(re.search(rf"\b{re.escape(w)}\b", t) for w in IN_SCOPE_TERMS)
+    if has_welfare:
+        return False
 
-    return False
+    # 5. Queries with no welfare, legal, or intake content are out of context
+    return True
+

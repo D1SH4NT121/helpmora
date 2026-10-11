@@ -85,16 +85,22 @@ def merge_profiles(prior: dict, cur: dict, text: str = "", answering: str = "") 
     for k in MERGE_FIELDS {
         v = cur.get(k);
         unknown = (v is None) or (v == "") or (k == "income_annual" and int(v) < 0) or (k in ["household_size", "age"] and int(v) == 0);
-        if unknown and prior.get(k) not in [None, ""] {
+        if unknown and prior.get(k) not in [None, ""] and not cur.get("out_of_context") {
             out[k] = prior.get(k);
         }
     }
     # A household inferred from children or a partner never shrinks one given
     # earlier ("we are 4", later "my partner hits me"); a stated count wins.
-    if not cur.get("household_stated") and int(prior.get("household_size", 0) or 0) > int(out.get("household_size", 0) or 0) {
+    if not cur.get("household_stated") and int(prior.get("household_size", 0) or 0) > int(out.get("household_size", 0) or 0) and not cur.get("out_of_context") {
         out["household_size"] = prior.get("household_size");
     }
-    if not cur.get("category") and prior.get("category") and not cur.get("out_of_context") {
+    if cur.get("out_of_context") {
+        out["category"] = "";
+        out["secondary"] = [];
+        out["category_scores"] = {};
+        out["category_conf"] = 0.0;
+        out["carried_category"] = False;
+    } elif not cur.get("category") and prior.get("category") {
         out["category"] = prior.get("category");
         out["secondary"] = list(prior.get("secondary", []));
         out["category_conf"] = float(prior.get("category_conf", 0.5));
@@ -110,11 +116,13 @@ def merge_profiles(prior: dict, cur: dict, text: str = "", answering: str = "") 
         }
     }
     flags = list(cur.get("flags", []));
-    for f in list(prior.get("flags", [])) {
-        if f not in flags { flags.append(f); }
-    }
-    if out.get("answered_yes") and ANSWER_FLAGS.get(str(out["answered_yes"])) and ANSWER_FLAGS[str(out["answered_yes"])] not in flags {
-        flags.append(ANSWER_FLAGS[str(out["answered_yes"])]);
+    if not cur.get("out_of_context") {
+        for f in list(prior.get("flags", [])) {
+            if f not in flags { flags.append(f); }
+        }
+        if out.get("answered_yes") and ANSWER_FLAGS.get(str(out["answered_yes"])) and ANSWER_FLAGS[str(out["answered_yes"])] not in flags {
+            flags.append(ANSWER_FLAGS[str(out["answered_yes"])]);
+        }
     }
     out["flags"] = flags;
     # "How many people live in your household?" → "3", "three", "there are 3 people".
