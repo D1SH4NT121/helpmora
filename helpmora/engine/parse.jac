@@ -23,7 +23,7 @@ Output contract (plain dict so it serialises straight into walker reports):
 """
 
 import re;
-py import from engine.guardrails { is_out_of_context }
+import from engine.guardrails { is_out_of_context }
 import from engine.i18n { detect_script, detect_latin_other, route_i18n, negated, need_focus, LATIN_MARKERS, NEG_RIGHT, is_small_talk }
 import from engine.facts_i18n { facts_i18n, place_i18n }
 
