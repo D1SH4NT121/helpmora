@@ -341,6 +341,58 @@ input:focus {
   .card-3d:hover { transform: none !important; }
 }
 
+/* Explicit toggle for Reduced Motion toolbar button */
+html.cm-reduced-motion,
+body.cm-reduced-motion,
+.cm-reduced-motion,
+.cm-reduced-motion *,
+.cm-reduced-motion *::before,
+.cm-reduced-motion *::after {
+  animation: none !important;
+  animation-duration: 0.001ms !important;
+  animation-delay: 0ms !important;
+  animation-iteration-count: 1 !important;
+  transition: none !important;
+  transition-duration: 0.001ms !important;
+  transition-delay: 0ms !important;
+  transform: none !important;
+  scroll-behavior: auto !important;
+}
+
+.cm-reduced-motion .hm-logo-container,
+.cm-reduced-motion .hm-logo-svg,
+.cm-reduced-motion .hm-guided-thread,
+.cm-reduced-motion .hm-human-group,
+.cm-reduced-motion .hm-human-aura,
+.cm-reduced-motion .hm-node,
+.cm-reduced-motion .hm-node-1, .cm-reduced-motion .hm-node-2,
+.cm-reduced-motion .hm-node-3, .cm-reduced-motion .hm-node-4, .cm-reduced-motion .hm-node-5,
+.cm-reduced-motion .hm-h-discovery,
+.cm-reduced-motion .hm-beacon-group,
+.cm-reduced-motion .hm-beacon-halo,
+.cm-reduced-motion .hm-signal-tracer,
+.cm-reduced-motion .stat-enter,
+.cm-reduced-motion .lp-blob,
+.cm-reduced-motion .badge-pulse,
+.cm-reduced-motion .card-3d:hover {
+  animation: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* High contrast & Large text toolbar overrides */
+html.cm-high-contrast,
+body.cm-high-contrast {
+  --lp-dark: #000000 !important;
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+}
+
+html.cm-large-text {
+  font-size: 115% !important;
+}
+
 /* ──────────────────────────────────────────────────────
    LANDING — Mesh background, glass cards, 3D tilt
    ────────────────────────────────────────────────────── */

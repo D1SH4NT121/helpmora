@@ -490,6 +490,11 @@ impl AdaptiveAssistant.toggleLargeText -> None {
     new_val = not large_text;
     large_text = new_val;
     try {
+        if new_val {
+            window.eval("document.documentElement.classList.add('cm-large-text'); document.body.classList.add('cm-large-text'); localStorage.setItem('cm_large_text', '1');");
+        } else {
+            window.eval("document.documentElement.classList.remove('cm-large-text'); document.body.classList.remove('cm-large-text'); localStorage.setItem('cm_large_text', '0');");
+        }
         msg = "Large Text mode turned on. Fonts enlarged." if new_val else "Large Text mode turned off.";
         window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
     } except Exception as _ex {}
@@ -499,6 +504,11 @@ impl AdaptiveAssistant.toggleHighContrast -> None {
     new_val = not high_contrast;
     high_contrast = new_val;
     try {
+        if new_val {
+            window.eval("document.documentElement.classList.add('cm-high-contrast'); document.body.classList.add('cm-high-contrast'); localStorage.setItem('cm_high_contrast', '1');");
+        } else {
+            window.eval("document.documentElement.classList.remove('cm-high-contrast'); document.body.classList.remove('cm-high-contrast'); localStorage.setItem('cm_high_contrast', '0');");
+        }
         msg = "High Contrast mode turned on. Maximum visibility active." if new_val else "High Contrast mode turned off.";
         window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
     } except Exception as _ex {}
@@ -508,6 +518,11 @@ impl AdaptiveAssistant.toggleReducedMotion -> None {
     new_val = not reduced_motion;
     reduced_motion = new_val;
     try {
+        if new_val {
+            window.eval("document.documentElement.classList.add('cm-reduced-motion'); document.body.classList.add('cm-reduced-motion'); localStorage.setItem('cm_reduced_motion', '1');");
+        } else {
+            window.eval("document.documentElement.classList.remove('cm-reduced-motion'); document.body.classList.remove('cm-reduced-motion'); localStorage.setItem('cm_reduced_motion', '0');");
+        }
         msg = "Reduced Motion turned on. Animations disabled." if new_val else "Reduced Motion turned off. Animations enabled.";
         window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
     } except Exception as _ex {}
@@ -517,6 +532,11 @@ impl AdaptiveAssistant.toggleSimpleLanguage -> None {
     new_val = not simple_lang;
     simple_lang = new_val;
     try {
+        if new_val {
+            window.eval("localStorage.setItem('cm_simple_lang', '1');");
+        } else {
+            window.eval("localStorage.setItem('cm_simple_lang', '0');");
+        }
         msg = "Simple Language turned on. Complex rules translated to plain English." if new_val else "Simple Language turned off. Showing statutory terms.";
         window.eval("if (window._cm_speak) { window._cm_speak('" + msg + "'); }");
     } except Exception as _ex {}

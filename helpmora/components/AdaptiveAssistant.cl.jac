@@ -149,6 +149,23 @@ def:pub AdaptiveAssistant(
                 };
             """);
         } except Exception as _ex {}
+        try {
+            if localStorage.getItem("cm_reduced_motion") == "1" {
+                reduced_motion = True;
+                window.eval("document.documentElement.classList.add('cm-reduced-motion'); document.body.classList.add('cm-reduced-motion');");
+            }
+            if localStorage.getItem("cm_high_contrast") == "1" {
+                high_contrast = True;
+                window.eval("document.documentElement.classList.add('cm-high-contrast'); document.body.classList.add('cm-high-contrast');");
+            }
+            if localStorage.getItem("cm_large_text") == "1" {
+                large_text = True;
+                window.eval("document.documentElement.classList.add('cm-large-text'); document.body.classList.add('cm-large-text');");
+            }
+            if localStorage.getItem("cm_simple_lang") == "1" {
+                simple_lang = True;
+            }
+        } except Exception as _lx {}
         syncFromChat();
     }
 
