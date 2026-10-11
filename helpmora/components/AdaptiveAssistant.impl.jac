@@ -19,9 +19,16 @@ impl AdaptiveAssistant.syncFromChat -> None {
         step1_confirmed = False;
         step2_confirmed = False;
         voice_confirmed = False;
+        user_overrode_income = False;
         approval_status = "pending";
         chat_user_text = "";
+        chat_category = "";
+        chat_household = 0;
+        chat_children = 0;
+        voice_field_val = "";
         approved_program = "";
+        spoken_transcript = "";
+        agent_state = "idle";
         trace_events = [
             {"badge": "READY", "title": "Engine Initialized", "status": "active", "detail": "Awaiting citizen intake or chat message to begin evaluation"}
         ];
@@ -29,9 +36,10 @@ impl AdaptiveAssistant.syncFromChat -> None {
     }
 
     try {
-        prof: Any = c["profile"] if c["profile"] else {};
-        chat_user_text = str(c["last_user_text"] if c["last_user_text"] else (c["conversation"] if c["conversation"] else ""));
-        chat_category = str(prof["category"]).replace("_", " ").title() if prof and prof["category"] else "Welfare Assistance";
+        prof: Any = c["profile"] if ("profile" in c and c["profile"]) else {};
+        chat_user_text = str(c["last_user_text"] if ("last_user_text" in c and c["last_user_text"]) else (c["conversation"] if ("conversation" in c and c["conversation"]) else ""));
+        raw_cat = str(prof["category"]).replace("_", " ").title() if (prof and "category" in prof and prof["category"]) else "";
+        chat_category = raw_cat if (raw_cat and raw_cat != "None") else "";
         chat_connected = True;
 
         # Income extraction from profile OR chat text
@@ -50,22 +58,32 @@ impl AdaptiveAssistant.syncFromChat -> None {
             }
         }
 
-        if not user_overrode_income and found_monthly >= 0 {
-            voice_field_val = "₹" + f"{found_monthly:,}";
+        if not user_overrode_income {
+            if found_monthly >= 0 {
+                voice_field_val = "₹" + f"{found_monthly:,}";
+            } elif not voice_confirmed {
+                voice_field_val = "";
+            }
         }
 
         # Household and children from profile or chat text
+        has_stated_household = False;
         if prof and ("household_size" in prof) and prof["household_size"] is not None and int(prof["household_size"]) > 0 {
             chat_household = int(prof["household_size"]);
+            has_stated_household = bool(prof.get("household_stated")) or (chat_household > 1);
         } elif chat_user_text {
             lower_txt = chat_user_text.lower();
             if "alone" in lower_txt or "single" in lower_txt or "myself" in lower_txt {
                 chat_household = 1;
                 chat_children = 0;
+                has_stated_household = True;
             }
         }
         if prof and ("children" in prof) and prof["children"] is not None and int(prof["children"]) >= 0 {
             chat_children = int(prof["children"]);
+            if chat_children > 0 {
+                has_stated_household = True;
+            }
         }
 
         # Matched program extraction
@@ -81,8 +99,8 @@ impl AdaptiveAssistant.syncFromChat -> None {
             extracted_scheme = str(res_list[0]["name"]);
         } elif len(plan_steps) > 0 and plan_steps[0] and ("resource" in plan_steps[0]) and plan_steps[0]["resource"] {
             extracted_scheme = str(plan_steps[0]["resource"]);
-        } elif prof and ("category" in prof) and prof["category"] {
-            cat_lower = str(prof["category"]).lower();
+        } elif chat_category {
+            cat_lower = chat_category.lower();
             if "food" in cat_lower or "nutrition" in cat_lower or "ration" in cat_lower {
                 extracted_scheme = "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / Free Food Grain)";
             } elif "health" in cat_lower or "med" in cat_lower {
@@ -93,35 +111,43 @@ impl AdaptiveAssistant.syncFromChat -> None {
                 extracted_scheme = "National Legal Services Authority (NALSA Free Legal Aid)";
             } elif "housing" in cat_lower or "shelter" in cat_lower or "rent" in cat_lower {
                 extracted_scheme = "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)";
-            } else {
-                extracted_scheme = "National Social Assistance & Welfare Support Program";
             }
         }
 
-        # If the scheme changed to a new program, update approved_program and reset approval to pending!
-        if extracted_scheme and extracted_scheme != approved_program {
+        if extracted_scheme != approved_program {
             approved_program = extracted_scheme;
             approval_status = "pending";
         }
 
-        # Step progression based on real chat facts
+        # Determine real fact presence
+        has_income = (found_monthly >= 0) or voice_confirmed or bool(voice_field_val);
+        has_household = has_stated_household or step2_confirmed;
+        has_scheme = bool(approved_program);
+
+        # Step progression based ONLY on real facts provided by citizen:
         if approval_status == "approved" {
             active_step = 6;
             step1_confirmed = True;
             step2_confirmed = True;
-        } elif len(match_list) > 0 or len(plan_steps) > 0 or len(res_list) > 0 {
+        } elif has_scheme and has_income and has_household {
             active_step = 5;
             step1_confirmed = True;
             step2_confirmed = True;
-        } elif voice_confirmed or found_monthly >= 0 {
-            active_step = 4;
-            step1_confirmed = True;
-            step2_confirmed = True;
-        } elif step2_confirmed or (chat_household > 0 and chat_connected) {
+        } elif has_scheme and not has_income {
+            # Scheme matched from need, but income is required to verify statutory limits
             active_step = 3;
             step1_confirmed = True;
-        } elif step1_confirmed or chat_connected {
+        } elif has_scheme and not has_household {
             active_step = 2;
+            step1_confirmed = True;
+        } elif has_income and not has_scheme {
+            active_step = 4;
+            step1_confirmed = True;
+        } elif chat_category {
+            active_step = 2;
+            step1_confirmed = True;
+        } elif chat_connected and chat_user_text {
+            active_step = 1;
         } else {
             active_step = 1;
         }

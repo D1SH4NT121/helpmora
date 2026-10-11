@@ -396,7 +396,7 @@ def:pub AdaptiveAssistant(
                 </button>
             </div>}
 
-            {chat_connected and <div style={{
+            {(chat_connected and bool(chat_user_text)) and <div style={{
                 "background": ("#000000" if high_contrast else "rgba(255, 229, 0, 0.04)"),
                 "borderRadius": "14px",
                 "border": ("1px solid #FFE500" if high_contrast else "0.5px solid rgba(255, 229, 0, 0.3)"),
@@ -415,24 +415,24 @@ def:pub AdaptiveAssistant(
                             {"Live Synced with Real-Time Chat"}
                         </div>
                         <div style={{"fontSize": fs_sm, "color": txt_main, "marginTop": "2px"}}>
-                            {("Case: \"" + chat_user_text + "\"") if chat_user_text else "Active conversation linked"}
+                            {("Case: \"" + chat_user_text + "\"")}
                         </div>
                     </div>
                 </div>
                 <div style={{"display": "flex", "alignItems": "center", "gap": "8px", "flexWrap": "wrap"}}>
                     <span style={{"fontSize": fs_xs, "padding": "4px 8px", "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_muted}}>
-                        {"Need: " + (chat_category if chat_category else "Welfare Assistance")}
+                        {"Need: " + (chat_category if chat_category else "Evaluating...")}
                     </span>
                     <span style={{"fontSize": fs_xs, "padding": "4px 8px", "borderRadius": "6px", "background": "rgba(0,255,136,0.1)", "color": "#00FF88", "fontWeight": "600"}}>
-                        {"Income: " + voice_field_val}
+                        {"Income: " + (voice_field_val if voice_field_val else "Pending")}
                     </span>
                     <span style={{"fontSize": fs_xs, "padding": "4px 8px", "borderRadius": "6px", "background": "rgba(255,229,0,0.1)", "color": "#FFE500", "fontWeight": "600"}}>
-                        {"Matched Scheme: " + approved_program}
+                        {"Matched Scheme: " + (approved_program if approved_program else "Evaluating...")}
                     </span>
                 </div>
             </div>}
 
-            {(not chat_connected) and <div style={{
+            {(not chat_connected or not bool(chat_user_text)) and <div style={{
                 "background": card_bg,
                 "borderRadius": "14px",
                 "border": ("1px solid #FFFFFF" if high_contrast else "0.5px solid " + border_color),
@@ -511,7 +511,7 @@ def:pub AdaptiveAssistant(
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step1 + " (Current Step)"}</span>
                         </div>}
 
-                        {(active_step > 2 or step2_confirmed or (chat_household > 0 and chat_connected)) and <div onClick={lambda _e: MouseEvent { active_step = 2; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
+                        {(step2_confirmed or (active_step > 2 and (chat_household > 1 or chat_children > 0))) and <div onClick={lambda _e: MouseEvent { active_step = 2; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step2.replace(" (Current Step)", "")}</span>
                         </div>}
@@ -527,11 +527,12 @@ def:pub AdaptiveAssistant(
                             <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step2 + " (Current Step)"}</span>
                         </div>}
-                        {active_step < 2 and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(active_step < 2 or (not step2_confirmed and chat_household <= 1 and chat_children == 0 and active_step != 2)) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
                             <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step2}</span>
                         </div>}
-                        {active_step > 3 and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+
+                        {(voice_field_val and (active_step > 3 or approval_status == "approved")) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step3.replace(" (Current Step)", "") + " (" + voice_field_val + " Verified)"}</span>
                         </div>}
@@ -547,8 +548,12 @@ def:pub AdaptiveAssistant(
                             <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step3}</span>
                         </div>}
+                        {(active_step < 3 or (not voice_field_val and active_step != 3 and approval_status != "approved")) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                            <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
+                            <span style={{"fontSize": fs_base, "color": txt_dim}}>{"3. Income Verification"}</span>
+                        </div>}
 
-                        {(active_step > 4 or approval_status == "approved") and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(approved_program and (active_step > 4 or approval_status == "approved")) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step4.replace(" (Current Step)", "")}</span>
                         </div>}
@@ -566,10 +571,10 @@ def:pub AdaptiveAssistant(
                         </div>}
                         {(active_step < 4 and approval_status != "approved") and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
                             <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
-                            <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step4}</span>
+                            <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step4 if approved_program else "4. Matched Scheme (Pending Need & Income)"}</span>
                         </div>}
 
-                        {(active_step > 5 or approval_status == "approved") and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(approved_program and voice_field_val and (active_step > 5 or approval_status == "approved")) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step5.replace(" (Current Step)", "") + " (Verified)"}</span>
                         </div>}
@@ -590,11 +595,11 @@ def:pub AdaptiveAssistant(
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step5}</span>
                         </div>}
 
-                        {(approval_status == "approved" or active_step >= 6) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(approval_status == "approved") and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": "#00FF88", "fontWeight": "600"}}>{lbl_step6 + " (Approved)"}</span>
                         </div>}
-                        {(approval_status != "approved" and active_step >= 5) and <div style={{
+                        {(approval_status != "approved" and active_step >= 5 and approved_program and voice_field_val) and <div style={{
                             "display": "flex",
                             "alignItems": "center",
                             "gap": "10px",
@@ -606,7 +611,7 @@ def:pub AdaptiveAssistant(
                             <span style={{"color": "#FFE500", "fontWeight": "bold", "fontSize": fs_base}}>→</span>
                             <span style={{"fontSize": fs_base, "fontWeight": "600", "color": "#FFE500"}}>{lbl_step6 + " (Awaiting Your Approval)"}</span>
                         </div>}
-                        {(approval_status != "approved" and active_step < 5) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
+                        {(approval_status != "approved" and not (active_step >= 5 and approved_program and voice_field_val)) and <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px"}}>
                             <span style={{"color": "rgba(255, 255, 255, 0.3)"}}>○</span>
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step6}</span>
                         </div>}
@@ -1021,7 +1026,7 @@ def:pub AdaptiveAssistant(
                         </button>
                     </div>}
 
-                    {(active_step < 5 and approval_status != "approved") and <div style={{
+                    {(not ((active_step >= 5 and bool(approved_program) and bool(voice_field_val)) or approval_status == "approved")) and <div style={{
                         "background": ("#000000" if high_contrast else "rgba(255, 255, 255, 0.03)"),
                         "border": inner_border,
                         "borderRadius": "12px",
@@ -1033,10 +1038,10 @@ def:pub AdaptiveAssistant(
                         "fontSize": fs_xs
                     }}>
                         <span style={{"fontSize": "16px"}}>🔒</span>
-                        <span>{"Steps 5 & 6 (Documents & Approval Gate) will unlock after confirming Step " + str(active_step) + " above."}</span>
+                        <span>{(("Verify your income in Step 3 above to unlock application review for " + approved_program + ".") if approved_program else "Tell me your situation in the Chat Panel to match a welfare scheme and unlock application review.")}</span>
                     </div>}
 
-                    {(active_step >= 5 or approval_status == "approved") and <div style={{
+                    {((active_step >= 5 and bool(approved_program) and bool(voice_field_val)) or approval_status == "approved") and <div style={{
                         "background": ("#000000" if high_contrast else "rgba(255, 229, 0, 0.04)"),
                         "border": ("2px solid #FFE500" if high_contrast else "0.5px solid rgba(255, 229, 0, 0.2)"),
                         "borderRadius": "12px",

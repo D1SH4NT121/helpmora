@@ -27,7 +27,11 @@ impl GraphViz.loadSnap -> None {
 
 impl GraphViz.resetGraph -> None {
     loading = True;
-    try { sessionStorage.removeItem("cm_chat_started"); } except Exception as _ex {}
+    try {
+        sessionStorage.removeItem("cm_chat_started");
+        sessionStorage.removeItem("cm_latest_case");
+        window._cm_latest_case = None;
+    } except Exception as _ex {}
     if user_id {
         await jacSpawn("ForgetWalker", "", {"user_id": user_id}).catch(
             lambda e: Any -> dict { return {"reports": []}; }

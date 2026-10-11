@@ -47,9 +47,22 @@ impl ChatPane.tierStyle(tier: str, ui: Any) -> dict {
 impl ChatPane.resetCase -> None {
     profile_ctx = {};
     pending_question = "";
-    messages = messages + [{
+    try {
+        window._cm_latest_case = None;
+        window._cm_manual_income = None;
+        sessionStorage.removeItem("cm_latest_case");
+        sessionStorage.removeItem("cm_chat_started");
+        sessionStorage.removeItem("cm_manual_income");
+    } except Exception as _ex {}
+    if on_case_update {
+        on_case_update(None);
+    }
+    if on_walker_event {
+        on_walker_event([]);
+    }
+    messages = [{
         "role": "bot", "kind": "text", "id": "reset-" + str(Math.random()),
-        "text": "New case started — nothing from the previous conversation is carried over. What's going on?",
+        "text": "New case started — nothing from the previous conversation is carried over. Tell me what's going on, and I'll find the welfare schemes you qualify for.",
         "suggestions": []
     }];
 }
