@@ -23,6 +23,7 @@ Output contract (plain dict so it serialises straight into walker reports):
 """
 
 import re;
+py import from engine.guardrails { is_out_of_context }
 import from engine.i18n { detect_script, detect_latin_other, route_i18n, negated, need_focus, LATIN_MARKERS, NEG_RIGHT, is_small_talk }
 import from engine.facts_i18n { facts_i18n, place_i18n }
 
@@ -887,10 +888,17 @@ def parse_intake(text: str) -> dict {
     # "hi", "thanks", "how are you": nothing to route (IntakeWalker answers it
     # without guessing a need).
     small_talk = is_small_talk(raw);
+    out_of_context = is_out_of_context(raw);
+    if out_of_context {
+        top_cat = "";
+        secondary = [];
+        cat_conf = 0.0;
+        scores = {};
+    }
     # The LLM is consulted only when nothing could be routed. A language
     # outside the lexicon no longer forces it: the narration call writes
     # back in the user's language either way.
-    if not top_cat and not small_talk {
+    if not top_cat and not small_talk and not out_of_context {
         needs_llm = True;
         llm_reason = "no category evidence" if lang else "unrecognized language";
     }
@@ -916,6 +924,7 @@ def parse_intake(text: str) -> dict {
         "completeness": round(known / 5.0, 2),
         "needs_llm": needs_llm,
         "llm_reason": llm_reason,
-        "small_talk": small_talk
+        "small_talk": small_talk,
+        "out_of_context": out_of_context
     };
 }

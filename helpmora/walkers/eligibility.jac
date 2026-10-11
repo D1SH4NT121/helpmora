@@ -97,6 +97,16 @@ yet what kind of help you need".
 """
 def quiet_summary(profile: dict, lang: str, pending: str) -> dict {
     ui_lang = reply_language(lang);
+    if profile.get("out_of_context") {
+        out_msg = "I don't have knowledge of those things. I am HELPmora, specialized exclusively in Indian social welfare schemes, government assistance programs, and free legal aid navigation. Please ask me about welfare programs, subsidies, pensions, housing, healthcare, rations, or legal support in India.";
+        return {
+            "reply": out_msg, "reply_language": "en", "reply_en": out_msg,
+            "question": {"key": "need", "text": "What welfare or legal aid program do you need assistance with?", "affects": 0, "gain": 0.0, "affects_label": "", "options": []},
+            "matches": [], "tiers": {"likely": 0, "possible": 0, "needs_info": 0, "unlikely": 0}, "near_misses": [],
+            "plan": {"steps": []}, "routes": [], "escalation": {}, "chips": ["Food rations", "Housing schemes", "Ayushman Bharat", "Free legal aid"], "chip_labels": [],
+            "ui": ui_labels(ui_lang), "facts": ""
+        };
+    }
     small_talk = bool(profile.get("small_talk"));
     key = pending if (small_talk and profile.get("category") and pending and pending != "need") else "need";
     replies: dict = {};

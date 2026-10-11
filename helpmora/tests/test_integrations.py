@@ -424,6 +424,29 @@ class TestIntegrations(unittest.TestCase):
         has_approval_memory = any("approved" in (m.get("text", "")).lower() for m in user_memories)
         self.assertTrue(has_approval_memory)
 
+    # 6. Domain Context Guardrail
+    def test_out_of_context_guardrail(self):
+        from helpmora.engine.guardrails import is_out_of_context, OUT_OF_CONTEXT_REPLY
+        from helpmora.integrations.lyzr.chat import query_lyzr_agent
+
+        # Out-of-context trivia and non-welfare requests must be flagged
+        self.assertTrue(is_out_of_context("what is the capital of india"))
+        self.assertTrue(is_out_of_context("who is the president of usa"))
+        self.assertTrue(is_out_of_context("how to make biryani"))
+        self.assertTrue(is_out_of_context("write a python script to solve math"))
+
+        # In-context welfare queries must NOT be flagged
+        self.assertFalse(is_out_of_context("I need housing assistance under PMAY"))
+        self.assertFalse(is_out_of_context("How can I get food rations with a ration card?"))
+        self.assertFalse(is_out_of_context("I am a widow and need pension support"))
+        self.assertFalse(is_out_of_context("Hello how are you"))
+        self.assertFalse(is_out_of_context("Namaste"))
+
+        # Querying lyzr agent with out-of-context question must return guardrail refusal
+        res = query_lyzr_agent("what is the capital of india")
+        self.assertTrue(res["ok"])
+        self.assertEqual(res["response"], OUT_OF_CONTEXT_REPLY)
+
 
 if __name__ == "__main__":
     unittest.main()

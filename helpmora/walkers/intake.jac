@@ -149,7 +149,7 @@ walker IntakeWalker {
         # or repeated, no crisis box, no narration, nothing written to the
         # graph. Guessing a need here is how "Hello how are you??" once came
         # back as "you're looking for housing help", with Section 8 to call.
-        quiet = bool(profile.get("small_talk")) or (not profile.get("category") and not list(profile.get("flags", [])));
+        quiet = bool(profile.get("small_talk")) or bool(profile.get("out_of_context")) or (not profile.get("category") and not list(profile.get("flags", [])));
         result: dict = {};
         if quiet {
             result = quiet_summary(profile, lang_out, str(self.answering));

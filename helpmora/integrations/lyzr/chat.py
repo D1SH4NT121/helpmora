@@ -41,16 +41,39 @@ def query_lyzr_agent(message: str, user_id: str = "futurexprime21@gmail.com", se
     uid = user_id or "futurexprime21@gmail.com"
     sid = session_id or f"{agent_id}-default"
 
+    # 0. Intercept out-of-context queries
+    try:
+        from helpmora.engine.guardrails import is_out_of_context, OUT_OF_CONTEXT_REPLY
+        if is_out_of_context(message):
+            logger.info("Out-of-context query intercepted: %s", message)
+            return {
+                "ok": True,
+                "agent_id": agent_id,
+                "response": OUT_OF_CONTEXT_REPLY,
+                "error": "",
+                "user_id": uid,
+                "session_id": sid,
+                "latency_ms": round((time.perf_counter() - t0) * 1000, 1),
+            }
+    except Exception:
+        pass
+
     url = "https://agent-prod.studio.lyzr.ai/v3/inference/chat/"
     headers = {
         "Content-Type": "application/json",
         "x-api-key": api_key,
     }
+    context_preamble = (
+        "[System Guardrail: You are HELPmora, specialized exclusively in Indian social welfare schemes, "
+        "government subsidies, and legal aid. Answer ONLY questions related to this project. If the question "
+        "is general trivia, geography, or unrelated to welfare and legal aid, reply: 'I don't have knowledge of those things. "
+        "I am HELPmora, specialized exclusively in Indian social welfare schemes, government assistance programs, and free legal aid navigation.']\n\n"
+    )
     payload = {
         "user_id": uid,
         "agent_id": agent_id,
         "session_id": sid,
-        "message": str(message),
+        "message": f"{context_preamble}{str(message)}",
     }
 
     resp_text = ""

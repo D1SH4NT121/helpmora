@@ -94,7 +94,7 @@ def merge_profiles(prior: dict, cur: dict, text: str = "", answering: str = "") 
     if not cur.get("household_stated") and int(prior.get("household_size", 0) or 0) > int(out.get("household_size", 0) or 0) {
         out["household_size"] = prior.get("household_size");
     }
-    if not cur.get("category") and prior.get("category") {
+    if not cur.get("category") and prior.get("category") and not cur.get("out_of_context") {
         out["category"] = prior.get("category");
         out["secondary"] = list(prior.get("secondary", []));
         out["category_conf"] = float(prior.get("category_conf", 0.5));
