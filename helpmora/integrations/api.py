@@ -340,6 +340,18 @@ async def delete_user_memories(user_id: str, case_id: Optional[str] = Query(None
     return {"ok": success}
 
 
+@router.post("/memory/wipe")
+@root_router.post("/api/memory/wipe")
+async def wipe_memories_post(payload: Dict[str, Any]):
+    """Wipes all vector memories for user_id via POST."""
+    user_id = payload.get("user_id") or payload.get("uid") or ""
+    if not user_id:
+        raise HTTPException(status_code=400, detail="user_id is required")
+    store = get_memory_store()
+    success = store.wipe_user_memories(user_id=user_id)
+    return {"ok": success, "user_id": user_id}
+
+
 @router.get("/memory/summary/{user_id}")
 async def get_memory_summary(user_id: str):
     """Aggregate memory summary for privacy dashboard."""

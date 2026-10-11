@@ -229,6 +229,21 @@ walker IntakeWalker {
         record_turn(self.user_id, lang_code or "?", "" if quiet else str(profile["category"]), float(root_span.get("duration_ms", 0.0)), llm_sync, llm_error.startswith("no answer within"));
         spans = export_spans(tr);
 
+        try {
+            import from integrations.qdrant.memory { get_memory_store }
+            qstore = get_memory_store();
+            if not quiet and profile.get("category") {
+                cat_name = str(profile.get("category"));
+                clean_txt = str(text or "")[:200];
+                qstore.store_memory(
+                    user_id=self.user_id,
+                    text="Citizen inquired about " + cat_name + " welfare support: " + clean_txt,
+                    memory_type="conversation",
+                    metadata={"category": cat_name, "urgency": str(profile.get("urgency", "within_weeks"))}
+                );
+            }
+        } except Exception as _qe {}
+
         public_profile = {k: v for (k, v) in profile.items() if k not in ["evidence", "category_scores"]};
         # Sorted, non-overlapping evidence spans so the client can highlight
         # the user's own words inline in a single linear pass.

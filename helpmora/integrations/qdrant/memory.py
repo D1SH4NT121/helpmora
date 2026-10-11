@@ -486,6 +486,10 @@ class QdrantMemoryStore:
             logger.error(f"Error deleting user memories: {ex}")
             return False
 
+    def wipe_user_memories(self, user_id: str) -> bool:
+        """Alias for delete_user_memories to purge all vector memories for user."""
+        return self.delete_user_memories(user_id=user_id)
+
     def get_memory_summary(self, user_id: str) -> Dict[str, Any]:
         """Provides an aggregate summary of stored user memories."""
         all_memories = self.retrieve_memories(user_id=user_id, limit=100)

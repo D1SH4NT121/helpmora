@@ -145,6 +145,16 @@ walker MemoryWalker {
             }
 
             updated = True;
+            try {
+                import from integrations.qdrant.memory { get_memory_store }
+                qstore = get_memory_store();
+                qstore.store_memory(
+                    user_id=self.user_id,
+                    text="Application for " + str(self.resource_name) + " status updated to " + str(self.new_status),
+                    memory_type="application",
+                    metadata={"resource": str(self.resource_name), "status": str(self.new_status)}
+                );
+            } except Exception as _qe {}
             break;
         }
 

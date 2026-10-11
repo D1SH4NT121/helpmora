@@ -575,23 +575,51 @@ impl AdaptiveAssistant.togglePrivacy(kind: str) -> None {
         conv_memory_on = new_val;
         state_str = "enabled" if new_val else "disabled";
         try { window.eval("if (window._cm_speak) { window._cm_speak('Conversation memory " + state_str + ".'); }"); } except Exception as _e {}
+        try {
+            window.fetch("/api/privacy/update", {
+                "method": "POST",
+                "headers": {"Content-Type": "application/json"},
+                "body": JSON.stringify({"user_id": user_id, "conversation_memory": new_val})
+            });
+        } except Exception as _pe {}
     }
     if kind == "app" {
         new_val = not app_history_on;
         app_history_on = new_val;
         state_str = "enabled" if new_val else "disabled";
         try { window.eval("if (window._cm_speak) { window._cm_speak('Application history retention " + state_str + ".'); }"); } except Exception as _e {}
+        try {
+            window.fetch("/api/privacy/update", {
+                "method": "POST",
+                "headers": {"Content-Type": "application/json"},
+                "body": JSON.stringify({"user_id": user_id, "application_history": new_val})
+            });
+        } except Exception as _pe {}
     }
     if kind == "docs" {
         new_val = not docs_on;
         docs_on = new_val;
         state_str = "enabled" if new_val else "disabled";
         try { window.eval("if (window._cm_speak) { window._cm_speak('Document retention " + state_str + ".'); }"); } except Exception as _e {}
+        try {
+            window.fetch("/api/privacy/update", {
+                "method": "POST",
+                "headers": {"Content-Type": "application/json"},
+                "body": JSON.stringify({"user_id": user_id, "documents": new_val})
+            });
+        } except Exception as _pe {}
     }
     if kind == "voice" {
         new_val = not raw_voice_on;
         raw_voice_on = new_val;
         state_str = "enabled" if new_val else "disabled";
         try { window.eval("if (window._cm_speak) { window._cm_speak('Raw voice retention " + state_str + ".'); }"); } except Exception as _e {}
+        try {
+            window.fetch("/api/privacy/update", {
+                "method": "POST",
+                "headers": {"Content-Type": "application/json"},
+                "body": JSON.stringify({"user_id": user_id, "raw_audio": new_val})
+            });
+        } except Exception as _pe {}
     }
 }

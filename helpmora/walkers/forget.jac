@@ -42,6 +42,13 @@ walker ForgetWalker {
             del p;
             removed["PersonNode"] += 1;
         }
+        try {
+            import from integrations.qdrant.memory { get_memory_store }
+            qstore = get_memory_store();
+            uid = str(self.user_id) if self.user_id else "anonymous";
+            qstore.delete_user_memories(user_id=uid);
+            removed["QdrantVectorPoints"] = 1;
+        } except Exception as _qe {}
         self.summary = {"ok": True, "removed": removed};
         report self.summary;
     }
