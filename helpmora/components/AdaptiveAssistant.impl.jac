@@ -20,6 +20,8 @@ impl AdaptiveAssistant.syncFromChat -> None {
         step2_confirmed = False;
         voice_confirmed = False;
         user_overrode_income = False;
+        location_city = "";
+        user_overrode_location = False;
         approval_status = "pending";
         chat_user_text = "";
         chat_category = "";
@@ -83,6 +85,36 @@ impl AdaptiveAssistant.syncFromChat -> None {
             chat_children = int(prof["children"]);
             if chat_children > 0 {
                 has_stated_household = True;
+            }
+        }
+
+        # Location extraction from profile OR chat text
+        extracted_loc = "";
+        if prof and ("city" in prof) and prof["city"] {
+            extracted_loc = str(prof["city"]);
+            if prof and ("state" in prof) and prof["state"] {
+                extracted_loc = extracted_loc + ", " + str(prof["state"]);
+            }
+        } elif prof and ("state" in prof) and prof["state"] {
+            extracted_loc = str(prof["state"]);
+        } elif chat_user_text {
+            try {
+                loc_res = str(window.eval("(function(t){ if(!t) return ''; var txt = ' ' + t.toLowerCase() + ' '; var places = ['delhi ncr', 'new delhi', 'delhi', 'mumbai', 'bangalore', 'bengaluru', 'kolkata', 'chennai', 'hyderabad', 'pune', 'ahmedabad', 'jaipur', 'lucknow', 'kanpur', 'nagpur', 'indore', 'patna', 'bhopal', 'chandigarh', 'noida', 'gurgaon', 'gurugram', 'varanasi', 'prayagraj', 'allahabad', 'ranchi', 'dehradun', 'shimla', 'uttar pradesh', 'bihar', 'maharashtra', 'karnataka', 'tamil nadu', 'rajasthan', 'madhya pradesh', 'gujarat', 'west bengal', 'punjab', 'haryana', 'kerala', 'telangana', 'andhra pradesh', 'odisha', 'assam', 'jharkhand', 'chhattisgarh', 'uttarakhand', 'himachal pradesh', 'goa']; for (var i = 0; i < places.length; i++) { var p = places[i]; var re = new RegExp('(\\\\b(in|at|from|near)\\\\s+)?\\\\b' + p + '\\\\b', 'i'); if (re.test(txt)) { return p; } } return ''; })('" + chat_user_text.replace("'", " ").replace("\n", " ") + "')"));
+                if loc_res {
+                    if loc_res == "delhi" or loc_res == "new delhi" or loc_res == "delhi ncr" {
+                        extracted_loc = "Delhi NCR";
+                    } else {
+                        extracted_loc = loc_res.title();
+                    }
+                }
+            } except Exception as _lx {}
+        }
+
+        if not user_overrode_location {
+            if extracted_loc {
+                location_city = extracted_loc;
+            } elif not location_city {
+                location_city = "";
             }
         }
 

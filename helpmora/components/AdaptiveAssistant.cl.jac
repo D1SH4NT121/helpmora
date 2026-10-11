@@ -26,7 +26,8 @@ def:pub AdaptiveAssistant(
         step1_confirmed: bool = False,
         step2_confirmed: bool = False,
         citizen_name: str = "Citizen (Anonymous)",
-        location_city: str = "Delhi NCR",
+        location_city: str = "",
+        user_overrode_location: bool = False,
         chat_user_text: str = "",
         chat_category: str = "",
         chat_household: int = 1,
@@ -498,7 +499,7 @@ def:pub AdaptiveAssistant(
                     <div style={{"display": "flex", "flexDirection": "column", "gap": "8px", "marginBottom": "20px"}}>
                         {(active_step > 1 or step1_confirmed or chat_connected) and <div onClick={lambda _e: MouseEvent { active_step = 1; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
-                            <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step1.replace(" (Current Step)", "") + " (" + citizen_name + " · " + location_city + ")"}</span>
+                            <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step1.replace(" (Current Step)", "") + " (" + citizen_name + (" · " + location_city if location_city else " · Location Not Stated") + ")"}</span>
                         </div>}
                         {active_step == 1 and (not step1_confirmed and not chat_connected) and <div style={{
                             "display": "flex",
@@ -664,8 +665,8 @@ def:pub AdaptiveAssistant(
                                 <input
                                     type="text"
                                     value={location_city}
-                                    onChange={lambda e: ChangeEvent { location_city = str(e.target.value); }}
-                                    placeholder="e.g. Delhi NCR"
+                                    onChange={lambda e: ChangeEvent { user_overrode_location = True; location_city = str(e.target.value); }}
+                                    placeholder="e.g. Delhi, Mumbai, Lucknow (optional)"
                                     style={{
                                         "width": "100%",
                                         "padding": "8px 12px",
@@ -681,10 +682,10 @@ def:pub AdaptiveAssistant(
                             </div>
                             <div style={{"display": "flex", "alignItems": "center", "gap": "6px", "flexWrap": "wrap"}}>
                                 <span style={{"fontSize": fs_xs, "color": txt_dim}}>{"Quick locations:"}</span>
-                                <button onClick={lambda _e: MouseEvent { location_city = "Delhi NCR"; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>Delhi</button>
-                                <button onClick={lambda _e: MouseEvent { location_city = "Mumbai, Maharashtra"; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>Mumbai</button>
-                                <button onClick={lambda _e: MouseEvent { location_city = "Uttar Pradesh"; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>UP</button>
-                                <button onClick={lambda _e: MouseEvent { location_city = "Bihar"; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>Bihar</button>
+                                <button onClick={lambda _e: MouseEvent { user_overrode_location = True; location_city = "Delhi NCR"; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>Delhi</button>
+                                <button onClick={lambda _e: MouseEvent { user_overrode_location = True; location_city = "Mumbai, Maharashtra"; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>Mumbai</button>
+                                <button onClick={lambda _e: MouseEvent { user_overrode_location = True; location_city = "Uttar Pradesh"; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>UP</button>
+                                <button onClick={lambda _e: MouseEvent { user_overrode_location = True; location_city = "Bihar"; }} style={{"padding": "3px 8px", "fontSize": fs_xs, "borderRadius": "6px", "background": "rgba(255,255,255,0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer"}}>Bihar</button>
                             </div>
                         </div>
                         <button
@@ -1041,7 +1042,7 @@ def:pub AdaptiveAssistant(
                         <ul style={{"margin": "0 0 16px 18px", "padding": "0", "fontSize": fs_sm, "color": txt_muted, "lineHeight": "1.7"}}>
                             <li>{"✓ Identity Proof: Aadhaar Card / Voter ID"}</li>
                             <li>{"✓ Income Verification: Pension passbook / Bank statement (" + voice_field_val + "/month verified)"}</li>
-                            <li>{"✓ Residence Proof: Tenancy agreement / Municipal electricity bill in " + location_city}</li>
+                            <li>{"✓ Residence Proof: Tenancy agreement / Municipal electricity bill (" + (location_city if location_city else "your district/state") + ")"}</li>
                             <li>{"✓ Relevant Case Records: Landlord notice / complaint letter"}</li>
                         </ul>
                         <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "flexWrap": "wrap"}}>
