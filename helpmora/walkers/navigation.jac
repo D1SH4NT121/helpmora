@@ -27,20 +27,39 @@ walker NavigationWalker {
         ts = datetime.datetime.utcnow().isoformat();
         plan = build_plan(list(self.ranked), self.urgency, self.language);
 
-        archived = 0;
-        for app in [here ->:applied_to:-> [?:ApplicationNode, status == "pending"]] {
-            setattr(app, "status", "archived");
-            setattr(app, "updated_at", ts);
-            archived += 1;
+        plan_agencies: list = [];
+        for step in plan["steps"] {
+            plan_agencies.append(str(step["agency_name"]));
         }
+
+        archived = 0;
+        # 1. Archive any ApplicationNodes not in the current plan so old topics don't pollute the new case
+        for app in [here ->:applied_to:-> [?:ApplicationNode, status != "archived"]] {
+            rname = str(app.resource_name);
+            if rname not in plan_agencies {
+                setattr(app, "status", "archived");
+                setattr(app, "updated_at", ts);
+                archived += 1;
+            }
+        }
+
+        # 2. For agencies in the current plan, avoid creating duplicate ApplicationNodes
+        existing_names: list = [];
+        for app in [here ->:applied_to:-> [?:ApplicationNode, status != "archived"]] {
+            existing_names.append(str(app.resource_name));
+        }
+
         for step in plan["steps"] {
             agency = str(step["agency_name"]);
-            here +>: applied_to() :+> ApplicationNode(
-                application_id=agency + "::" + ts,
-                status="pending",
-                resource_name=agency,
-                updated_at=ts
-            );
+            if agency not in existing_names {
+                here +>: applied_to() :+> ApplicationNode(
+                    application_id=agency + "::" + ts,
+                    status="pending",
+                    resource_name=agency,
+                    updated_at=ts
+                );
+                existing_names.append(agency);
+            }
         }
         span_end(self.trace, sp, {"helpmora.steps": len(plan["steps"]), "helpmora.archived": archived});
         self.summary = plan;

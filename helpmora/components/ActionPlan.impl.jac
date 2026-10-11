@@ -301,26 +301,40 @@ impl ActionPlan.loadPlan -> None {
         if res["reports"] and len(res["reports"]) > 0 {
             data: Any = res["reports"][0];
             all_steps: list = [];
-            approved_names: list = [];
-            pending_names: list = [];
-            denied_names: list = [];
-            approved_names = list(data["approved"]) if (data and ("approved" in data) and data["approved"]) else [];
-            pending_names = list(data["pending"]) if (data and ("pending" in data) and data["pending"]) else [];
-            denied_names = list(data["denied"]) if (data and ("denied" in data) and data["denied"]) else [];
+            approved_names: list = list(data["approved"]) if (data and ("approved" in data) and data["approved"]) else [];
+            pending_names: list = list(data["pending"]) if (data and ("pending" in data) and data["pending"]) else [];
+            denied_names: list = list(data["denied"]) if (data and ("denied" in data) and data["denied"]) else [];
+            
+            cur_done = 0;
+            seen_names: dict = {};
             for name in approved_names {
-                all_steps = all_steps + [{"name": name, "status": "approved"}];
-                done_count = done_count + 1;
+                n_str = str(name);
+                if not (n_str in seen_names) {
+                    seen_names[n_str] = True;
+                    all_steps = all_steps + [{"name": n_str, "status": "approved"}];
+                    cur_done = cur_done + 1;
+                }
             }
             for name in pending_names {
-                all_steps = all_steps + [{"name": name, "status": "pending"}];
+                n_str = str(name);
+                if not (n_str in seen_names) {
+                    seen_names[n_str] = True;
+                    all_steps = all_steps + [{"name": n_str, "status": "pending"}];
+                }
             }
             for name in denied_names {
-                all_steps = all_steps + [{"name": name, "status": "denied"}];
+                n_str = str(name);
+                if not (n_str in seen_names) {
+                    seen_names[n_str] = True;
+                    all_steps = all_steps + [{"name": n_str, "status": "denied"}];
+                }
             }
             steps = all_steps;
+            done_count = cur_done;
         }
     } except Exception as _ex {
         steps = [];
+        done_count = 0;
     }
     loading = False;
 }

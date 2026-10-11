@@ -40,7 +40,7 @@ def:pub ActionPlan(user_id: str, walker_events: list = []) -> JsxElement {
     def renderStep(s: Any, i: int) -> JsxElement;
 
     total = len(steps);
-    pct = (int(done_count / total * 100) if total > 0 else 0);
+    pct = (Math.min(100, Math.max(0, int(done_count / total * 100))) if total > 0 else 0);
 
 
     if loading {
