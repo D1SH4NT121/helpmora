@@ -131,9 +131,13 @@ def:pub GraphViz(walker_events: list, user_id: str = "") -> JsxElement {
                         {has_routes and renderRight(m)}
                     </div>}
                 </div>
-                <div className="gv-side" style={{"display": "flex", "flexDirection": "column", "gap": "18px", "overflowY": "auto", "maxHeight": "calc(100vh - 120px)"}}>
+                <div className="gv-side">
                     {renderDetail(m)}
-                    {renderLegend()}
+                    {not (selected if selected else hovered) and renderLegend()}
+                    {(selected if selected else hovered) and <details style={{"marginTop": "14px", "paddingTop": "12px", "borderTop": "0.5px solid rgba(255,255,255,0.08)", "fontSize": "11px"}}>
+                        <summary style={{"cursor": "pointer", "color": "rgba(255,255,255,0.55)", "fontWeight": "600"}}>{"How to read this graph ▸"}</summary>
+                        <div style={{"marginTop": "10px"}}>{renderLegend()}</div>
+                    </details>}
                 </div>
             </div>
         </div>;
