@@ -131,7 +131,7 @@ def:pub GraphViz(walker_events: list, user_id: str = "") -> JsxElement {
                         {has_routes and renderRight(m)}
                     </div>}
                 </div>
-                <div className="gv-side">
+                <div className="gv-side" style={{"display": "flex", "flexDirection": "column", "gap": "18px", "overflowY": "auto", "maxHeight": "calc(100vh - 120px)"}}>
                     {renderDetail(m)}
                     {renderLegend()}
                 </div>

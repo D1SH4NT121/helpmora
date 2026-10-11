@@ -457,7 +457,7 @@ impl GraphViz.renderDetail(m: dict) -> JsxElement {
     picked: Any = m["byid"][nid] if nid else None;
     if not picked {
         return
-            <div className="gv-detail" style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}>
+            <div className="gv-detail" style={{"display": "flex", "flexDirection": "column", "gap": "10px", "flexShrink": 0}}>
                 <div style={{"display": "flex", "alignItems": "center", "gap": "6px", "color": "#FFE500", "fontWeight": "700", "fontSize": "11px", "letterSpacing": "0.06em", "textTransform": "uppercase"}}>
                     <span>🔍</span>
                     <span>Workflow & Case Graph Guide</span>
@@ -508,7 +508,7 @@ impl GraphViz.renderDetail(m: dict) -> JsxElement {
     }
     score_pct = Math.round(Number(picked["p"]) * 100) if picked["p"] else 0;
     return
-        <div className="gv-detail">
+        <div className="gv-detail" style={{"flexShrink": 0, "minHeight": "min-content"}}>
             <div className="gv-detail-type" style={{"color": (ti["color"] if ti else "#FFE500"), "display": "flex", "alignItems": "center", "justifyContent": "space-between"}}>
                 <span>{kind + (" · " + t if schema else "")}</span>
                 {ti and <span style={{"background": "rgba(255,255,255,0.06)", "padding": "2px 6px", "borderRadius": "4px", "color": ti["color"]}}>{"Score: " + str(score_pct) + "%"}</span>}
@@ -534,7 +534,7 @@ impl GraphViz.renderDetail(m: dict) -> JsxElement {
 
 impl GraphViz.renderLegend -> JsxElement {
     return
-        <div className="gv-legend">
+        <div className="gv-legend" style={{"flexShrink": 0, "marginTop": "14px", "paddingTop": "14px", "borderTop": "0.5px solid rgba(255,255,255,0.08)"}}>
             <div className="gv-legend-title">How to read it</div>
             <div className="gv-legend-tiers">
                 {[<span key={k} className="gv-tier" style={{"--tier": GV_TIER[k]["color"]}}><span className="gv-tier-ico" aria-hidden="true">{GV_TIER[k]["icon"]}</span>{GV_TIER[k]["label"]}</span> for k in GV_TIER_ORDER]}
