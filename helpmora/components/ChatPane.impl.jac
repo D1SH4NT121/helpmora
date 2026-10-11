@@ -136,6 +136,14 @@ impl ChatPane.sendMessage(text_override: str = "", answering: str = "", display:
     }
     t0 = window.performance.now();
     res: Any = {"reports": [], "spawn_error": "couldn't sign in to the server"};
+    lz_task: Any = None;
+    if lyzr_mode and uid and jacIsLoggedIn() {
+        lz_task = safeSpawn("LyzrChatWalker", {
+            "message": user_text,
+            "user_id": (uid if uid else "futurexprime21@gmail.com"),
+            "session_id": ("lyzr-" + str(uid))
+        });
+    }
     if uid and jacIsLoggedIn() {
         res = await safeSpawn("IntakeWalker", {
             "conversation": user_text,
@@ -194,11 +202,16 @@ impl ChatPane.sendMessage(text_override: str = "", answering: str = "", display:
         narrations[bot_id] = {"status": "pending", "is_lyzr": True};
         narr_tick = Math.random();
         try {
-            lz_res = await safeSpawn("LyzrChatWalker", {
-                "message": user_text,
-                "user_id": (uid if uid else "futurexprime21@gmail.com"),
-                "session_id": ("lyzr-" + str(uid))
-            });
+            lz_res = None;
+            if lz_task {
+                lz_res = await lz_task;
+            } else {
+                lz_res = await safeSpawn("LyzrChatWalker", {
+                    "message": user_text,
+                    "user_id": (uid if uid else "futurexprime21@gmail.com"),
+                    "session_id": ("lyzr-" + str(uid))
+                });
+            }
             lz_reps = lz_res["reports"] if (lz_res and lz_res["reports"]) else [];
             if len(lz_reps) > 0 and lz_reps[0] and lz_reps[0]["ok"] and lz_reps[0]["response"] {
                 lz_text = str(lz_reps[0]["response"]).trim();
