@@ -281,6 +281,16 @@ impl ActionPlan.renderStep(s: Any, i: int) -> JsxElement {
 }
 
 impl ActionPlan.loadPlan -> None {
+    has_chat: bool = False;
+    try {
+        has_chat = bool(len(walker_events) > 0 or (sessionStorage.getItem("cm_chat_started") == "1"));
+    } except Exception as _ex {}
+    if not has_chat {
+        steps = [];
+        done_count = 0;
+        loading = False;
+        return;
+    }
     if not user_id or not jacIsLoggedIn() {
         loading = False;
         return;

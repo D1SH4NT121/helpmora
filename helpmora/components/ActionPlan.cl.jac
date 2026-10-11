@@ -78,10 +78,15 @@ def:pub ActionPlan(user_id: str, walker_events: list = []) -> JsxElement {
     def renderSessionContext -> JsxElement;
     def renderWalkerRow(w: dict) -> JsxElement;
 
-    if len(steps) == 0 {
+    has_chat: bool = False;
+    try {
+        has_chat = bool(len(walker_events) > 0 or (sessionStorage.getItem("cm_chat_started") == "1"));
+    } except Exception as _ex {}
+
+    if (not has_chat) or (len(steps) == 0) {
         # Branch A: chat ran this session AND it routed to EscalationWalker.
         # That's why no ApplicationNodes — show the user what happened.
-        if saw_chat and saw_escalation {
+        if has_chat and saw_chat and saw_escalation {
             return
                 <div style={{"display": "grid", "gridTemplateColumns": "1fr 280px", "gap": "16px"}}>
                     <div

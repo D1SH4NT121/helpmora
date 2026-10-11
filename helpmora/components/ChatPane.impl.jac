@@ -60,6 +60,9 @@ impl ChatPane.resetCase -> None {
     if on_walker_event {
         on_walker_event([]);
     }
+    if user_id and jacIsLoggedIn() {
+        await jacSpawn("ForgetWalker", "", {"user_id": user_id}).catch(lambda e: Any -> dict { return {"reports": []}; });
+    }
     messages = [{
         "role": "bot", "kind": "text", "id": "reset-" + str(Math.random()),
         "text": "New case started — nothing from the previous conversation is carried over. Tell me what's going on, and I'll find the welfare schemes you qualify for.",

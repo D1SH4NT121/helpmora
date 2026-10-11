@@ -344,7 +344,7 @@ def:pub ChatPane(
     def renderInterpreter(card: Any, open_default: bool) -> JsxElement;
     def renderLangPicker -> JsxElement;
     def renderLocal(loc: Any) -> JsxElement;
-    def resetCase -> None;
+    async def resetCase -> None;
     async def forgetMe -> None;
     def setPrivate(on: bool) -> None;
     def renderPrivacy -> JsxElement;
