@@ -294,9 +294,9 @@ impl ActionPlan.loadPlan -> None {
             approved_names: list = [];
             pending_names: list = [];
             denied_names: list = [];
-            try { approved_names = list(data["approved"]); } except Exception as _ex { approved_names = []; }
-            try { pending_names = list(data["pending"]); } except Exception as _ex { pending_names = []; }
-            try { denied_names = list(data["denied"]); } except Exception as _ex { denied_names = []; }
+            approved_names = list(data["approved"]) if (data and ("approved" in data) and data["approved"]) else [];
+            pending_names = list(data["pending"]) if (data and ("pending" in data) and data["pending"]) else [];
+            denied_names = list(data["denied"]) if (data and ("denied" in data) and data["denied"]) else [];
             for name in approved_names {
                 all_steps = all_steps + [{"name": name, "status": "approved"}];
                 done_count = done_count + 1;

@@ -716,7 +716,7 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
                         <div className="cm-muted cm-bubble-label">English original · same engine answer</div>
                         {renderRich(str(d["reply_en"]))}
                     </div>}
-                </div>
+                </div>}
                 {((not interp_tier) and foreign) and renderInterpreter(card, False)}
                 {len(facts) > 0 and <div className="cm-understood">
                     <span className="cm-muted">{L(ui, "ui.understood", "Understood")}</span>

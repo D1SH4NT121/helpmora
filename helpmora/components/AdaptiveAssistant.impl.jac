@@ -304,7 +304,7 @@ impl AdaptiveAssistant.confirmVoiceField -> None {
     try {
         window.eval("if (window._cm_speak) { window._cm_speak('Income of " + voice_field_val + " confirmed. Advancing to " + approved_program.replace("'", "") + " evaluation.'); }");
     } except Exception as _ex {}
-    runLiveAnalysis("My monthly income is " + voice_field_val + ". " + input_text);
+    runLiveAnalysis("My monthly income is " + voice_field_val + ". " + chat_user_text);
 }
 
 impl AdaptiveAssistant.triggerVoiceInput -> None {
