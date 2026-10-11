@@ -1,4 +1,4 @@
-﻿"""Async and walker-backed real-time logic for AdaptiveAssistant with accurate voice narration."""
+"""Async and walker-backed real-time logic for AdaptiveAssistant with accurate voice narration."""
 
 impl AdaptiveAssistant.syncFromChat -> None {
     has_chat: bool = False;
@@ -51,7 +51,7 @@ impl AdaptiveAssistant.syncFromChat -> None {
         }
 
         if not user_overrode_income and found_monthly >= 0 {
-            voice_field_val = "â‚¹" + f"{found_monthly:,}";
+            voice_field_val = "₹" + f"{found_monthly:,}";
         }
 
         # Household and children from profile or chat text
@@ -215,7 +215,7 @@ impl AdaptiveAssistant.runLiveAnalysis(text: str) -> None {
 
             prof: Any = cs["profile"] if cs["profile"] else {};
             if prof and prof["income"] {
-                voice_field_val = "â‚¹" + str(prof["income"]);
+                voice_field_val = "₹" + str(prof["income"]);
             }
 
             active_step = 5;
@@ -332,10 +332,10 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
                     window._cm_current_rec = window._cm_listen_field(
                         function(text) {
                             var stat = document.getElementById('cm-voice-live-status');
-                            if (stat) { stat.innerText = 'ðŸŽ™ï¸ Heard: "' + text + '"'; }
+                            if (stat) { stat.innerText = '🎙️ Heard: "' + text + '"'; }
                             var parsed = window._cm_parse_income ? window._cm_parse_income(text) : null;
                             if (parsed) {
-                                var formatted = 'â‚¹' + parsed.toLocaleString();
+                                var formatted = '₹' + parsed.toLocaleString();
                                 window._cm_manual_income = formatted;
                                 try { sessionStorage.setItem('cm_manual_income', formatted); } catch(se) {}
                                 var inp = document.getElementById('cm-voice-input');
@@ -349,7 +349,7 @@ impl AdaptiveAssistant.triggerVoiceInput -> None {
                                     inp.dispatchEvent(new Event('input', { bubbles: true }));
                                     inp.dispatchEvent(new Event('change', { bubbles: true }));
                                 }
-                                if (stat) { stat.innerText = 'âœ“ Recorded ' + formatted + ' (Heard: "' + text + '")'; }
+                                if (stat) { stat.innerText = '✓ Recorded ' + formatted + ' (Heard: "' + text + '")'; }
                                 if (window._cm_speak) {
                                     window._cm_speak('I recorded ' + parsed.toLocaleString() + ' rupees. Click confirm to save.');
                                 }
@@ -477,4 +477,3 @@ impl AdaptiveAssistant.togglePrivacy(kind: str) -> None {
         try { window.eval("if (window._cm_speak) { window._cm_speak('Raw voice retention " + state_str + ".'); }"); } except Exception as _e {}
     }
 }
-
