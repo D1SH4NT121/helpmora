@@ -749,7 +749,7 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
                     <span className="cm-hud-fast">{"⚡ " + fmtMs(trace["total_ms"]) + " engine"}</span>
                     <span>{("1 LLM call (routing)" if llm["sync_used"] else "0 LLM calls on the critical path")}</span>
                     {Number(msg["rtt_ms"]) > 0 and <span>{"round trip " + fmtMs(msg["rtt_ms"])}</span>}
-                    {(narr and narr["status"] == "ok" and narr["is_lyzr"]) and <span className="cm-hud-llm">{"🤖 HELPmora Assistant: " + fmtMs(narr["ms"])}</span>}
+                    {(narr and narr["status"] == "ok" and narr["is_lyzr"]) and <span className="cm-hud-llm">{"🤖 Helpmora (Lyzr Agent): " + fmtMs(narr["ms"])}</span>}
                     {(narr and narr["status"] == "ok" and not narr["is_lyzr"]) and <span className="cm-hud-llm">{"✦ narrated in " + fmtMs(narr["ms"]) + " · facts guard passed"}</span>}
                     {(narr and narr["status"] == "failed") and <span className="cm-muted" title={str(narr["error"] or "")}>{"LLM narration unavailable — engine answer shown"}</span>}
                     {(d["privacy"] and d["privacy"]["private_turn"]) and <span className="cm-hud-private">{"Not sent to any AI model"}</span>}
