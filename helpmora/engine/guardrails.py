@@ -90,6 +90,7 @@ OUT_OF_SCOPE_REGEX = [
     r"\b(?:movie|cricket|football|world cup|olympics|actor|actress|celebrity)\b",
     r"\b(?:weather in|temperature in|forecast)\b",
     r"\b(?:tallest building|highest mountain|longest river|fastest car)\b",
+    r"\b(?:output of ideas|brainstorm ideas|give me ideas)\b",
 ]
 
 
@@ -123,38 +124,43 @@ def is_out_of_context(text: str) -> bool:
     if clean_t in CONVERSATIONAL:
         return False
 
-    # 2. Intake follow-up answers (income numbers, family counts, age, Indian states/cities, citizenship)
+    # 2. Crisis cues and distress indicators must never be flagged as out-of-context
+    if re.search(r"\b(?:suicide|kill myself|end my life|die|dead|better off without me|burden|no reason to live|trapped|unbearable|disappear|husband hits me|hits me|abuse|abusive|violence|safe place|nowhere to stay|homeless|shelter|danger|scared|afraid|controls|hurts?)\b", t):
+        return False
+
+    # 3. Multilingual script or non-ASCII characters (Chinese, Vietnamese, Cyrillic, Arabic, accented Latin, Devanagari, Tamil, etc.)
+    if any(ord(c) > 127 for c in t):
+        return False
+
+    # 4. Intake follow-up answers (income numbers, family counts, age, Indian states/cities, citizenship)
     if re.search(r"(?:₹|rs\.?|inr|\$)\s*\d+|\b\d{1,7}\b", t):
         return False
     if re.search(r"\b(?:alone|single|myself|just me|live alone|\d+\s*(?:members?|people|kids|children)|family(?: of \d+)?|household(?: of \d+)?)\b", t):
         return False
     if re.search(r"\b(?:age\s*\d+|\d+\s*years?\s*old)\b", t):
         return False
-    if re.search(r"\b(?:delhi|mumbai|bangalore|bengaluru|kolkata|chennai|hyderabad|pune|lucknow|patna|bhopal|jaipur|uttar pradesh|bihar|maharashtra|karnataka|rajasthan|gujarat|punjab|haryana|mp|up)\b", t):
+    if re.search(r"\b(?:delhi|mumbai|bangalore|bengaluru|kolkata|chennai|hyderabad|pune|lucknow|patna|bhopal|jaipur|uttar pradesh|bihar|maharashtra|karnataka|rajasthan|gujarat|punjab|haryana|mp|up|texas|houston|dallas|illinois)\b", t):
         return False
     if re.search(r"\b(?:citizen|citizenship|indian|resident|aadhaar|aadhar|ration|rashan|documents?|no documents|refugee|immigrant)\b", t):
         return False
 
-    # 3. Check for presence of any in-scope welfare / legal / citizen assistance term
+    # 5. Check for presence of any in-scope welfare / legal / citizen assistance term
     has_welfare = any(re.search(rf"\b{re.escape(w)}\b", t) for w in IN_SCOPE_TERMS)
-
-    # 4. Check explicit out-of-scope patterns (trivia, coding, math, recipes, entertainment, etc.)
-    for pat in OUT_OF_SCOPE_REGEX:
-        if re.search(pat, t):
-            if not has_welfare:
-                return True
-
     if has_welfare:
         return False
 
-    # 5. Check encyclopedic questions without welfare context (e.g., "what is photosynthesis")
+    # 6. Check explicit out-of-scope patterns (trivia, coding, math, recipes, entertainment, etc.)
+    for pat in OUT_OF_SCOPE_REGEX:
+        if re.search(pat, t):
+            return True
+
+    # 7. Check encyclopedic questions without welfare context (e.g., "what is photosynthesis")
     if re.search(r"^(?:what|who|where|when|why|how)\s+(?:is|are|was|were|do|does|did)\s+(?:the\s+)?[a-z0-9\s]+[?]?$", t):
         return True
 
-    # 6. Check generic off-topic action requests
+    # 8. Check generic off-topic action requests
     if re.search(r"\b(?:birthday|party|cake|pizza|music|song|lyrics|joke|story|poem|poetry|essay|game|cricket|football|movie|actor|film)\b", t):
         return True
 
-    # 7. Queries with no welfare, legal, or intake content are out of context
-    return True
+    return False
 

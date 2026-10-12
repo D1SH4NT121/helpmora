@@ -103,7 +103,7 @@ def quiet_summary(profile: dict, lang: str, pending: str) -> dict {
             "reply": out_msg, "reply_language": "en", "reply_en": out_msg,
             "question": {"key": "need", "text": "What welfare or legal aid program do you need assistance with?", "affects": 0, "gain": 0.0, "affects_label": "", "options": []},
             "matches": [], "tiers": {"likely": 0, "possible": 0, "needs_info": 0, "unlikely": 0}, "near_misses": [],
-            "plan": {"steps": []}, "routes": [], "escalation": {}, "chips": ["Food rations", "Housing schemes", "Ayushman Bharat", "Free legal aid"], "chip_labels": [],
+            "plan": {"steps": []}, "routes": [], "escalation": {}, "chips": [], "chip_labels": [],
             "ui": ui_labels(ui_lang), "facts": ""
         };
     }

@@ -890,7 +890,10 @@ def parse_intake(text: str) -> dict {
     # without guessing a need).
     revert_intent = is_revert_intent(raw);
     small_talk = is_small_talk(raw) or revert_intent;
-    out_of_context = is_out_of_context(raw) and not small_talk and not revert_intent;
+    out_of_context = False;
+    if not top_cat and not flags and not small_talk and not revert_intent {
+        out_of_context = is_out_of_context(raw);
+    }
     if out_of_context {
         top_cat = "";
         secondary = [];
