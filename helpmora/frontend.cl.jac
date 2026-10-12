@@ -72,6 +72,14 @@ def:pub ClientApp -> JsxElement {
     def renderPalette -> JsxElement;
 
     can with entry {
+        try {
+            document.title = "HELPmora";
+            icon_link = document.querySelector("link[rel*='icon']");
+            if icon_link {
+                icon_link.href = "/favicon.svg";
+            }
+        } except Exception as _ex {}
+
         # Run initAuth once on mount: it migrates browsers still holding the
         # old shared demo token onto their own visitor account.
         if not auth_ready {

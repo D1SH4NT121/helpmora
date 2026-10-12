@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="64" height="64">
+  <defs>
+    <linearGradient id="thread_grad" x1="34" y1="154" x2="174" y2="62" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0B132B"/>
+      <stop offset="25%" stop-color="#034B75"/>
+      <stop offset="50%" stop-color="#0C847A"/>
+      <stop offset="75%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <linearGradient id="beacon_grad" x1="165" y1="49" x2="183" y2="67" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="200" height="200" rx="44" fill="#0A0E1A"/>
+  <g opacity="0.45">
+    <line x1="48" y1="72" x2="48" y2="134" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="48" y1="102" x2="152" y2="102" stroke="#38BDF8" stroke-width="2.8" stroke-linecap="round" stroke-dasharray="4 4"/>
+    <line x1="152" y1="72" x2="152" y2="130" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  <path d="M 34,154 C 44,154 48,148 48,134 L 48,72 C 48,46 72,46 80,66 L 86,110 C 92,122 108,122 114,110 L 120,66 C 128,46 152,46 152,72 L 152,130 C 152,154 174,148 174,114 L 174,62" fill="none" stroke="url(#thread_grad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="34" cy="154" r="14" fill="rgba(12, 132, 122, 0.25)"/>
+  <circle cx="34" cy="154" r="6" fill="#0B132B" stroke="#034B75" stroke-width="1.5"/>
+  <circle cx="34" cy="154" r="2.5" fill="#FFFFFF"/>
+  <circle cx="48" cy="102" r="5" fill="#0C847A" stroke="#0B132B" stroke-width="1"/>
+  <circle cx="48" cy="102" r="2" fill="#FFFFFF"/>
+  <circle cx="86" cy="110" r="5" fill="#0C847A" stroke="#0B132B" stroke-width="1"/>
+  <circle cx="86" cy="110" r="2" fill="#FFFFFF"/>
+  <circle cx="114" cy="110" r="5" fill="#059669" stroke="#0B132B" stroke-width="1"/>
+  <circle cx="114" cy="110" r="2" fill="#FFFFFF"/>
+  <circle cx="152" cy="102" r="5" fill="#10B981" stroke="#0B132B" stroke-width="1"/>
+  <circle cx="152" cy="102" r="2" fill="#FFFFFF"/>
+  <circle cx="166" cy="140" r="5" fill="#10B981" stroke="#0B132B" stroke-width="1"/>
+  <circle cx="166" cy="140" r="2" fill="#FFFFFF"/>
+  <circle cx="174" cy="58" r="16" fill="rgba(245, 158, 11, 0.28)" filter="url(#glow)"/>
+  <circle cx="174" cy="58" r="9" fill="url(#beacon_grad)" stroke="#FFFFFF" stroke-width="1.5"/>
+  <circle cx="174" cy="58" r="3.5" fill="#FFFBEB"/>
+  <path d="M 170.5,58 L 173,60.5 L 177.5,55.5" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
