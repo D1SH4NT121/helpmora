@@ -17,6 +17,9 @@ mkdir -p "$OUT/engine" "$OUT/tests"
 for f in engine/*.jac; do
   jac jac2py "$f" > "$OUT/engine/$(basename "$f" .jac).py"
 done
+for f in engine/*.py; do
+  [ -f "$f" ] && cp "$f" "$OUT/engine/"
+done
 jac jac2py tests/eval_engine.jac > "$OUT/tests/eval_engine.py"
 if grep -rn "jaclang" "$OUT"; then
   echo "ejected code still imports jaclang" >&2
