@@ -88,7 +88,10 @@ def query_lyzr_agent(message: str, user_id: str = "futurexprime21@gmail.com", se
 
     # 0. Intercept greetings with a welcoming message and overview of capabilities
     try:
-        from helpmora.engine.guardrails import is_greeting, GREETING_WELCOME_REPLY
+        try:
+            from engine.guardrails import is_greeting, GREETING_WELCOME_REPLY
+        except ImportError:
+            from helpmora.engine.guardrails import is_greeting, GREETING_WELCOME_REPLY
         if is_greeting(msg_clean):
             return {
                 "ok": True,
@@ -104,7 +107,10 @@ def query_lyzr_agent(message: str, user_id: str = "futurexprime21@gmail.com", se
 
     # 0b. Intercept revert / step back / change requests
     try:
-        from helpmora.engine.guardrails import is_revert_intent, REVERT_WELCOME_REPLY
+        try:
+            from engine.guardrails import is_revert_intent, REVERT_WELCOME_REPLY
+        except ImportError:
+            from helpmora.engine.guardrails import is_revert_intent, REVERT_WELCOME_REPLY
         if is_revert_intent(msg_clean):
             return {
                 "ok": True,
@@ -120,7 +126,10 @@ def query_lyzr_agent(message: str, user_id: str = "futurexprime21@gmail.com", se
 
     # 1. Intercept out-of-context queries
     try:
-        from helpmora.engine.guardrails import is_out_of_context, OUT_OF_CONTEXT_REPLY
+        try:
+            from engine.guardrails import is_out_of_context, OUT_OF_CONTEXT_REPLY
+        except ImportError:
+            from helpmora.engine.guardrails import is_out_of_context, OUT_OF_CONTEXT_REPLY
         if is_out_of_context(msg_clean):
             return {
                 "ok": True,

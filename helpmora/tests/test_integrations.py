@@ -426,10 +426,16 @@ class TestIntegrations(unittest.TestCase):
 
     # 6. Domain Context Guardrail
     def test_out_of_context_guardrail(self):
-        from helpmora.engine.guardrails import (
-            is_out_of_context, is_greeting, OUT_OF_CONTEXT_REPLY, GREETING_WELCOME_REPLY
-        )
-        from helpmora.integrations.lyzr.chat import query_lyzr_agent
+        try:
+            from engine.guardrails import (
+                is_out_of_context, is_greeting, OUT_OF_CONTEXT_REPLY, GREETING_WELCOME_REPLY
+            )
+            from integrations.lyzr.chat import query_lyzr_agent
+        except ImportError:
+            from helpmora.engine.guardrails import (
+                is_out_of_context, is_greeting, OUT_OF_CONTEXT_REPLY, GREETING_WELCOME_REPLY
+            )
+            from helpmora.integrations.lyzr.chat import query_lyzr_agent
 
         # Out-of-context trivia and non-welfare requests must be flagged
         self.assertTrue(is_out_of_context("what is the capital of india"))
