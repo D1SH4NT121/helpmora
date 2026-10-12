@@ -94,6 +94,47 @@ def:pub ChatPane(
                     baseText: '',
                     accumulatedText: '',
                     _rafId: null,
+                    _isVoiceUpdating: false,
+                    _ignoreUntilRestart: false,
+                    _editRestartTimer: null,
+
+                    syncUserEdit: function(text) {
+                        if (window._cm_voice_bridge._isVoiceUpdating) return;
+                        var cleanText = (text !== undefined && text !== null) ? String(text) : '';
+                        window._cm_voice_bridge.baseText = cleanText;
+                        window._cm_voice_bridge.accumulatedText = '';
+
+                        if (window._cm_voice_bridge.isListening) {
+                            var trimmed = cleanText.trim();
+                            var statusMsg = trimmed ? ('Hearing live: "' + trimmed + '"') : ('🔴 Listening live (' + (window._cm_voice_bridge.currentLang || 'en-IN') + ')... Speak now');
+                            window._cm_voice_bridge.status = statusMsg;
+                            if (window._cm_on_voice_status) {
+                                window._cm_on_voice_status(statusMsg, true);
+                            }
+
+                            // Discard any audio events already in flight from before the user edit
+                            window._cm_voice_bridge._ignoreUntilRestart = true;
+
+                            // Debounce a clean restart of speech recognition so user edit is the firm base
+                            if (window._cm_voice_bridge._editRestartTimer) {
+                                clearTimeout(window._cm_voice_bridge._editRestartTimer);
+                            }
+                            window._cm_voice_bridge._editRestartTimer = setTimeout(function() {
+                                window._cm_voice_bridge._editRestartTimer = null;
+                                if (window._cm_voice_bridge.isListening && window._cm_voice_bridge.userActive) {
+                                    try {
+                                        if (window._cm_voice_bridge.rec) {
+                                            window._cm_voice_bridge.rec.abort();
+                                        } else {
+                                            window._cm_voice_bridge.runInstance();
+                                        }
+                                    } catch(e) {
+                                        try { window._cm_voice_bridge.runInstance(); } catch(e2) {}
+                                    }
+                                }
+                            }, 180);
+                        }
+                    },
 
                     runInstance: function() {
                         var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -117,14 +158,17 @@ def:pub ChatPane(
 
                             rec.onstart = function() {
                                 window._cm_voice_bridge.isListening = true;
+                                window._cm_voice_bridge._ignoreUntilRestart = false;
                                 var langLabel = window._cm_voice_bridge.currentLang || 'en-IN';
-                                var msg = '🔴 Listening live (' + langLabel + ')... Speak now';
+                                var inputEl = document.querySelector('.cm-input');
+                                var curVal = (inputEl && inputEl.value) ? inputEl.value.trim() : '';
+                                var msg = curVal ? ('Hearing live: "' + curVal + '"') : ('🔴 Listening live (' + langLabel + ')... Speak now');
                                 window._cm_voice_bridge.status = msg;
                                 if (window._cm_on_voice_status) { window._cm_on_voice_status(msg, true); }
                             };
 
                             rec.onresult = function(event) {
-                                if (!window._cm_voice_bridge.userActive) return;
+                                if (!window._cm_voice_bridge.userActive || window._cm_voice_bridge._ignoreUntilRestart) return;
                                 var interim = '';
                                 var finals = '';
                                 for (var i = event.resultIndex; i < event.results.length; ++i) {
@@ -139,10 +183,20 @@ def:pub ChatPane(
                                     window._cm_voice_bridge.accumulatedText += finals;
                                 }
                                 var base = window._cm_voice_bridge.baseText || '';
-                                var full = (base ? (base + ' ') : '') + window._cm_voice_bridge.accumulatedText + interim;
-                                full = full.replace(/\s+/g, ' ').trim();
+                                var speech = (window._cm_voice_bridge.accumulatedText + interim).replace(/\s+/g, ' ');
+                                var full = '';
+                                if (base && speech) {
+                                    var baseTrim = base.trim();
+                                    var speechTrim = speech.trim();
+                                    full = baseTrim ? (baseTrim + ' ' + speechTrim) : speechTrim;
+                                } else if (base) {
+                                    full = base;
+                                } else {
+                                    full = speech.trim();
+                                }
 
-                                if (full) {
+                                if (full !== undefined) {
+                                    window._cm_voice_bridge._isVoiceUpdating = true;
                                     // Instantly update DOM input element with zero delay
                                     var inputEl = document.querySelector('.cm-input');
                                     if (inputEl) {
@@ -164,9 +218,10 @@ def:pub ChatPane(
                                         });
                                     }
 
-                                    var statusText = 'Hearing live: "' + full + '"';
+                                    var statusText = full ? ('Hearing live: "' + full + '"') : ('🔴 Listening live...');
                                     window._cm_voice_bridge.status = statusText;
                                     if (window._cm_on_voice_status) { window._cm_on_voice_status(statusText, true); }
+                                    window._cm_voice_bridge._isVoiceUpdating = false;
                                 }
                             };
 
@@ -207,19 +262,27 @@ def:pub ChatPane(
 
                             rec.onend = function() {
                                 if (window._cm_voice_bridge.userActive) {
+                                    if (window._cm_voice_bridge._editRestartTimer) {
+                                        return;
+                                    }
                                     try {
                                         window._cm_voice_bridge.rec.start();
                                     } catch(e) {
                                         setTimeout(function() {
-                                            if (window._cm_voice_bridge.userActive) {
+                                            if (window._cm_voice_bridge.userActive && !window._cm_voice_bridge._editRestartTimer) {
                                                 try { window._cm_voice_bridge.runInstance(); } catch(e2) {}
                                             }
-                                        }, 15);
+                                        }, 25);
                                     }
                                 } else {
                                     window._cm_voice_bridge.isListening = false;
                                     window._cm_voice_bridge.baseText = '';
                                     window._cm_voice_bridge.accumulatedText = '';
+                                    window._cm_voice_bridge._ignoreUntilRestart = false;
+                                    if (window._cm_voice_bridge._editRestartTimer) {
+                                        clearTimeout(window._cm_voice_bridge._editRestartTimer);
+                                        window._cm_voice_bridge._editRestartTimer = null;
+                                    }
                                     if (window._cm_on_voice_status) { window._cm_on_voice_status('', false); }
                                 }
                             };
@@ -275,12 +338,26 @@ def:pub ChatPane(
                         window._cm_voice_bridge.currentLang = speechLang;
                         window._cm_voice_bridge.userActive = true;
                         window._cm_voice_bridge.isListening = true;
+                        window._cm_voice_bridge._ignoreUntilRestart = false;
                         window._cm_voice_bridge.accumulatedText = '';
                         var inputEl = document.querySelector('.cm-input');
                         window._cm_voice_bridge.baseText = (inputEl && inputEl.value) ? inputEl.value : '';
-                        window._cm_voice_bridge.status = '🔴 Listening live (' + speechLang + ')... Speak now';
+
+                        if (inputEl && !inputEl._cmVoiceSynced) {
+                            inputEl._cmVoiceSynced = true;
+                            var onInputSync = function(e) {
+                                if (window._cm_voice_bridge && window._cm_voice_bridge.syncUserEdit) {
+                                    window._cm_voice_bridge.syncUserEdit(e.target.value);
+                                }
+                            };
+                            inputEl.addEventListener('input', onInputSync);
+                            inputEl.addEventListener('change', onInputSync);
+                        }
+
+                        var startMsg = window._cm_voice_bridge.baseText.trim() ? ('Hearing live: "' + window._cm_voice_bridge.baseText.trim() + '"') : ('🔴 Listening live (' + speechLang + ')... Speak now');
+                        window._cm_voice_bridge.status = startMsg;
                         if (window._cm_on_voice_status) {
-                            window._cm_on_voice_status('🔴 Listening live (' + speechLang + ')... Speak now', true);
+                            window._cm_on_voice_status(startMsg, true);
                         }
                         return window._cm_voice_bridge.runInstance();
                     },
@@ -288,6 +365,11 @@ def:pub ChatPane(
                     stop: function() {
                         window._cm_voice_bridge.userActive = false;
                         window._cm_voice_bridge.isListening = false;
+                        window._cm_voice_bridge._ignoreUntilRestart = false;
+                        if (window._cm_voice_bridge._editRestartTimer) {
+                            clearTimeout(window._cm_voice_bridge._editRestartTimer);
+                            window._cm_voice_bridge._editRestartTimer = null;
+                        }
                         window._cm_voice_bridge.baseText = '';
                         window._cm_voice_bridge.accumulatedText = '';
                         window._cm_voice_bridge.status = '';
@@ -514,7 +596,14 @@ def:pub ChatPane(
                     <input
                         aria-label="Your message"
                         value={input_val}
-                        onChange={lambda e: ChangeEvent { input_val = e.target.value; }}
+                        onChange={lambda e: ChangeEvent {
+                            input_val = e.target.value;
+                            try {
+                                if window._cm_voice_bridge {
+                                    window._cm_voice_bridge.syncUserEdit(e.target.value);
+                                }
+                            } except Exception as _ve {}
+                        }}
                         onKeyDown={lambda e: KeyboardEvent {
                             if e.key == "Enter" { sendMessage(); }
                         }}
