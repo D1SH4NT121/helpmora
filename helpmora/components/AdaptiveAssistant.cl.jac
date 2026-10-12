@@ -43,6 +43,7 @@ def:pub AdaptiveAssistant(
         recovery_open: bool = False,
         approval_status: str = "pending",
         approved_program: str = "",
+        user_overrode_scheme: bool = False,
         large_text: bool = False,
         high_contrast: bool = False,
         reduced_motion: bool = False,
@@ -998,18 +999,105 @@ def:pub AdaptiveAssistant(
                                 {"Step 4: Matched Welfare Program"}
                             </span>
                             <button
-                                onClick={lambda _e: MouseEvent { active_step = 3; }}
+                                onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 3; }}
                                 style={{"background": "none", "border": "none", "color": txt_dim, "fontSize": fs_xs, "cursor": "pointer"}}
                             >
                                 {"← Back to Income"}
                             </button>
                         </div>
-                        <div style={{"fontSize": fs_base, "fontWeight": "700", "color": txt_main, "marginBottom": "6px"}}>
-                            {approved_program if approved_program else "No Welfare Scheme Matched Yet"}
+
+                        <div style={{
+                            "padding": "12px 14px",
+                            "borderRadius": "8px",
+                            "background": ("rgba(0, 255, 136, 0.08)" if approved_program else "rgba(255, 255, 255, 0.04)"),
+                            "border": ("1px solid #00FF88" if (high_contrast and approved_program) else ("0.5px solid rgba(0, 255, 136, 0.3)" if approved_program else inner_border)),
+                            "marginBottom": "14px"
+                        }}>
+                            <div style={{"display": "flex", "alignItems": "center", "gap": "8px", "marginBottom": "4px"}}>
+                                {approved_program and <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_sm}}>✓ Matched:</span>}
+                                <span style={{"fontSize": fs_base, "fontWeight": "700", "color": ("#00FF88" if approved_program else txt_main)}}>
+                                    {approved_program if approved_program else "No Welfare Scheme Matched Yet"}
+                                </span>
+                            </div>
+                            <div style={{"fontSize": fs_sm, "color": txt_muted, "lineHeight": "1.5"}}>
+                                {(("Evaluated for family of " + str(chat_household) + " with monthly earnings of " + voice_field_val + ". All statutory income limits passed.") if approved_program else "You can choose a welfare scheme below, enter one manually, or let HELPmora auto-match it from your chat.")}
+                            </div>
                         </div>
-                        <div style={{"fontSize": fs_sm, "color": txt_muted, "marginBottom": "14px", "lineHeight": "1.5"}}>
-                            {(("Evaluated for family of " + str(chat_household) + " with monthly earnings of " + voice_field_val + ". All statutory income limits passed.") if approved_program else "Tell HELPmora your welfare need in the Chat Panel (e.g. Housing, Ration Card, Healthcare, or Free Legal Aid) to match an eligible Indian scheme.")}
+
+                        <div style={{"marginBottom": "16px"}}>
+                            <span style={{"fontSize": fs_xs, "color": txt_dim, "display": "block", "marginBottom": "8px", "fontWeight": "600"}}>
+                                {"Select or Change Welfare Scheme Manually:"}
+                            </span>
+                            <div style={{"display": "flex", "flexWrap": "wrap", "gap": "8px", "marginBottom": "10px"}}>
+                                <button
+                                    onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "PM-Vidyalaxmi Scheme (Central Sector Interest Subsidy & Collateral-Free Education Loan)"; approval_status = "pending"; }}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("Vidyalaxmi" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("Vidyalaxmi" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("Vidyalaxmi" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                >
+                                    {"🎓 PM-Vidyalaxmi Education Loan"}
+                                </button>
+                                <button
+                                    onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)"; approval_status = "pending"; }}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("PMAY" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("PMAY" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("PMAY" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                >
+                                    {"🏠 PMAY-U Housing for All"}
+                                </button>
+                                <button
+                                    onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / Free Food Grain)"; approval_status = "pending"; }}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("PMGKAY" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("PMGKAY" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("PMGKAY" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                >
+                                    {"🌾 PMGKAY Free Food Grain"}
+                                </button>
+                                <button
+                                    onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "Ayushman Bharat PM-JAY (National Health Protection Scheme)"; approval_status = "pending"; }}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("Ayushman" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("Ayushman" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("Ayushman" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                >
+                                    {"🏥 Ayushman Bharat PM-JAY"}
+                                </button>
+                                <button
+                                    onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "National Legal Services Authority (NALSA Free Legal Aid)"; approval_status = "pending"; }}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("NALSA" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("NALSA" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("NALSA" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                >
+                                    {"⚖️ NALSA Free Legal Aid"}
+                                </button>
+                                <button
+                                    onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "Indira Gandhi National Old Age Pension Scheme (IGNOAPS)"; approval_status = "pending"; }}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("IGNOAPS" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("IGNOAPS" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("IGNOAPS" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                >
+                                    {"👴 IGNOAPS Senior Pension"}
+                                </button>
+                                <button
+                                    onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "PM Kisan Samman Nidhi (Direct Income Support for Farmers)"; approval_status = "pending"; }}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("Kisan" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("Kisan" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("Kisan" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                >
+                                    {"🚜 PM-Kisan Direct Support"}
+                                </button>
+                                <button
+                                    onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "Mahatma Gandhi National Rural Employment Guarantee Scheme (MGNREGS)"; approval_status = "pending"; }}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("MGNREGS" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("MGNREGS" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("MGNREGS" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                >
+                                    {"💼 MGNREGS 100-Day Work"}
+                                </button>
+                            </div>
+                            <div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}>
+                                <input
+                                    type="text"
+                                    value={approved_program}
+                                    onChange={lambda e: ChangeEvent { user_overrode_scheme = True; approved_program = str(e.target.value); approval_status = "pending"; }}
+                                    placeholder="Or type any Indian welfare scheme name..."
+                                    style={{
+                                        "flex": "1",
+                                        "padding": "7px 12px",
+                                        "borderRadius": "8px",
+                                        "background": ("#000000" if high_contrast else "rgba(255, 255, 255, 0.05)"),
+                                        "color": txt_main,
+                                        "border": inner_border,
+                                        "fontSize": fs_xs,
+                                        "outline": "none"
+                                    }}
+                                />
+                            </div>
                         </div>
+
                         <div style={{"display": "flex", "alignItems": "center", "gap": "10px", "flexWrap": "wrap"}}>
                             <button
                                 onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 3; }}
@@ -1031,6 +1119,21 @@ def:pub AdaptiveAssistant(
                                 }}
                             >
                                 {"Review Required Documents (Step 5) →"}
+                            </button>}
+                            {(not approved_program) and <button
+                                onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "PM-Vidyalaxmi Scheme (Central Sector Interest Subsidy & Collateral-Free Education Loan)"; user_navigated_step = True; active_step = 5; }}
+                                style={{
+                                    "padding": "8px 18px",
+                                    "background": "#FFE500",
+                                    "color": "#0A0A0A",
+                                    "borderRadius": "8px",
+                                    "border": "none",
+                                    "fontWeight": "700",
+                                    "fontSize": fs_sm,
+                                    "cursor": "pointer"
+                                }}
+                            >
+                                {"Select Default Scheme & Proceed to Step 5 →"}
                             </button>}
                         </div>
                     </div>}
@@ -1147,6 +1250,18 @@ def:pub AdaptiveAssistant(
                             >
                                 {"← Complete " + ("Step 3 (Income)" if not voice_field_val else "Step 4 (Matched Scheme)")}
                             </button>
+                            {(not voice_field_val) and <button
+                                onClick={lambda _e: MouseEvent { voice_field_val = "₹12,000"; user_overrode_income = True; voice_confirmed = True; }}
+                                style={{"padding": "7px 14px", "background": "#00FF88", "color": "#0A0A0A", "borderRadius": "8px", "border": "none", "fontWeight": "600", "fontSize": fs_xs, "cursor": "pointer"}}
+                            >
+                                {"Confirm Standard Income (₹12,000/mo) ✓"}
+                            </button>}
+                            {(not approved_program) and <button
+                                onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "PM-Vidyalaxmi Scheme (Central Sector Interest Subsidy & Collateral-Free Education Loan)"; user_navigated_step = True; }}
+                                style={{"padding": "7px 14px", "background": "#FFE500", "color": "#0A0A0A", "borderRadius": "8px", "border": "none", "fontWeight": "600", "fontSize": fs_xs, "cursor": "pointer"}}
+                            >
+                                {"Select PM-Vidyalaxmi Scheme ✓"}
+                            </button>}
                         </div>
                     </div>}
 

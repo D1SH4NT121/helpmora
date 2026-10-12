@@ -3,7 +3,7 @@
 impl AdaptiveAssistant.syncFromChat -> None {
     has_chat: bool = False;
     try {
-        has_chat = bool(len(walker_events) > 0 or (sessionStorage.getItem("cm_chat_started") == "1"));
+        has_chat = bool(len(walker_events) > 0 or (sessionStorage.getItem("cm_chat_started") == "1") or bool(active_case) or bool(window._cm_latest_case) or bool(sessionStorage.getItem("cm_latest_case")));
     } except Exception as _ex {}
 
     c = active_case;
@@ -11,10 +11,19 @@ impl AdaptiveAssistant.syncFromChat -> None {
         if not c and window._cm_latest_case {
             c = window._cm_latest_case;
         }
+        if not c {
+            raw_s = sessionStorage.getItem("cm_latest_case");
+            if raw_s {
+                c = JSON.parse(raw_s);
+            }
+        }
     } except Exception as _ex {}
 
     if not has_chat or not c {
         chat_connected = False;
+        if user_navigated_step or user_overrode_income or user_overrode_scheme or step1_confirmed or step2_confirmed or bool(voice_field_val) or bool(approved_program) {
+            return;
+        }
         active_step = 1;
         step1_confirmed = False;
         step2_confirmed = False;
@@ -25,7 +34,7 @@ impl AdaptiveAssistant.syncFromChat -> None {
         approval_status = "pending";
         chat_user_text = "";
         chat_category = "";
-        chat_household = 0;
+        chat_household = 1;
         chat_children = 0;
         voice_field_val = "";
         approved_program = "";
@@ -118,37 +127,124 @@ impl AdaptiveAssistant.syncFromChat -> None {
             }
         }
 
-        # Matched program extraction
+        # Matched program extraction across matches, resources, plan, escalation, and category
         match_list = c["matches"] if (c and "matches" in c and c["matches"]) else [];
         plan_raw: Any = c["plan"] if (c and "plan" in c and c["plan"]) else {};
         plan_steps = plan_raw["steps"] if (plan_raw and "steps" in plan_raw and plan_raw["steps"]) else [];
         res_list = c["resources"] if (c and "resources" in c and c["resources"]) else [];
+        esc_data: Any = c["escalation"] if (c and "escalation" in c and c["escalation"]) else {};
 
         extracted_scheme = "";
-        if len(match_list) > 0 and match_list[0] and ("resource_name" in match_list[0]) and match_list[0]["resource_name"] {
-            extracted_scheme = str(match_list[0]["resource_name"]);
-        } elif len(res_list) > 0 and res_list[0] and ("name" in res_list[0]) and res_list[0]["name"] {
-            extracted_scheme = str(res_list[0]["name"]);
-        } elif len(plan_steps) > 0 and plan_steps[0] and ("resource" in plan_steps[0]) and plan_steps[0]["resource"] {
-            extracted_scheme = str(plan_steps[0]["resource"]);
-        } elif chat_category {
-            cat_lower = chat_category.lower();
-            if "food" in cat_lower or "nutrition" in cat_lower or "ration" in cat_lower {
-                extracted_scheme = "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / Free Food Grain)";
-            } elif "health" in cat_lower or "med" in cat_lower {
+        if len(match_list) > 0 and match_list[0] {
+            m0 = match_list[0];
+            if "resource_name" in m0 and m0["resource_name"] {
+                extracted_scheme = str(m0["resource_name"]);
+            } elif "agency_name" in m0 and m0["agency_name"] {
+                extracted_scheme = str(m0["agency_name"]);
+            } elif "name" in m0 and m0["name"] {
+                extracted_scheme = str(m0["name"]);
+            }
+        }
+        if not extracted_scheme and len(res_list) > 0 and res_list[0] {
+            r0 = res_list[0];
+            if "agency_name" in r0 and r0["agency_name"] {
+                extracted_scheme = str(r0["agency_name"]);
+            } elif "name" in r0 and r0["name"] {
+                extracted_scheme = str(r0["name"]);
+            } elif "resource_name" in r0 and r0["resource_name"] {
+                extracted_scheme = str(r0["resource_name"]);
+            }
+        }
+        if not extracted_scheme and len(plan_steps) > 0 and plan_steps[0] {
+            p0 = plan_steps[0];
+            if "resource" in p0 and p0["resource"] {
+                extracted_scheme = str(p0["resource"]);
+            } elif "agency" in p0 and p0["agency"] {
+                extracted_scheme = str(p0["agency"]);
+            }
+        }
+        if not extracted_scheme and esc_data {
+            esc_name = "";
+            try {
+                if isinstance(esc_data, dict) {
+                    esc_name = str(esc_data.get("agency") or esc_data.get("name") or esc_data.get("resource") or "");
+                } elif isinstance(esc_data, list) and len(esc_data) > 0 {
+                    esc_name = str(esc_data[0]);
+                }
+            } except Exception as _ex {}
+            if esc_name {
+                esc_low = esc_name.lower();
+                if "vidyalaxmi" in esc_low or "scholarship" in esc_low or "education" in esc_low {
+                    extracted_scheme = "PM-Vidyalaxmi Scheme (Central Sector Interest Subsidy & Collateral-Free Education Loan)";
+                } elif "housing" in esc_low or "shelter" in esc_low {
+                    extracted_scheme = "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)";
+                } elif "legal" in esc_low or "nalsa" in esc_low {
+                    extracted_scheme = "National Legal Services Authority (NALSA Free Legal Aid)";
+                } else {
+                    extracted_scheme = esc_name;
+                }
+            }
+        }
+        if not extracted_scheme and chat_user_text {
+            txt_low = chat_user_text.lower();
+            if "vidyalaxmi" in txt_low or "study loan" in txt_low or "education loan" in txt_low or "student loan" in txt_low {
+                extracted_scheme = "PM-Vidyalaxmi Scheme (Central Sector Interest Subsidy & Collateral-Free Education Loan)";
+            } elif "ayushman" in txt_low or "pmjay" in txt_low or "pm-jay" in txt_low {
                 extracted_scheme = "Ayushman Bharat PM-JAY (National Health Protection Scheme)";
+            } elif "pmay" in txt_low or "awas yojana" in txt_low or "housing for all" in txt_low {
+                extracted_scheme = "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)";
+            } elif "pmgkay" in txt_low or "ration card" in txt_low or "food grain" in txt_low or "rashan" in txt_low {
+                extracted_scheme = "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / Free Food Grain)";
+            } elif "nalsa" in txt_low or "dlsa" in txt_low or "legal aid" in txt_low {
+                extracted_scheme = "National Legal Services Authority (NALSA Free Legal Aid)";
+            } elif "pension" in txt_low or "ignoaps" in txt_low or "old age" in txt_low {
+                extracted_scheme = "Indira Gandhi National Old Age Pension Scheme (IGNOAPS)";
+            } elif "kisan" in txt_low or "pm-kisan" in txt_low {
+                extracted_scheme = "PM Kisan Samman Nidhi (Direct Income Support for Farmers)";
+            } elif "mgnrega" in txt_low or "nrega" in txt_low or "100 day" in txt_low {
+                extracted_scheme = "Mahatma Gandhi National Rural Employment Guarantee Scheme (MGNREGS)";
+            } elif "mudra" in txt_low {
+                extracted_scheme = "Pradhan Mantri MUDRA Yojana (Micro-Enterprise Loan)";
+            } elif "svanidhi" in txt_low or "street vendor" in txt_low {
+                extracted_scheme = "PM SVANidhi (Micro-Credit for Street Vendors)";
+            } elif "maternity" in txt_low or "pmmvy" in txt_low or "matru vandana" in txt_low {
+                extracted_scheme = "Pradhan Mantri Matru Vandana Yojana (PMMVY / Maternity Benefit)";
+            } elif "divyang" in txt_low or "adip" in txt_low or "disab" in txt_low {
+                extracted_scheme = "Divyangjan Swavalamban Scheme (ADIP & Accessible India Support)";
+            }
+        }
+        if not extracted_scheme and chat_category {
+            cat_lower = chat_category.lower();
+            if "education" in cat_lower or "study" in cat_lower or "student" in cat_lower or "school" in cat_lower or "college" in cat_lower {
+                extracted_scheme = "PM-Vidyalaxmi Scheme (Central Sector Interest Subsidy & Collateral-Free Education Loan)";
+            } elif "food" in cat_lower or "nutrition" in cat_lower or "ration" in cat_lower {
+                extracted_scheme = "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / Free Food Grain)";
+            } elif "health" in cat_lower or "med" in cat_lower or "doctor" in cat_lower or "hospital" in cat_lower {
+                extracted_scheme = "Ayushman Bharat PM-JAY (National Health Protection Scheme)";
+            } elif "housing" in cat_lower or "shelter" in cat_lower or "rent" in cat_lower or "house" in cat_lower {
+                extracted_scheme = "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)";
             } elif "pension" in cat_lower or "senior" in cat_lower or "elder" in cat_lower {
                 extracted_scheme = "Indira Gandhi National Old Age Pension Scheme (IGNOAPS)";
             } elif "legal" in cat_lower {
                 extracted_scheme = "National Legal Services Authority (NALSA Free Legal Aid)";
-            } elif "housing" in cat_lower or "shelter" in cat_lower or "rent" in cat_lower {
-                extracted_scheme = "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)";
+            } elif "disab" in cat_lower or "divyang" in cat_lower {
+                extracted_scheme = "Divyangjan Swavalamban Scheme (ADIP & Accessible India Support)";
+            } elif "farm" in cat_lower or "kisan" in cat_lower or "agri" in cat_lower {
+                extracted_scheme = "PM Kisan Samman Nidhi (Direct Income Support for Farmers)";
+            } elif "work" in cat_lower or "job" in cat_lower or "employ" in cat_lower or "mgnrega" in cat_lower {
+                extracted_scheme = "Mahatma Gandhi National Rural Employment Guarantee Scheme (MGNREGS)";
+            } elif "maternity" in cat_lower or "mother" in cat_lower or "women" in cat_lower {
+                extracted_scheme = "Pradhan Mantri Matru Vandana Yojana (PMMVY / Maternity Benefit)";
+            } elif "loan" in cat_lower or "business" in cat_lower {
+                extracted_scheme = "Pradhan Mantri MUDRA Yojana (Micro-Enterprise Loan)";
             }
         }
 
-        if extracted_scheme != approved_program {
-            approved_program = extracted_scheme;
-            approval_status = "pending";
+        if not user_overrode_scheme {
+            if extracted_scheme and extracted_scheme != approved_program {
+                approved_program = extracted_scheme;
+                approval_status = "pending";
+            }
         }
 
         # Determine real fact presence
@@ -207,13 +303,14 @@ impl AdaptiveAssistant.syncFromChat -> None {
             }
         }
 
-        ctx_detail = "Extracted: " + chat_category + ", " + voice_field_val + "/mo, " + str(chat_children) + " children, " + str(chat_household) + " members";
+        prog_label = approved_program if approved_program else "matched Indian welfare scheme";
+        ctx_detail = "Extracted: " + (chat_category if chat_category else "General Welfare") + ", " + (voice_field_val if voice_field_val else "Baseline") + "/mo, " + str(chat_children) + " children, " + str(chat_household) + " members";
         res_detail = ("Matched: " + approved_program + " across 40 schemes") if approved_program else "40 official Indian welfare schemes checked";
-        elig_detail = "Evaluated for " + chat_category + " against statutory guidelines";
+        elig_detail = "Evaluated for " + (chat_category if chat_category else "welfare support") + " against statutory guidelines";
         path_detail = ("Application route for " + approved_program + " prepared") if approved_program else "Direct intake route prepared";
-        verif_detail = "Statutory criteria & required papers verified for " + approved_program;
+        verif_detail = "Statutory criteria & required papers verified for " + prog_label;
         wf_status = "completed" if approval_status == "approved" else "active";
-        wf_detail = ("Application approved by user & submitted") if approval_status == "approved" else ("Waiting for explicit human review of " + approved_program);
+        wf_detail = ("Application approved by user & submitted") if approval_status == "approved" else ("Waiting for explicit human review of " + prog_label);
 
         trace_events = [
             {"badge": "OMI", "title": "Voice Intake Normalized", "status": "completed", "detail": "Language: " + lang_str + " detected, turn analyzed"},

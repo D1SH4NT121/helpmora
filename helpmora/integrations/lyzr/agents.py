@@ -117,6 +117,9 @@ class ContextAgent:
         if any(w in text for w in ["legal", "court", "lawyer", "police", "jail", "fir", "bail", "dispute", "tenant"]):
             if "legal" not in needs:
                 needs.append("legal")
+        if any(w in text for w in ["education", "study", "student", "scholarship", "vidyalaxmi", "college", "school", "tuition", "degree"]):
+            if "education" not in needs:
+                needs.append("education")
         if not needs:
             needs.append("housing")  # Default to housing if unspecified
 
@@ -230,6 +233,7 @@ class ResourceAgent:
             cat = res.get("category", "").lower()
             if cat in needs:
                 candidate = dict(res)
+                candidate["name"] = res.get("agency_name", "")
                 # Attach provenance
                 candidate["provenance"] = {
                     "source_name": res.get("agency_name"),
