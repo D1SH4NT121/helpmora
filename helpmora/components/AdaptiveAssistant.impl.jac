@@ -166,9 +166,13 @@ impl AdaptiveAssistant.syncFromChat -> None {
         if not extracted_scheme and esc_data {
             esc_name = "";
             try {
-                if isinstance(esc_data, dict) {
-                    esc_name = str(esc_data.get("agency") or esc_data.get("name") or esc_data.get("resource") or "");
-                } elif isinstance(esc_data, list) and len(esc_data) > 0 {
+                if esc_data and "agency" in esc_data and esc_data["agency"] {
+                    esc_name = str(esc_data["agency"]);
+                } elif esc_data and "name" in esc_data and esc_data["name"] {
+                    esc_name = str(esc_data["name"]);
+                } elif esc_data and "resource" in esc_data and esc_data["resource"] {
+                    esc_name = str(esc_data["resource"]);
+                } elif esc_data and len(esc_data) > 0 {
                     esc_name = str(esc_data[0]);
                 }
             } except Exception as _ex {}

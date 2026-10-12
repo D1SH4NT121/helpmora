@@ -1031,49 +1031,49 @@ def:pub AdaptiveAssistant(
                             <div style={{"display": "flex", "flexWrap": "wrap", "gap": "8px", "marginBottom": "10px"}}>
                                 <button
                                     onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "PM-Vidyalaxmi Scheme (Central Sector Interest Subsidy & Collateral-Free Education Loan)"; approval_status = "pending"; }}
-                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("Vidyalaxmi" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("Vidyalaxmi" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("Vidyalaxmi" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": "rgba(255, 255, 255, 0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer", "fontWeight": "600"}}
                                 >
                                     {"🎓 PM-Vidyalaxmi Education Loan"}
                                 </button>
                                 <button
                                     onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "Pradhan Mantri Awas Yojana - Urban (PMAY-U / Housing for All)"; approval_status = "pending"; }}
-                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("PMAY" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("PMAY" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("PMAY" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": "rgba(255, 255, 255, 0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer", "fontWeight": "600"}}
                                 >
                                     {"🏠 PMAY-U Housing for All"}
                                 </button>
                                 <button
                                     onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / Free Food Grain)"; approval_status = "pending"; }}
-                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("PMGKAY" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("PMGKAY" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("PMGKAY" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": "rgba(255, 255, 255, 0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer", "fontWeight": "600"}}
                                 >
                                     {"🌾 PMGKAY Free Food Grain"}
                                 </button>
                                 <button
                                     onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "Ayushman Bharat PM-JAY (National Health Protection Scheme)"; approval_status = "pending"; }}
-                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("Ayushman" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("Ayushman" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("Ayushman" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": "rgba(255, 255, 255, 0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer", "fontWeight": "600"}}
                                 >
                                     {"🏥 Ayushman Bharat PM-JAY"}
                                 </button>
                                 <button
                                     onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "National Legal Services Authority (NALSA Free Legal Aid)"; approval_status = "pending"; }}
-                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("NALSA" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("NALSA" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("NALSA" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": "rgba(255, 255, 255, 0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer", "fontWeight": "600"}}
                                 >
                                     {"⚖️ NALSA Free Legal Aid"}
                                 </button>
                                 <button
                                     onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "Indira Gandhi National Old Age Pension Scheme (IGNOAPS)"; approval_status = "pending"; }}
-                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("IGNOAPS" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("IGNOAPS" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("IGNOAPS" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": "rgba(255, 255, 255, 0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer", "fontWeight": "600"}}
                                 >
                                     {"👴 IGNOAPS Senior Pension"}
                                 </button>
                                 <button
                                     onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "PM Kisan Samman Nidhi (Direct Income Support for Farmers)"; approval_status = "pending"; }}
-                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("Kisan" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("Kisan" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("Kisan" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": "rgba(255, 255, 255, 0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer", "fontWeight": "600"}}
                                 >
                                     {"🚜 PM-Kisan Direct Support"}
                                 </button>
                                 <button
                                     onClick={lambda _e: MouseEvent { user_overrode_scheme = True; approved_program = "Mahatma Gandhi National Rural Employment Guarantee Scheme (MGNREGS)"; approval_status = "pending"; }}
-                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": ("rgba(255, 229, 0, 0.2)" if ("MGNREGS" in approved_program) else "rgba(255, 255, 255, 0.05)"), "color": ("#FFE500" if ("MGNREGS" in approved_program) else txt_main), "border": ("1px solid #FFE500" if ("MGNREGS" in approved_program) else inner_border), "cursor": "pointer", "fontWeight": "600"}}
+                                    style={{"padding": "6px 10px", "borderRadius": "6px", "fontSize": fs_xs, "background": "rgba(255, 255, 255, 0.06)", "color": txt_main, "border": inner_border, "cursor": "pointer", "fontWeight": "600"}}
                                 >
                                     {"💼 MGNREGS 100-Day Work"}
                                 </button>
