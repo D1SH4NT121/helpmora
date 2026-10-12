@@ -148,6 +148,9 @@ def:pub ClientApp -> JsxElement {
         <div
             style={{
                 "minHeight": "100vh",
+                "width": "100%",
+                "margin": "0",
+                "padding": "0",
                 "display": "flex",
                 "flexDirection": "column",
                 "background": "#0A0A0A",

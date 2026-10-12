@@ -54,6 +54,9 @@ def:pub LandingPage(on_start: Any, platform: Any = None) -> JsxElement {
             className="lp-root"
             style={{
                 "minHeight": "100vh",
+                "width": "100%",
+                "margin": "0",
+                "padding": "0",
                 "display": "flex",
                 "flexDirection": "column",
                 "background": "#070708",
