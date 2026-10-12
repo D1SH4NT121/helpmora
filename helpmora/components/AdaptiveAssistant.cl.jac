@@ -64,9 +64,10 @@ def:pub AdaptiveAssistant(
     can with entry {
         try {
             window.eval("""
-                window._cm_speak = function(text, onDone) {
+                window._cm_speak = function(text, onDoneOrLang, maybeDone) {
+                    var onDone = (typeof onDoneOrLang === 'function') ? onDoneOrLang : ((typeof maybeDone === 'function') ? maybeDone : null);
                     try {
-                        if (!('speechSynthesis' in window)) { if (onDone) onDone(); return; }
+                        if (!('speechSynthesis' in window)) { if (typeof onDone === 'function') onDone(); return; }
                         window.speechSynthesis.cancel();
                         setTimeout(function() {
                             try {
@@ -78,14 +79,14 @@ def:pub AdaptiveAssistant(
                                     var v = voices.find(function(x) { return x.lang && (x.lang.includes('en-IN') || x.lang.includes('en-US') || x.lang.startsWith('en')); });
                                     if (v) utt.voice = v;
                                 }
-                                utt.onend = function() { window._current_utt = null; if (onDone) onDone(); };
-                                utt.onerror = function() { window._current_utt = null; if (onDone) onDone(); };
+                                utt.onend = function() { window._current_utt = null; if (typeof onDone === 'function') onDone(); };
+                                utt.onerror = function() { window._current_utt = null; if (typeof onDone === 'function') onDone(); };
                                 window._current_utt = utt;
                                 window.speechSynthesis.resume();
                                 window.speechSynthesis.speak(utt);
-                            } catch(ie) { if (onDone) onDone(); }
+                            } catch(ie) { if (typeof onDone === 'function') onDone(); }
                         }, 50);
-                    } catch(e) { if (onDone) onDone(); }
+                    } catch(e) { if (typeof onDone === 'function') onDone(); }
                 };
 
                 window._cm_parse_income = function(text) {
@@ -126,7 +127,7 @@ def:pub AdaptiveAssistant(
                         var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
                         if (!SR) {
                             if (window._cm_speak) window._cm_speak('Speech recognition is not supported in this browser. Please use Chrome or Edge.');
-                            if (onDone) onDone();
+                            if (typeof onDone === 'function') onDone();
                             return null;
                         }
                         var rec = new SR();
@@ -139,13 +140,13 @@ def:pub AdaptiveAssistant(
                             for (var i = 0; i < e.results.length; i++) {
                                 full += e.results[i][0].transcript;
                             }
-                            if (onText && full) onText(full);
+                            if (typeof onText === 'function' && full) onText(full);
                         };
-                        rec.onend = function() { if (onDone) onDone(); };
-                        rec.onerror = function(err) { if (onDone) onDone(); };
+                        rec.onend = function() { if (typeof onDone === 'function') onDone(); };
+                        rec.onerror = function(err) { if (typeof onDone === 'function') onDone(); };
                         rec.start();
                         return rec;
-                    } catch(e) { if (onDone) onDone(); return null; }
+                    } catch(e) { if (typeof onDone === 'function') onDone(); return null; }
                 };
             """);
         } except Exception as _ex {}

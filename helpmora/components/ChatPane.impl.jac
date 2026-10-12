@@ -45,6 +45,7 @@ impl ChatPane.tierStyle(tier: str, ui: Any) -> dict {
 }
 
 impl ChatPane.resetCase -> None {
+    stopSpeaking();
     profile_ctx = {};
     pending_question = "";
     try {
@@ -97,7 +98,8 @@ impl ChatPane.sendMessage(text_override: str = "", answering: str = "", display:
     user_text = effective;
     input_val = "";
 
-    # Stop voice recording immediately on message send so it never leaks into next message
+    # Stop voice recording and speech synthesis immediately on message send
+    stopSpeaking();
     try {
         if window._cm_voice_bridge {
             window._cm_voice_bridge.stop();
@@ -789,6 +791,20 @@ impl ChatPane.renderResult(msg: dict, idx: int, is_last: bool) -> JsxElement {
                     {(narr and narr["status"] == "failed") and <span className="cm-muted" title={str(narr["error"] or "")}>{"LLM narration unavailable — engine answer shown"}</span>}
                     {(d["privacy"] and d["privacy"]["private_turn"]) and <span className="cm-hud-private">{"Not sent to any AI model"}</span>}
                     {(d["privacy"] and d["privacy"]["words_sent_to_model"]) and <span className="cm-hud-private">{"The engine couldn't place this, so an AI model read it (identifiers removed first)"}</span>}
+                    <button
+                        className={"cm-why" + (" cm-speak-btn-active" if (speaking_msg_id == str(msg["id"]) and is_speaking) else "")}
+                        onClick={lambda _e: MouseEvent {
+                            speak_text = str(narr["message"]) if (narr and narr["status"] == "ok" and narr["message"]) else str(d["reply"]);
+                            speakMessage(str(msg["id"]), speak_text, lang);
+                        }}
+                        style={{
+                            "color": ("#FFE500" if (speaking_msg_id == str(msg["id"]) and is_speaking) else "inherit"),
+                            "fontWeight": ("600" if (speaking_msg_id == str(msg["id"]) and is_speaking) else "normal")
+                        }}
+                        title={("Stop reading aloud" if (speaking_msg_id == str(msg["id"]) and is_speaking) else "Read answer aloud")}
+                    >
+                        {( "⏹️ Stop" if (speaking_msg_id == str(msg["id"]) and is_speaking) else "🔊 Listen" )}
+                    </button>
                     <button className="cm-why" onClick={lambda _e: MouseEvent { waterfall_open = (-1 if waterfall_open == idx else idx); }}>{("Hide trace" if waterfall_open == idx else "Trace")}</button>
                 </div>
                 {waterfall_open == idx and renderWaterfall(trace, narr, idx)}
@@ -817,6 +833,23 @@ impl ChatPane.renderMessage(msg: dict, idx: int, is_last: bool) -> JsxElement {
                 <div className={("cm-bubble cm-bubble-error" if kind == "error" else "cm-bubble")}>
                     {renderRich(str(msg["text"]))}
                     {(kind == "error" and is_last and msg["retry"]) and <div className="cm-retry-row"><button className="cm-why cm-retry" onClick={lambda _e: MouseEvent { sendMessage(str(msg["retry"]), str(msg["retry_answering"] or ""), str(msg["retry_display"] or ""), bool(msg["retry_pin"])); }}>Try again</button></div>}
+                    {kind != "error" and <div style={{"marginTop": "8px"}}>
+                        <button
+                            className={"cm-why" + (" cm-speak-btn-active" if (speaking_msg_id == str(msg.get("id", idx)) and is_speaking) else "")}
+                            onClick={lambda _e: MouseEvent {
+                                speakMessage(str(msg.get("id", idx)), str(msg["text"]), "en");
+                            }}
+                            style={{
+                                "padding": "2px 8px",
+                                "fontSize": "11px",
+                                "color": ("#FFE500" if (speaking_msg_id == str(msg.get("id", idx)) and is_speaking) else "inherit"),
+                                "fontWeight": ("600" if (speaking_msg_id == str(msg.get("id", idx)) and is_speaking) else "normal")
+                            }}
+                            title={("Stop reading aloud" if (speaking_msg_id == str(msg.get("id", idx)) and is_speaking) else "Read aloud")}
+                        >
+                            {( "⏹️ Stop" if (speaking_msg_id == str(msg.get("id", idx)) and is_speaking) else "🔊 Listen" )}
+                        </button>
+                    </div>}
                 </div>
                 {(is_last and len(sugg) > 0) and <div className="cm-chips cm-chips-col">
                     {[renderChip(str(sugg[s]), str(sugg[s]), "") for s in range(len(sugg))]}
@@ -969,6 +1002,7 @@ impl ChatPane.toggleVoice -> None {
             is_listening = False;
             voice_status = "";
         } else {
+            stopSpeaking();
             target_lang = pref_lang if pref_lang and pref_lang != "auto" else "en";
             if window._cm_voice_bridge {
                 started = window._cm_voice_bridge.start(target_lang);
@@ -980,6 +1014,35 @@ impl ChatPane.toggleVoice -> None {
         is_listening = False;
         voice_status = "Voice error: " + str(ex);
     }
+}
+
+impl ChatPane.speakMessage(msg_id: str, text: str, lang: str = "en") -> None {
+    try {
+        if speaking_msg_id == msg_id and is_speaking {
+            stopSpeaking();
+            return;
+        }
+        stopSpeaking();
+        speaking_msg_id = msg_id;
+        is_speaking = True;
+        target_lang = lang if lang else "en";
+        if window._cm_speak {
+            window._cm_speak(text, target_lang);
+        }
+    } except Exception as ex {
+        speaking_msg_id = "";
+        is_speaking = False;
+    }
+}
+
+impl ChatPane.stopSpeaking -> None {
+    try {
+        if window._cm_stop_speak {
+            window._cm_stop_speak();
+        }
+        speaking_msg_id = "";
+        is_speaking = False;
+    } except Exception as ex {}
 }
 
 impl ChatPane.renderVoiceModal -> JsxElement {

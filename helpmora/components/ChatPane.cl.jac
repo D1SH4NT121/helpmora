@@ -57,7 +57,9 @@ def:pub ChatPane(
         is_listening: bool = False,
         voice_status: str = "",
         voice_modal_open: bool = False,
-        lyzr_mode: bool = True;
+        lyzr_mode: bool = True,
+        speaking_msg_id: str = "",
+        is_speaking: bool = False;
 
     can with entry {
         seed = [{
@@ -304,6 +306,65 @@ def:pub ChatPane(
                         }
                     }
                 };
+
+                window._cm_speak = function(text, lang) {
+                    try {
+                        if (!('speechSynthesis' in window)) {
+                            if (window._cm_on_speak_end) { window._cm_on_speak_end(); }
+                            return false;
+                        }
+                        window.speechSynthesis.cancel();
+                        setTimeout(function() {
+                            try {
+                                var clean = (text || '').replace(/[*#_`~>•\[\]\(\)]/g, ' ').replace(/\s+/g, ' ').trim();
+                                if (!clean) {
+                                    if (window._cm_on_speak_end) { window._cm_on_speak_end(); }
+                                    return;
+                                }
+                                var utt = new SpeechSynthesisUtterance(clean);
+                                utt.rate = 1.0;
+                                utt.pitch = 1.0;
+                                var langMap = {
+                                    'en': 'en-IN', 'hi': 'hi-IN', 'bn': 'bn-IN', 'te': 'te-IN', 'mr': 'mr-IN',
+                                    'ta': 'ta-IN', 'gu': 'gu-IN', 'kn': 'kn-IN', 'ml': 'ml-IN', 'pa': 'pa-IN',
+                                    'ur': 'ur-IN', 'es': 'es-US', 'fr': 'fr-FR', 'de': 'de-DE'
+                                };
+                                var targetLang = (lang && langMap[lang]) ? langMap[lang] : (lang || 'en-IN');
+                                utt.lang = targetLang;
+                                var voices = window.speechSynthesis.getVoices();
+                                if (voices && voices.length > 0) {
+                                    var v = voices.find(function(x) { return x.lang && (x.lang.includes(targetLang) || x.lang.startsWith(targetLang.split('-')[0])); });
+                                    if (v) utt.voice = v;
+                                }
+                                utt.onend = function() {
+                                    if (window._cm_on_speak_end) { window._cm_on_speak_end(); }
+                                };
+                                utt.onerror = function() {
+                                    if (window._cm_on_speak_end) { window._cm_on_speak_end(); }
+                                };
+                                window.speechSynthesis.resume();
+                                window.speechSynthesis.speak(utt);
+                                return true;
+                            } catch(ie) {
+                                if (window._cm_on_speak_end) { window._cm_on_speak_end(); }
+                                return false;
+                            }
+                        }, 50);
+                        return true;
+                    } catch(e) {
+                        if (window._cm_on_speak_end) { window._cm_on_speak_end(); }
+                        return false;
+                    }
+                };
+
+                window._cm_stop_speak = function() {
+                    try {
+                        if ('speechSynthesis' in window) {
+                            window.speechSynthesis.cancel();
+                        }
+                    } catch(e) {}
+                    if (window._cm_on_speak_end) { window._cm_on_speak_end(); }
+                };
             """);
             window._cm_on_voice = lambda txt: str {
                 input_val = txt;
@@ -312,6 +373,10 @@ def:pub ChatPane(
             window._cm_on_voice_status = lambda st: str, listening: bool {
                 voice_status = st;
                 is_listening = listening;
+            };
+            window._cm_on_speak_end = lambda _ev: Any {
+                speaking_msg_id = "";
+                is_speaking = False;
             };
         } except Exception as _ex {}
     }
@@ -369,6 +434,8 @@ def:pub ChatPane(
     def renderPipeline -> JsxElement;
     def toggleVoice -> None;
     def renderVoiceModal -> JsxElement;
+    def speakMessage(msg_id: str, text: str, lang: str = "en") -> None;
+    def stopSpeaking -> None;
 
     return
         <div className="cm-chat-grid">
