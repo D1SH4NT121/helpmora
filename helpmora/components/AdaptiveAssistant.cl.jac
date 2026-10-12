@@ -515,7 +515,6 @@ def:pub AdaptiveAssistant(
                     </h3>
 
                     <div style={{"display": "flex", "flexDirection": "column", "gap": "8px", "marginBottom": "20px"}}>
-                        {/* Step 1 */}
                         {active_step == 1 and <div style={{
                             "display": "flex",
                             "alignItems": "center",
@@ -533,7 +532,6 @@ def:pub AdaptiveAssistant(
                             <span style={{"fontSize": fs_base, "color": txt_muted}}>{lbl_step1 + " (" + citizen_name + (" · " + location_city if location_city else " · Location Not Stated") + ")"}</span>
                         </div>}
 
-                        {/* Step 2 */}
                         {active_step == 2 and <div style={{
                             "display": "flex",
                             "alignItems": "center",
@@ -555,7 +553,6 @@ def:pub AdaptiveAssistant(
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step2}</span>
                         </div>}
 
-                        {/* Step 3 */}
                         {active_step == 3 and <div style={{
                             "display": "flex",
                             "alignItems": "center",
@@ -577,7 +574,6 @@ def:pub AdaptiveAssistant(
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step3}</span>
                         </div>}
 
-                        {/* Step 4 */}
                         {active_step == 4 and <div style={{
                             "display": "flex",
                             "alignItems": "center",
@@ -599,7 +595,6 @@ def:pub AdaptiveAssistant(
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step4}</span>
                         </div>}
 
-                        {/* Step 5 */}
                         {active_step == 5 and <div style={{
                             "display": "flex",
                             "alignItems": "center",
@@ -621,7 +616,6 @@ def:pub AdaptiveAssistant(
                             <span style={{"fontSize": fs_base, "color": txt_dim}}>{lbl_step5}</span>
                         </div>}
 
-                        {/* Step 6 */}
                         {approval_status == "approved" and <div onClick={lambda _e: MouseEvent { user_navigated_step = True; active_step = 6; }} style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "4px 8px", "cursor": "pointer"}}>
                             <span style={{"color": "#00FF88", "fontWeight": "bold", "fontSize": fs_base}}>✓</span>
                             <span style={{"fontSize": fs_base, "color": "#00FF88", "fontWeight": "600"}}>{lbl_step6 + " (Approved)"}</span>
