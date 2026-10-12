@@ -544,16 +544,16 @@ def:pub ChatPane(
                             "padding": "5px 10px",
                             "cursor": "pointer"
                         }}
-                        title="Helpmora (Lyzr Agent)"
+                        title="HELPmora (Lyzr Agent)"
                     >
-                        {"🤖 Helpmora (Lyzr Agent): " + ("ON" if lyzr_mode else "OFF")}
+                        {"🤖 HELPmora (Lyzr Agent): " + ("ON" if lyzr_mode else "OFF")}
                     </button>
                     <button className="cm-ghost-btn" onClick={lambda _e: MouseEvent { resetCase(); }} title="Start a new case">New case</button>
                 </div>
                 <div className="cm-thread" role="log" aria-live="polite" aria-relevant="additions" aria-label="Conversation" aria-busy={is_loading} tabIndex={0}>
                     {[renderMessage(messages[i], i, (i == len(messages) - 1) and (not is_loading)) for i in range(len(messages))]}
                     {is_loading and <div className="cm-row">
-                        <div className="cm-avatar">CM</div>
+                        <div className="cm-avatar">HM</div>
                         <div className="cm-typing" role="status"><span aria-hidden="true"/><span aria-hidden="true"/><span aria-hidden="true"/><span className="cm-sr-only">Working on your answer…</span></div>
                     </div>}
                 </div>
