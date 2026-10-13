@@ -89,15 +89,21 @@ walker GraphSnapshotWalker {
                     "tip": str(r.agency_name) + " · " + str(e.tier).replace("_", " ") + " · Rule Match " + str(int(round(float(e.p_eligible) * 100))) + "%" + (" · Monthly Benefit: ≈ ₹" + str(ben) if ben > 0 else "") + " · Intake: " + str(r.capacity) + (" · Sector: " + str(r.category) if r.category else "") + (" · Helpline: " + str(r.contact_phone) if r.contact_phone else "")
                 });
                 edges.append({"src": "need", "tgt": rid, "label": "eligible_for · " + str(int(round(float(e.p_eligible) * 100))) + "%", "tier": str(e.tier)});
-                rules = [r ->:governed_by:-> [?:EligibilityRuleNode]];
+                rules = [r ->:governed_by:->];
+                if not rules {
+                    rules = [n for n in [r -->] if (type(n).__name__ == "EligibilityRuleNode" or isinstance(n, EligibilityRuleNode))];
+                }
                 if rules {
-                    ru: EligibilityRuleNode = rules[0];
+                    ru = rules[0];
                     ruid = "rule:" + str(ru.rule_id);
                     nodes.append({"id": ruid, "type": "EligibilityRuleNode", "label": "rule", "tip": "Statutory Rule: " + str(ru.criteria_summary)[:160] + (" · Income limit: ₹" + str(ru.income_limit_annual) + "/yr" if ru.income_limit_annual and int(ru.income_limit_annual) > 0 else "") + (" · Approvals: " + str(ru.prior_approvals) + "/" + str(ru.prior_attempts) if int(ru.prior_attempts or 0) > 0 else ""), "parent": rid});
                     edges.append({"src": rid, "tgt": ruid, "label": "governed_by"});
-                    forms = [ru ->:requires_form:-> [?:FormNode]];
+                    forms = [ru ->:requires_form:->];
+                    if not forms {
+                        forms = [n for n in [ru -->] if (type(n).__name__ == "FormNode" or isinstance(n, FormNode))];
+                    }
                     if forms {
-                        f: FormNode = forms[0];
+                        f = forms[0];
                         fid = "form:" + str(f.form_id);
                         nodes.append({"id": fid, "type": "FormNode", "label": "form", "tip": "Form: " + str(f.form_name) + " · Time: " + str(f.estimated_minutes) + " min · Proofs required: " + ", ".join([str(d) for d in list(f.required_documents)][:4]), "parent": rid});
                         edges.append({"src": ruid, "tgt": fid, "label": "requires_form"});
@@ -110,6 +116,9 @@ walker GraphSnapshotWalker {
         routes = 0;
         for (rid, name) in list(shown.items()) {
             src_nodes = [root --> [?:ResourceNode, agency_name == name]];
+            if not src_nodes {
+                src_nodes = [n for n in [root -->] if (type(n).__name__ == "ResourceNode" or isinstance(n, ResourceNode)) and str(getattr(n, "agency_name", "")) == str(name)];
+            }
             if not src_nodes { continue; }
             for le in [edge src_nodes[0] ->:leads_to:->] {
                 if routes >= self.max_routes { break; }

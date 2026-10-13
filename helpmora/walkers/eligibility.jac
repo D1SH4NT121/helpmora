@@ -215,11 +215,19 @@ walker EligibilityWalker {
         cached = len(items) > 0;
         sp = span_begin(tr, "graph.traverse resource→rule→form", "INTERNAL", self.parent_span, {"helpmora.cache_hit": cached});
         if not cached {
-            for r in [root --> [?:ResourceNode]] {
-                rules = [r ->:governed_by:-> [?:EligibilityRuleNode]];
+            all_root_nodes = [root -->];
+            res_nodes = [n for n in all_root_nodes if (type(n).__name__ == "ResourceNode" or isinstance(n, ResourceNode))];
+            for r in res_nodes {
+                rules = [r ->:governed_by:->];
+                if not rules {
+                    rules = [n for n in [r -->] if (type(n).__name__ == "EligibilityRuleNode" or isinstance(n, EligibilityRuleNode))];
+                }
                 if not rules { continue; }
-                rule: EligibilityRuleNode = rules[0];
-                forms = [rule ->:requires_form:-> [?:FormNode]];
+                rule = rules[0];
+                forms = [rule ->:requires_form:->];
+                if not forms {
+                    forms = [n for n in [rule -->] if (type(n).__name__ == "FormNode" or isinstance(n, FormNode))];
+                }
                 items.append({"resource": resource_dict(r), "rule": rule_dict(rule), "form": form_dict(forms[0]) if forms else {}});
             }
             if len(items) > 0 { CATALOG_CACHE[cache_key] = items; }
@@ -252,7 +260,8 @@ walker EligibilityWalker {
         rank_of: dict = {};
         for (i, s) in enumerate(ranked) { rank_of[str(s["resource_name"])] = i; }
         written = 0;
-        for r in [root --> [?:ResourceNode]] {
+        res_nodes_to_link = [n for n in [root -->] if (type(n).__name__ == "ResourceNode" or isinstance(n, ResourceNode))];
+        for r in res_nodes_to_link {
             nm = str(r.agency_name);
             if nm in rank_of {
                 s = ranked[int(rank_of[nm])];
