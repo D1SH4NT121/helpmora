@@ -365,8 +365,12 @@ impl ClientApp.renderPalette -> JsxElement {
                                 if len(filtered) > 0 {
                                     runPaletteAction(filtered[sel]);
                                 }
-                            } elif e.key == "Escape" {
-                                togglePalette();
+                            } elif e.key == "Escape" or e.key == "Esc" {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                palette_open = False;
+                                palette_query = "";
+                                palette_idx = 0;
                             }
                         }}
                         placeholder="Type a command — tabs, replay, docs, reset..."
@@ -381,15 +385,25 @@ impl ClientApp.renderPalette -> JsxElement {
                             "fontFamily": "system-ui, sans-serif"
                         }}
                     />
-                    <span style={{
-                        "fontSize": "10px",
-                        "color": "rgba(255,255,255,0.62)",
-                        "fontFamily": "ui-monospace, monospace",
-                        "padding": "3px 7px",
-                        "background": "rgba(255,255,255,0.04)",
-                        "border": "0.5px solid rgba(255,255,255,0.1)",
-                        "borderRadius": "5px"
-                    }}>
+                    <span
+                        onClick={lambda _e: MouseEvent {
+                            palette_open = False;
+                            palette_query = "";
+                            palette_idx = 0;
+                        }}
+                        title="Close (Esc)"
+                        style={{
+                            "fontSize": "10px",
+                            "color": "rgba(255,255,255,0.7)",
+                            "fontFamily": "ui-monospace, monospace",
+                            "padding": "3px 7px",
+                            "background": "rgba(255,255,255,0.06)",
+                            "border": "0.5px solid rgba(255,255,255,0.15)",
+                            "borderRadius": "5px",
+                            "cursor": "pointer",
+                            "userSelect": "none"
+                        }}
+                    >
                         ESC
                     </span>
                 </div>
@@ -411,7 +425,17 @@ impl ClientApp.renderPalette -> JsxElement {
                 }}>
                     <span>↑↓ navigate</span>
                     <span>↵ run</span>
-                    <span>esc close</span>
+                    <span
+                        onClick={lambda _e: MouseEvent {
+                            palette_open = False;
+                            palette_query = "";
+                            palette_idx = 0;
+                        }}
+                        style={{"cursor": "pointer"}}
+                        title="Close"
+                    >
+                        esc close
+                    </span>
                     <span style={{"flex": "1"}}/>
                     <span>{str(len(filtered)) + " action" + ("" if len(filtered) == 1 else "s")}</span>
                 </div>

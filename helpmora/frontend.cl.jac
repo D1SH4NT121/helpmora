@@ -99,8 +99,10 @@ def:pub ClientApp -> JsxElement {
                     palette_open = (not palette_open);
                     palette_query = "";
                     palette_idx = 0;
-                } elif palette_open and k == "Escape" {
+                } elif k == "Escape" or k == "Esc" {
                     palette_open = False;
+                    palette_query = "";
+                    palette_idx = 0;
                 }
                 c_raw = e.code;
                 c = str(c_raw) if c_raw else "";
