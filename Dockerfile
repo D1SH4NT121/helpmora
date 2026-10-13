@@ -7,6 +7,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_CACHE_DIR=1 \
+    MALLOC_ARENA_MAX=2 \
+    PYTHONMALLOC=malloc \
+    PYTHONOPTIMIZE=1 \
     BUN_INSTALL=/opt/bun \
     PATH=/opt/bun/bin:$PATH \
     DEFAULT_MAX_RETRIES=0
@@ -65,5 +68,5 @@ EXPOSE 7860
 # The gateway (cmguard/gateway.py) is the only public listener; jac-scale runs
 # on 127.0.0.1 behind it. cmguard/serve.py generates per-boot secrets for login
 # tokens, narration/translation tokens and the jac-scale system account when
-# they aren't set, and stops the container if jac-scale exits.
-CMD ["python", "-m", "cmguard.serve"]
+# Run single-process jac server directly on Render/cloud hosts to stay well under 512MB RAM.
+CMD ["sh", "-c", "python -m jaclang start app.jac --no-dev --port ${PORT:-10000} --host 0.0.0.0"]
