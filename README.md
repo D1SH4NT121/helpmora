@@ -1,411 +1,665 @@
 <div align="center">
+  <img src="assets/helpmora-hero.svg" alt="HELPmora — From your story to your next step" width="100%" />
 
-# HELPmora
+  **Voice-first civic welfare and free legal-aid navigation for India**
 
-### Deterministic Social Welfare & Legal Aid Navigator with Omi Voice Intake, Qdrant Semantic Memory, and Lyzr Multi-Agent Orchestration
-**A rules engine on an object-spatial knowledge graph that routes citizens in hardship to the housing, food, healthcare, and legal aid programs they qualify for — with zero hallucinations, complete explainability, and zero API keys required.**
+  [![Python](https://img.shields.io/badge/python-3.12-blue.svg?style=flat-square)](https://www.python.org/)
+  [![Jaclang](https://img.shields.io/badge/jaclang-0.15.1-6366f1.svg?style=flat-square)](https://www.jac-lang.org/)
+  [![Qdrant](https://img.shields.io/badge/qdrant-vector%20memory-dc2626.svg?style=flat-square)](https://qdrant.tech/)
+  [![Lyzr](https://img.shields.io/badge/lyzr-agent%20api-7c3aed.svg?style=flat-square)](https://www.lyzr.ai/)
+  [![Omi](https://img.shields.io/badge/omi-voice%20intake-0284c7.svg?style=flat-square)](https://omi.me/)
+  [![Tests](https://img.shields.io/badge/tests-52%20passing-10b981?style=flat-square)](./helpmora/tests)
+  [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](./LICENSE)
 
-[![Python](https://img.shields.io/badge/python-3.12-blue.svg?style=flat-square)](https://www.python.org/)
-[![Jaclang](https://img.shields.io/badge/jaclang-0.15.1-6366f1.svg?style=flat-square)](https://www.jac-lang.org/)
-[![Qdrant](https://img.shields.io/badge/qdrant-vector%20memory-dc2626.svg?style=flat-square)](https://qdrant.tech/)
-[![Lyzr](https://img.shields.io/badge/lyzr-agent%20api-7c3aed.svg?style=flat-square)](https://www.lyzr.ai/)
-[![Omi](https://img.shields.io/badge/omi-voice%20intake-0284c7.svg?style=flat-square)](https://omi.me/)
-[![Tests](https://img.shields.io/badge/tests-48%20passing-10b981?style=flat-square)](./helpmora/tests)
-[![Privacy](https://img.shields.io/badge/privacy-scrubbed%20%C2%B7%20no%20tracking-0f766e?style=flat-square)](./PRIVACY.md)
-[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](./LICENSE)
-
-*Maintained by [@D1SH4NT121](https://github.com/D1SH4NT121) · [GitHub Repository](https://github.com/D1SH4NT121/helpmora)*
-
+  [Architecture](#4-architecture) · [System Overview](#1-what-is-helpmora) · [Security & Privacy](#11-security-and-privacy) · [Local Setup](#14-local-development) · [Hackathon Demo](#17-demo-scenario)
 </div>
 
 ---
 
-## The Problem
+## 1. What is HELPmora?
 
-Millions of vulnerable individuals — single parents, daily wage earners, unhoused families, and elderly citizens — do not know which social welfare schemes they qualify for, what documents they must assemble, or which office to visit. In India, statutory programs such as **PMAY (Housing)**, **PMGKAY (Food Security)**, **Ayushman Bharat (Healthcare)**, and **NALSA (Free Legal Aid)** exist to guarantee fundamental rights, but they sit behind fragmented portals, complex income brackets, and bureaucratic red tape.
+**HELPmora** is an open-source, voice-first Civic Welfare & Free Legal Aid Navigator for India. It is designed to help people describe a difficult situation in everyday language, discover relevant public-support pathways, understand the information needed for a decision, and identify a practical next step.
 
-When citizens consult standard generative AI chatbots, those models frequently **hallucinate** eligibility criteria, quote outdated numbers, or give false hope.
+Public-service information is often spread across departments and portals, while eligibility rules and application procedures can be difficult to interpret. HELPmora aims to bridge that gap by converting a person's story into a structured case, evaluating configured program rules through deterministic code, searching curated graph transitions when a direct route is blocked, and presenting an actionable plan.
 
-**HELPmora** transforms conversational input — whether spoken aloud via **Omi wearable/mobile audio** or typed into the web interface — into an explainable, ranked action plan. It evaluates exact rules in closed form over a live knowledge graph in less than a millisecond, provides direct phone numbers and physical submission channels, and explains the plain-language reason for every recommendation.
+The project handbook describes a catalog of **40 curated Indian welfare programs**, **26 curated transition paths**, multilingual dictionaries, Qdrant-backed case memory, Lyzr-based orchestration, and a Jac/Python application protected by the `cmguard` gateway. These are repository/documentation inventory figures; current policy accuracy, language quality and live integration status must still be validated against the running build.
 
----
+### The central principle
 
-## Key Pillars: What Makes HELPmora Different
+> **AI helps understand and coordinate. Deterministic HELPmora policy logic decides eligibility.**
 
-### 1. Math First, LLM Last (Zero Hallucination Guarantee)
-Every critical decision — who qualifies, why, what documents are required, and what to do first — is computed in closed form over a Jac graph without calling an external language model on the critical evaluation path. Language models are strictly auxiliary; the deterministic policy engine (`score.jac`) holds exclusive authority over eligibility determinations.
+An LLM should not invent legal rights, eligibility thresholds, schemes, official links or emergency contacts. Lyzr can coordinate suitable tasks and explain tool results; the existing Jac engine remains authoritative for policy scoring, Pathfinder traversal and deterministic crisis routing.
 
-### 2. Comprehensive 40-Program Indian Welfare Catalog
-HELPmora is pre-seeded with 40 authentic Indian central and state welfare programs across four domains:
-- **Housing (10 Programs):** PMAY-Urban, PMAY-Gramin, Shelter for Urban Homeless (SUH-NULM), Shakti Sadan (Swadhar Greh), Affordable Rental Housing Complexes (ARHCs), Working Women Hostels (Sakhi Niwas), PM SVANidhi Vendor Support, Rashtriya Vayoshri Senior Living, SDRF Disaster Shelters, Slum Rehabilitation Authority (SRA).
-- **Food Security (10 Programs):** Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY), Antyodaya Anna Yojana (AAY 35kg grain), One Nation One Ration Card (ONORC Portability), Mission Poshan 2.0 (ICDS Anganwadi), PM POSHAN (Mid-Day Meals), Subsidized Urban Canteens, PMMVY Maternity Nutrition, Annapurna Scheme for Seniors, Akshaya Patra Relief, Food Security Helpline 1967.
-- **Healthcare (10 Programs):** Ayushman Bharat PM-JAY (₹5 Lakh Cover + 70+ Seniors), Jan Aushadhi Kendras (50-90% Generic Medicine Discount), Ayushman Arogya Mandirs (Health & Wellness Centres), Tele-MANAS (14416), Janani Suraksha Yojana & JSSK, Rashtriya Arogya Nidhi (RAN), National TB Elimination & Nikshay Poshan, ESIC Medical Benefits, NACO ART Centers (Free HIV Care), eSanjeevani Teleconsultations.
-- **Legal Aid (10 Programs):** NALSA Free Legal Aid Clinics (Section 12), Tele-Law (CSCs / Dept of Justice), One Stop Centres (OSC Sakhi), DLSA Lok Adalat (Pre-Litigation Settlement), Childline 1098 & DCPU, National Cyber Crime Portal (1930), Senior Citizens Maintenance Tribunal (2007 Act), Labour Commissioner Conciliation & e-Shram, Consumer Disputes Redressal (e-Daakhil), National Human Rights Commission (NHRC).
+## 2. The problem HELPmora addresses
 
-### 3. Multi-Step Escape Path Pathfinder
-When direct eligibility fails (for example, an applicant lacking formal land records or a permanent address), HELPmora does not simply return an "application denied" screen. The **PathfinderWalker** traverses 26 curated `leads_to` graph edges using bounded breadth-first search to find transition pathways:
-> **Example:** Shelter for Urban Homeless (SUH) $\rightarrow$ Biometric Aadhaar & Job Card Enrollment $\rightarrow$ PMAY-Urban EWS In-situ Rehabilitation Allotment (estimated 60-day roadmap).
+| Challenge | What HELPmora is designed to do |
+|---|---|
+| Fragmented program information | Search a curated catalog of welfare resources and their configured rules. |
+| Bureaucratic language | Turn a natural-language story into structured facts and explain results in simpler language. |
+| Missing documents or prerequisites | Use curated graph transitions to look for a bridge route where one exists. |
+| Repeated case explanations | Retrieve relevant, user-scoped case memory when persistence is enabled and consented to. |
+| Risky AI-made policy claims | Keep authoritative eligibility and crisis decisions in deterministic code. |
+| High-friction forms | Guide the user through progressive steps, document lists and available submission channels. |
 
-### 4. Deterministic Crisis & Emergency Routing
-Messages indicating acute crisis, domestic abuse, child endangerment, or financial cyber fraud bypass normal queuing and immediately surface verified toll-free helplines:
-- **112**: Emergency Response Support System (Police / Ambulance / Disaster)
-- **181**: Women Helpline (24/7 Domestic Violence & Shelter Support)
-- **1098**: Childline (Child Protection & Abuse Rescue)
-- **14416**: Tele-MANAS (24/7 Mental Health Crisis Support)
-- **1930**: National Cyber Crime Reporting Portal (Financial Fraud Lien Freezing)
-- **1967**: National Food Security Helpline (Ration Grievances)
+HELPmora's goal is to make the path clearer—not to guarantee approval or replace official agencies, qualified legal professionals or emergency services.
 
-### 5. Multi-Session Episodic Memory (Qdrant)
-Persistent citizen memory without tracking. HELPmora uses **Qdrant** vector storage to retain historical cases, prior application outcomes, and verified documents across sessions. If a citizen was previously rejected for PMAY-Urban due to missing documents, subsequent sessions immediately recognize the history and recommend the exact bridge pathway without starting from scratch.
+## 3. Scope and documented inventory
 
-### 6. Enterprise Multi-Agent Orchestration (Lyzr Agent API)
-A directed acyclic graph (DAG) of 6 specialized autonomous agents coordinates case evaluation, contextual enrichment, deterministic eligibility validation, pathfinding, and actionable roadmap synthesis with full observable traces.
+<div align="center">
+  <img src="assets/helpmora-scope.svg" alt="HELPmora scope and documented inventory" width="100%" />
+</div>
 
-### 7. Safety & Privacy by Construction
-- **Quick Exit:** A prominent red button and keyboard shortcut (pressing Shift three times) immediately redirects the browser to a neutral page.
-- **Multi-Tenant Isolation:** Memory records in Qdrant are strictly isolated by `user_id == current_user_id`. Users can wipe their memory with a single click.
-- **Zero Tracking:** No user names, Aadhaar numbers, or raw personal messages are written to persistent server logs.
+| Inventory | Documented scope | Important interpretation |
+|---|---|---|
+| Program catalog | 40 entries in `helpmora/data/resources.json` | The entries require periodic review against official sources, jurisdiction and effective date. |
+| Bridge transitions | 26 entries in `helpmora/data/transitions.json` | Pathfinder can search configured edges; it cannot create a valid statutory path that is absent from the data. |
+| Localization | 51 dictionaries are listed in `helpmora/data/i18n/` in the project handbook | A dictionary count does not prove that voice recognition, translation and output are complete or human-validated for every language. |
+| Core domains | Housing/shelter, food/nutrition, healthcare/medical relief, financial security/livelihood, legal aid/citizen rights | Some programs may cover more than one area. Use the data catalog as the runtime source. |
 
----
+### Representative catalog examples
 
-## Unified Integration Architecture (Omi + Qdrant + Lyzr + HELPmora)
+| Domain | Examples named in the project handbook |
+|---|---|
+| Housing and shelter | PMAY-Urban, Shelter for Urban Homeless, Sakhi Niwas, Shakti Sadan, Affordable Rental Housing Complexes |
+| Food and nutrition | NFSA Priority Household, Antyodaya Anna Yojana, PM-GKAY, Annapurna, subsidized community kitchens |
+| Healthcare and medical relief | Ayushman Bharat PM-JAY, Rashtriya Arogya Nidhi, eSanjeevani, Jan Aushadhi |
+| Financial security and livelihood | PM-KISAN, MGNREGA, PM SVANidhi, old-age/widow/disability pension programs |
+| Legal aid and citizen rights | NALSA/DLSA free legal services, Tele-Law, NHRC redressal, e-Daakhil, One Stop Centres |
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                                        INTAKE LAYER                                               |
-|   +---------------------------------------+       +-------------------------------------------+   |
-|   |          Omi Voice Ingestion          |       |            Web Chat / Keyboard            |   |
-|   |  - Audio Transcription Webhook        |       |  - Real-time Multi-lingual Chat           |   |
-|   |  - HMAC Signature Verification        |       |  - Interactive Stepper / Manual Inputs    |   |
-|   |  - SHA-256 Deduplication (10-min TTL) |       |  - Voice-to-Form Dynamic Parser           |   |
-|   +-------------------+-------------------+       +---------------------+---------------------+   |
-+-----------------------|-------------------------------------------------|-------------------------+
-                        |                                                 |
-                        +------------------------+------------------------+
-                                                 |
-                                                 v
-+---------------------------------------------------------------------------------------------------+
-|                           SECURITY GATEWAY & RATE LIMITER (CMGuard)                               |
-|   - Classify request: Static / Walker / Integration API (/api/omi/..., /api/memory/...)           |
-|   - Token bucket rate limiting, payload byte caps, security header injection                      |
-+------------------------------------------------+--------------------------------------------------+
-                                                 |
-                                                 v
-+---------------------------------------------------------------------------------------------------+
-|                          QDRANT VECTOR STORE: EPISODIC CASE MEMORY                                |
-|   - Multi-tenant collection: helpmora_memory (user_id partition filter)                           |
-|   - 8 Typed records: Citizen Profile, Scheme Result, Application, Appeal, Follow-up, DocCheck     |
-|   - Prior session retrieval -> Re-injected into CaseState context                                 |
-+------------------------------------------------+--------------------------------------------------+
-                                                 |
-                                                 v
-+---------------------------------------------------------------------------------------------------+
-|                             LYZR MULTI-AGENT SUPERFLOW ORCHESTRATOR                               |
-|                                                                                                   |
-|   +-------------------+      +--------------------+      +--------------------+                   |
-|   |   ContextAgent    | ---> |   ResourceAgent    | ---> |  EligibilityAgent  |                   |
-|   | (Enriches memory) |      | (Fetches catalog)  |      | (Calls score.jac)  |                   |
-|   +-------------------+      +--------------------+      +---------+----------+                   |
-|                                                                    |                              |
-|   +-------------------+      +--------------------+                |                              |
-|   |    ActionAgent    | <--- | VerificationAgent  | <--------------+                              |
-|   | (Generates steps) |      | (Enforces checks)  |      +---------v----------+                   |
-|   +-------------------+      +--------------------+      |  PathfinderAgent   | (If ineligible)   |
-|                                                          | (26 escape edges)  |                   |
-|                                                          +--------------------+                   |
-|   [CrisisSafetyGate]: Evaluates high-risk keywords (112, 181, 1098, 14416 bypass)                |
-+------------------------------------------------+--------------------------------------------------+
-                                                 |
-                                                 v
-+---------------------------------------------------------------------------------------------------+
-|                          DETERMINISTIC KNOWLEDGE GRAPH & POLICY ENGINE                            |
-|   - Closed-form mathematical evaluation: Hard Gates * Soft Gates                                  |
-|   - 40 Indian Welfare Programs (resources.json) & 26 Escape Edges (transitions.json)              |
-|   - Verification Gate: Zero hallucinations, statutory rule conformity                             |
-+------------------------------------------------+--------------------------------------------------+
-                                                 |
-                                                 v
-+---------------------------------------------------------------------------------------------------+
-|                              ADAPTIVE ASSISTANT (USER INTERACTION)                                |
-|   - 5-Stage Stepper: Context -> Discovery -> Documents -> Escape Paths -> Submission              |
-|   - Voice-to-Form Auto-Fill: Real-time confidence badges, transcript field extraction             |
-|   - "Ask HELPmora": Plain-language statutory term explanations (EWS, LIG, Ration rules)           |
-|   - Guided Recovery: Automated suggestions for missing documents or edge-case incomes             |
-|   - Human-in-the-Loop Consent Gate: Citizen approval modal before writing applications to memory  |
-|   - Accessibility Suite: High-Contrast mode, Dyslexia-Friendly font, Observable Trace drawer      |
-+------------------------------------------------+--------------------------------------------------+
-                                                 |
-                                (Citizen Approves Application)
-                                                 |
-                                                 v
-+---------------------------------------------------------------------------------------------------+
-|                                QDRANT WRITE & STATE PERSISTENCE                                   |
-|   Stores application submission, updates follow-up reminders, records telemetry trace             |
-+---------------------------------------------------------------------------------------------------+
+Do not use this README as the runtime policy source. Eligibility rules, amounts, program names, effective dates, required documents and URLs must be read from the maintained application data and checked against official sources before production use.
+
+## 4. Architecture
+
+### 4.1 System overview
+
+<div align="center">
+  <img src="assets/helpmora-architecture.svg" alt="HELPmora system architecture from input channels through guardrails, Qdrant, Lyzr, Jac and guided delivery" width="100%" />
+</div>
+
+HELPmora is organized around distinct responsibilities:
+
+1. **Input adapters** receive Omi transcript/conversation events and typed input. Browser-microphone voice is an optional interface when enabled; it is not itself an Omi integration.
+2. **Perimeter and guardrails** validate requests, enforce route controls and apply domain/crisis handling. The documented `cmguard` layer provides route allowlisting, request-size/depth controls, rate limiting, token validation, budget control and redaction.
+3. **Case and memory services** normalize input into case state and retrieve relevant user-scoped Qdrant memory when configured and permitted.
+4. **Adaptive/perceptual model layer** (Omi, Lyzr and the existing byLLM/configured model chain where enabled) handles voice events, language/text extraction and task coordination.
+5. **Deterministic Jac core** performs the authoritative policy scoring and graph traversal, plus navigation and crisis behavior.
+6. **Guided delivery** presents the result, explains missing facts and next steps, asks for user review, and only carries out consequential actions after the required approval.
+
+### 4.2 Request lifecycle
+
+```mermaid
+flowchart TD
+    A[Citizen voice or typed request] --> B[Validate and normalize input]
+    B --> C{Immediate crisis?}
+    C -- Yes --> D[Existing deterministic EscalationWalker]
+    C -- No --> E[Domain and request guardrails]
+    E --> F[Resolve case and user scope]
+    F --> G[Retrieve relevant Qdrant memory when enabled]
+    G --> H[Lyzr orchestration when configured]
+    H --> I[Call existing Jac tools]
+    I --> J[Deterministic eligibility / pathfinding / navigation]
+    J --> K[Verification and plain-language explanation]
+    K --> L[Guided next step and user review]
+    L --> M{Consequential action?}
+    M -- Yes --> N[Wait for explicit user approval]
+    M -- No --> O[Return response]
+    N --> O
+    O --> P[Persist approved case milestone if allowed]
 ```
 
-### The Seven-Walker Deterministic Pipeline
-1. **SeedWalker (`walkers/seed.jac`)**: Idempotently seeds the 40 welfare schemes and 26 transition edges into the graph.
-2. **IntakeWalker (`walkers/intake.jac`)**: Detects language, extracts category, urgency, and household financial context.
-3. **EligibilityWalker (`walkers/eligibility.jac`)**: Evaluates all 40 programs against policy constraints in sub-millisecond execution.
-4. **PathfinderWalker (`walkers/pathfinder.jac`)**: Traverses `leads_to` transition edges to find multi-step workarounds.
-5. **NavigationWalker (`walkers/navigation.jac`)**: Compiles the ranked `ActionPlan`, required documents, and offline steps.
-6. **EscalationWalker (`walkers/escalation.jac`)**: Deterministically routes crisis scenarios to verified national helplines.
-7. **MemoryWalker & CritiqueWalker (`walkers/memory.jac`, `walkers/critique.jac`)**: Manages session insights and telemetry.
+The request lifecycle should produce observable events. A state such as “Qdrant retrieved memory” or “Lyzr completed” must only be shown when the corresponding operation actually succeeded.
 
----
+### 4.3 Voice-to-action sequence
 
-## 🛠️ Required Hackathon Resource Implementations
+<div align="center">
+  <img src="assets/helpmora-voice-sequence.svg" alt="Sequence diagram showing voice source, Omi adapter, shared conversation service, Qdrant, Lyzr/Jac and UI response" width="100%" />
+</div>
 
-HELPmora strictly implements and integrates all three designated hackathon technologies across its architecture:
+Omi webhooks should acknowledge accepted events promptly and process slow work separately. An HTTP success response means the event was accepted—not that every downstream model, memory and policy step has completed. Track later completion or failure in the execution trace.
 
-### 1. Omi (Wearable & Voice Ingestion)
-- **Documentation & References:**
-  - [Main Documentation](https://docs.omi.me/?utm_medium=referral&utm_source=hidevs&utm_campaign=hackathon_month&utm_content=platform_hidevs)
-  - [App Development Guide](https://docs.omi.me/doc/developer/apps/Introduction?utm_medium=referral&utm_source=hidevs&utm_campaign=hackathon_month&utm_content=platform_hidevs)
-  - [GitHub Repository](https://github.com/BasedHardware/omi?utm_medium=referral&utm_source=hidevs&utm_campaign=hackathon_month&utm_content=platform_hidevs)
-- **Implementation in HELPmora (`helpmora/integrations/omi/`):**
-  - **Webhook Ingestion & Normalization (`adapter.py`):** Ingests raw audio and conversation transcripts from Omi wearables or mobile clients. Handles missing headers, malformed text, and timestamp normalization.
-  - **Security & Replay Protection:** Enforces HMAC SHA-256 signature verification and token-based authentication. Implements SHA-256 event fingerprinting with a 10-minute sliding deduplication cache (`compute_event_fingerprint`).
-  - **Standard Endpoints (`helpmora/integrations/api.py`):**
-    - `POST /api/omi/events`: Authoritative webhook entrypoint for Omi device events.
-    - `POST /omi/conversation`: Hackathon-standard memory creation trigger fired upon conversation completion.
-    - `POST /omi/realtime`: Real-time streaming transcript handler for chunked voice processing.
-    - `POST /ask`: Context-aware Q&A endpoint retrieving Qdrant memories before invoking the pipeline.
-  - **Frontend Experience (`ChatPane.cl.jac` & `AdaptiveAssistant.cl.jac`):** Features a dedicated `⚡ Omi` voice launcher with browser microphone recording, live transcript streaming, and pre-loaded authentic Indian civic audio scenarios (Hindi, English, Telugu).
+### 4.4 Agent orchestration and policy boundary
 
----
+<div align="center">
+  <img src="assets/helpmora-agent-boundary.svg" alt="Lyzr Manager coordinating specialist roles above the deterministic Jac tool layer" width="100%" />
+</div>
 
-### 2. Lyzr (Enterprise Multi-Agent SuperFlow)
-- **Documentation & References:**
-  - [Documentation](https://docs.lyzr.ai/introduction?utm_medium=referral&utm_source=hidevs&utm_campaign=hackathon_month&utm_content=platform_hidevs)
-  - [Studio Website](https://studio.lyzr.ai/?utm_medium=referral&utm_source=hidevs&utm_campaign=hackathon_month&utm_content=platform_hidevs)
-  - [GitHub Repository](https://github.com/LyzrCore/lyzr-framework?utm_medium=referral&utm_source=hackathon_month&utm_content=platform_hidevs)
-- **Implementation in HELPmora (`helpmora/integrations/lyzr/` & `helpmora/orchestration/`):**
-  - **Lyzr Multi-Agent DAG (`agents.py`):** Deploys 6 coordinated specialized agents following Lyzr agent contracts:
-    1. **`ContextAgent`:** Enriches citizen profiles using conversation history retrieved from Qdrant.
-    2. **`ResourceAgent`:** Queries the pre-seeded statutory catalog of 40 Indian welfare programs.
-    3. **`EligibilityAgent`:** Executes deterministic closed-form mathematical eligibility checks (`score.jac`).
-    4. **`PathfinderAgent`:** Dynamically traverses 26 `leads_to` transition graph edges to synthesize recovery pathways when direct eligibility is blocked.
-    5. **`VerificationAgent`:** Enforces a rigid verification gate to guarantee 0 hallucinations.
-    6. **`ActionAgent`:** Synthesizes actionable plain-language next steps, offline office channels, and documentation requirements.
-  - **Lyzr Client (`client.py`):** Provides seamless integration with `lyzr-agent-api` cloud endpoints with automatic fallback to zero-credential local deterministic execution.
-  - **Deterministic Crisis Safety Gate (`check_crisis_safety_gate`):** Intercepts acute distress keywords (abuse, violence, hunger, fraud) and immediately routes citizens to verified national helplines (112, 181, 1098, 14416) with zero LLM latency.
+| Agent role (as described in the project design) | Responsibility | Must not do |
+|---|---|---|
+| ContextAgent | Interpret user request and summarize relevant, authorized case context. | Invent missing user facts. |
+| ResourceAgent | Identify candidates from the approved resource catalog. | Invent schemes or unsupported benefits. |
+| EligibilityAgent | Prepare structured inputs and request deterministic evaluation. | Make final eligibility decisions by LLM judgment. |
+| PathfinderAgent | Request a search of existing transition paths when needed. | Fabricate graph edges or guarantee the path will succeed. |
+| Verification / gate role | Check completeness, consistency and available provenance. | Claim a rule is verified without supporting data. |
+| Action role | Explain the result and prepare guided next steps. | Submit consequential actions without the required consent. |
 
----
+The exact configured agent set depends on the actual Lyzr setup. Document and display only agents that exist and execute in the running environment.
 
-### 3. Qdrant (Episodic Vector Memory & Multi-Tenant Isolation)
-- **Documentation & References:**
-  - [Qdrant Website](http://qdrant.tech/?utm_medium=referral&utm_source=stars&utm_campaign=devrel&utm_content=deepak-chawla)
-  - [Qdrant Documentation](https://qdrant.tech/documentation/?utm_medium=referral&utm_source=stars&utm_campaign=devrel&utm_content=deepak-chawla)
-  - [Qdrant Cloud Signup](https://cloud.qdrant.io/signup?utm_medium=referral&utm_source=stars&utm_campaign=devrel&utm_content=deepak-chawla)
-- **Implementation in HELPmora (`helpmora/integrations/qdrant/`):**
-  - **Persistent Vector Memory Store (`memory.py`):** Maintains the `helpmora_memory` vector collection for semantic case history and program discovery. Supports remote cloud clusters (`QDRANT_URL`), local persistent disk storage (`QDRANT_STORAGE_PATH`), and in-memory embedded vector storage.
-  - **Strict Multi-Tenant Privacy Isolation:** Enforces deterministic payload filtering (`user_id == current_user_id`). Visitors never see or retrieve another citizen's data.
-  - **Typed Memory Records (`schemas.py`):** Manages 8 distinct schemas: `CitizenProfile`, `SchemeResult`, `ApplicationHistory`, `AppealRecord`, `FollowUpReminder`, `DocumentCheck`, `ConversationMemory`, and `RealtimeTranscript`.
-  - **Citizen Memory Governance UI (`AdaptiveAssistant.cl.jac`):** Provides transparent privacy toggles and a 1-click **"Wipe Qdrant Memories"** button fulfilling the citizen's Right to be Forgotten.
+## 5. Jac graph model
 
----
+<div align="center">
+  <img src="assets/helpmora-graph-model.svg" alt="HELPmora knowledge graph schema with PersonNode, NeedNode, ResourceNode, EligibilityRuleNode, FormNode, ApplicationNode and SessionInsight" width="100%" />
+</div>
 
-## The Adaptive Assistant
+The project describes an in-memory or persisted directed Jac graph. Its documented nodes and edges include:
 
-HELPmora's **Adaptive Assistant** is specifically engineered for inclusive, accessible, and high-trust civic navigation. It features:
+### Node types
 
-1. **Progressive Disclosure Stepper**: Breaks complex government schemes into five bite-sized steps:
-   - **Step 1: Context & Profile** — Income, household size, category, location.
-   - **Step 2: Scheme Discovery** — Eligible schemes ranked by statutory priority.
-   - **Step 3: Document Verification** — Interactive checklist with status indicators.
-   - **Step 4: Escape Paths** — Multi-step transition pathways if direct eligibility fails.
-   - **Step 5: Review & Consent** — Summary preview with explicit human-in-the-loop consent.
-2. **Voice-to-Form Auto-Fill**:
-   - Parses natural spoken transcripts into structured eligibility parameters (e.g., *"I earn 12000 a month in Delhi with two children"* $\rightarrow$ `income: 144000/yr`, `household_size: 3`, `state: DL`).
-   - Displays clear confidence badges on auto-filled fields.
-3. **"Ask HELPmora" Contextual Explanations**:
-   - Instant inline explanations for complex statutory terms like *EWS (Economically Weaker Section)*, *AAY (Antyodaya Anna Yojana)*, or *BPL Certificate*.
-4. **Guided Recovery Engine**:
-   - Detects when an applicant falls just outside a threshold or lacks mandatory proof (e.g., missing ration card).
-   - Dynamically proposes recovery actions (e.g., apply for temporary urban shelter, obtain CSC income certificate).
-5. **Human-in-the-Loop Approval Gate**:
-   - No application or state record is persisted without explicit user confirmation.
-   - Transparent modal allows citizens to inspect, edit, or reject the planned action before saving.
-6. **Accessibility Controls**:
-   - High-contrast toggle for low-vision users.
-   - OpenDyslexic typography mode for readability.
-   - Full keyboard navigation and quick exit emergency shortcut.
+| Node | Purpose | Example attributes named in the project handbook |
+|---|---|---|
+| `PersonNode` | Root for citizen/session context | `user_id`, language, location, income bracket, family size |
+| `NeedNode` | Expressed civic problem | category, urgency, details |
+| `ResourceNode` | Program or agency | agency, category, contact, address, online URL |
+| `EligibilityRuleNode` | Configured rule data | income limit, residency requirements, criteria and audit values |
+| `FormNode` | Required procedural form or proof | form name, URL, documents, submission method |
+| `ApplicationNode` | Case/application tracking | status, denial reason, next-step hint |
+| `SessionInsight` | Execution/quality reflection | walkers invoked, estimated calls, escalation/pathfinder flags, quality metrics |
 
----
+### Edge types
 
-## API Endpoints Reference
+| Edge | Meaning |
+|---|---|
+| `has_need` | Links a person to an expressed need. |
+| `eligible_for` | Links a need to a resource and carries configured match information. |
+| `governed_by` | Links a resource to its eligibility rule. |
+| `requires_form` | Links a rule to required forms/proofs. |
+| `applied_to` | Links a person/case to an application record. |
+| `leads_to` | Represents a curated transition between resources or procedural steps. |
+| `reflected_on` | Links a person/case to a session insight. |
 
-The integration layer exposes RESTful APIs mounted through the `cmguard` reverse gateway:
+The graph provides a structured way to relate needs, policy rules, programs, documents and next steps. Keep real-person identifiers and sensitive fields out of public graph snapshots and telemetry.
 
-| Endpoint | Method | Description |
-| :--- | :--- | :--- |
-| `/api/omi/events` | `POST` | Ingests Omi voice webhook transcripts with HMAC verification & deduplication. |
-| `/api/helpmora/run` | `POST` | Executes the complete multi-agent workflow for a case intake. |
-| `/api/helpmora/run/{run_id}` | `GET` | Retrieves run status, event traces, and synthesized action plan. |
-| `/api/memory/retrieve` | `POST` | Queries Qdrant semantic memory filtered by `user_id`. |
-| `/api/memory/store` | `POST` | Stores a typed memory record (`profile`, `application`, `appeal`, etc.). |
-| `/api/memory/user/{user_id}` | `DELETE` | Wipes all stored memory for a user (Right to be Forgotten). |
-| `/api/workflow/voice-to-form` | `POST` | Extracts form fields and confidence metrics from voice transcripts. |
-| `/api/workflow/explain-field` | `POST` | Plain-language statutory explanations for form fields. |
-| `/api/workflow/recovery` | `POST` | Proposes guided recovery steps for missing evidence or edge cases. |
-| `/api/workflow/approve` | `POST` | Human-in-the-loop approval gate that commits application to memory. |
-| `/api/integrations/health` | `GET` | Health status of Omi, Qdrant, Lyzr, and Core Engine. |
+## 6. Jac walkers and responsibilities
 
----
+<div align="center">
+  <img src="assets/helpmora-walkers.svg" alt="HELPmora Jac walker responsibility map" width="100%" />
+</div>
 
-## Quick Start Guide
+The project handbook describes these main workflow roles:
 
-### Prerequisites
-- **Python 3.12+** (configured in `.venv312`)
-- **Git**
+| Walker | Responsibility |
+|---|---|
+| `SeedWalker` | Idempotently initializes the graph/catalog data. |
+| `IntakeWalker` | Extracts need category, income, household facts, language and urgency. |
+| `EligibilityWalker` | Evaluates configured eligibility rules and ranks resources. |
+| `PathfinderWalker` | Traverses curated `leads_to` edges using graph search to find alternative routes. |
+| `NavigationWalker` | Builds an action plan, document checklist and available submission channels. |
+| `EscalationWalker` | Applies deterministic crisis routing using the configured verified information. |
+| `MemoryWalker` | Updates graph/case state and milestones. |
+| `ForgetWalker` | Supports the documented right-to-be-forgotten flow. |
+| `CritiqueWalker` | Computes workflow reflection/quality telemetry. |
+| `NarrateWalker` | Produces a natural-language summary through the guarded model path. |
+| `LocalizeWalker` | Supports localization/language mapping. |
+| `graph_snapshot.jac` (graph snapshot) | Serializes graph state for visualization. |
+| `integrated_pipeline.jac` (integrated pipeline) | Bridges the integrated orchestration path. |
 
-### Installation
+The handbook groups the first roles into the principal workflow and also inventories supporting walkers. Whether a walker is registered, reachable and executed must be confirmed in the running application and its trace; a source file alone does not prove runtime execution.
+
+## 7. Persistent memory with Qdrant
+
+Qdrant is intended to retain semantically searchable case context across interactions. It should complement—not replace—the Jac graph or structured case state.
+
+### Typical memory lifecycle
+
+1. Normalize the current request into structured case facts.
+2. Apply privacy minimization and the user's memory preference.
+3. Embed an approved memory item using the configured embedding approach.
+4. Store a vector plus payload metadata in the configured Qdrant collection.
+5. Retrieve relevant records using semantic similarity and strict user/case filters.
+6. Pass only appropriate, relevant context into orchestration.
+7. Persist an appropriate milestone after the workflow step completes, if memory is enabled.
+8. Support deletion when the user invokes the documented forget function.
+
+### Recommended payload concepts
+
+| Field | Why it matters |
+|---|---|
+| `user_id` / tenant key | Enforces retrieval and deletion boundaries. |
+| `case_id` | Groups memory to a specific case. |
+| `session_id` | Helps associate events with an interaction. |
+| `memory_type` | Separates case state, milestone, confirmed fact or summary. |
+| `text` / searchable summary | Provides semantic retrieval content. |
+| timestamp / language / workflow step | Supports context and continuation. |
+| consent/retention metadata where designed | Supports user-controlled persistence. |
+
+The actual payload schema must follow the implementation in `helpmora/integrations/qdrant/schemas.py`. Do not introduce a conflicting schema based solely on this README.
+
+### Local and cloud mode
+
+The existing configuration documents `QDRANT_URL`, `QDRANT_API_KEY`, `QDRANT_COLLECTION_NAME` and `QDRANT_STORAGE_PATH`. Inspect the existing client to determine whether an empty URL selects embedded local storage, a local Qdrant server, or another fallback. Do not assume embedded mode works unless the installed client and current code implement it. Collections should be initialized idempotently; never delete production memory just to reinitialize a collection.
+
+## 8. Omi and voice input
+
+Omi is the required voice/ambient input integration for the hackathon. The application documentation inventories Omi webhook routes and an adapter that normalizes payloads and deduplicates events.
+
+### Omi path
+
+```mermaid
+sequenceDiagram
+    participant O as Omi app / transcript source
+    participant G as cmguard / webhook route
+    participant A as Omi adapter
+    participant S as Shared conversation pipeline
+    participant Q as Qdrant
+    participant L as Lyzr + Jac tools
+    O->>G: Real transcript or conversation event
+    G->>A: Validate allowed route and request
+    A->>A: Verify configured auth, normalize, deduplicate
+    A-->>O: Acknowledge accepted event promptly
+    A->>S: Queue/process normalized turn
+    S->>Q: Retrieve scoped context
+    S->>L: Orchestrate + deterministic tool calls
+    L-->>S: Structured result
+    S->>Q: Store permitted case milestone
+    S-->>G: Trace/status available to client
+```
+
+### Browser microphone path
+
+Browser voice may be offered as an input alternative, subject to browser/API support and the current frontend implementation. It must use the same conversation service as Omi. **Browser microphone input alone is not a genuine Omi integration.** Browser speech recognition may be processed by a browser-managed or external service depending on the chosen implementation; disclose this accurately and do not claim fully local transcription unless verified.
+
+### Response channels
+
+The response can be shown in the HELPmora UI. Browser speech synthesis may be used for read-aloud when supported and enabled. Do not assume an incoming Omi webhook response automatically plays spoken audio in the Omi app. Omi-side outbound notifications or response delivery must use a documented, implemented and tested API capability.
+
+## 9. Guided workflow and accessibility
+
+The `AdaptiveAssistant` components are described as providing a six-step guided workflow, voice-to-form support, privacy toggles and a human-approval gate. Related features listed in the handbook include:
+
+- High-contrast mode.
+- Large-text mode.
+- Reduced motion.
+- Simple-language mode.
+- Transcript and chat interaction.
+- Progressive form and field explanation.
+- Guided recovery when information or documents are missing.
+- Human review before consequential actions.
+
+Treat these as implemented only to the extent verified in the current UI. During testing, ensure each toggle changes actual behavior, all controls remain usable with a keyboard, and no workflow depends on animation to convey meaning.
+
+## 10. Crisis safety and verification
+
+Crisis keywords and emergency paths should be handled by the existing deterministic guardrail and escalation code without unnecessary LLM delay. The project handbook lists these helplines:
+
+| Number | Purpose as documented in the project handbook |
+|---|---|
+| `112` | All-India emergency response |
+| `181` | Women in distress |
+| `1098` | Child protection and rescue |
+| `14416` | Tele-MANAS mental-health support |
+
+Before deployment, verify contact numbers, service availability, language support and descriptions against current authoritative government sources. Never let an LLM generate or modify a number at runtime.
+
+The verification layer should check whether required facts are present, whether configured rules and documents are consistent, and whether there is enough provenance to explain the proposed next step. Where evidence is missing, say so plainly. Do not promise that a person qualifies, that an application will be approved, or that all policies are current without validated data.
+
+## 11. Security and privacy
+
+<div align="center">
+  <img src="assets/helpmora-security-privacy.svg" alt="HELPmora trust boundaries for cmguard, guardrails, Qdrant memory, secrets and user controls" width="100%" />
+</div>
+
+The project handbook describes the following controls in `helpmora/cmguard/` and related privacy code:
+
+- Route allowlisting and loopback binding of the internal Jac server.
+- Request body size/depth limits.
+- Token-bucket rate limiting.
+- HMAC-SHA256 capability-token support for protected/expensive operations.
+- Budget limits and provider-error cooldowns.
+- Redaction of PII and secrets from logs/responses.
+- Deterministic crisis routing.
+- Quick Exit behavior.
+- User-scoped Qdrant retrieval and deletion support.
+
+These are architecture/documentation claims; confirm each control with current code and tests before describing it as an independently verified security guarantee.
+
+### Privacy practices
+
+1. Keep `.env` and real credentials out of Git, screenshots, logs and client bundles.
+2. Store only data needed to continue the workflow, with a clear retention/consent rule.
+3. Avoid persisting raw audio by default.
+4. Scope every vector search, update and delete to the authenticated user/tenant and case where appropriate.
+5. Ensure that User A cannot retrieve User B's memory.
+6. Provide a clear forget/delete path and verify that it removes all intended storage copies.
+7. Do not describe sessions as anonymous or private-by-default unless storage, network calls, identity handling and retention behavior genuinely support that description.
+8. Require explicit user approval before external or irreversible operations.
+
+## 12. Repository structure
+
+The following tree is based on the project's documented inventory. Keep it aligned to the actual repository as files change.
+
+```text
+HELPmora/
+├── .github/                         # Repository workflows/configuration
+├── .jac/                            # Jac/tooling state where applicable
+├── assets/                          # Scalable vector architecture & workflow diagrams (SVG)
+├── png/                             # High-resolution raster diagram exports
+├── docs/
+│   ├── architecture.md              # Architecture reference & trust boundaries
+│   ├── demo.md                      # Demo verification guide
+│   ├── DEMO_SCRIPT.md               # Paced 5-minute presentation script
+│   ├── DEPLOY.md                    # Deployment guidance
+│   ├── HACKATHON_CHECKLIST.md       # Submission & verification checklist
+│   ├── SECURITY_CHECKLIST.md        # Pre-release security & privacy verification
+│   └── MAINTENANCE.md               # Policy/data maintenance
+├── helpmora/
+│   ├── app.jac                      # Jac application entrypoint
+│   ├── app.sv.jac                   # Server-side walker registration
+│   ├── frontend.cl.jac              # Client UI root
+│   ├── frontend.impl.jac            # Frontend state/navigation
+│   ├── cmguard/                     # Gateway, tokens, rate/budget controls, redaction
+│   ├── components/                  # Chat, adaptive workflow, plans, graph, telemetry, landing
+│   ├── data/
+│   │   ├── resources.json           # Curated 40-program catalog
+│   │   ├── transitions.json         # Curated 26-bridge paths
+│   │   └── i18n/                    # Localization dictionaries
+│   ├── engine/                      # Parse, policy, score, plan, paths, privacy, stats
+│   ├── graph/                       # Node/edge schema and seed data
+│   ├── integrations/
+│   │   ├── api.py                   # Documented integration/API routes
+│   │   ├── config.py                # Integration configuration/health
+│   │   ├── omi/                     # Omi adapter
+│   │   ├── qdrant/                  # Vector memory client and schemas
+│   │   └── lyzr/                    # Lyzr client and agent coordination
+│   ├── orchestration/               # Workflow and CaseState
+│   ├── verification/                # Pre-action verification
+│   └── walkers/                     # Intake, eligibility, Pathfinder, navigation, safety, memory, etc.
+├── ASSET_GUIDE.md                   # Diagram asset placement and raster export guide
+├── .env.example                     # Safe placeholders only
+├── .gitignore                       # Must exclude .env and generated secrets
+├── requirements.txt                 # Python dependencies
+├── Dockerfile                       # Container build
+├── render.yaml                      # Deployment configuration
+├── run.ps1                          # Windows PowerShell startup
+├── run.bat                          # Windows Command Prompt startup
+├── README.md                        # This file
+└── SECURITY.md / PRIVACY.md         # Security and privacy notes
+```
+
+### Key files at a glance
+
+| File/path | Role |
+|---|---|
+| `helpmora/app.jac` | Application entrypoint and UI assembly. |
+| `helpmora/app.sv.jac` | Server-side variant loader / walker registration. |
+| `helpmora/engine/score.jac` | Deterministic scoring implementation. |
+| `helpmora/engine/policy.jac` | Configured policy rules. |
+| `helpmora/engine/parse.jac` | Input fact extraction. |
+| `helpmora/engine/paths.jac` | Graph traversal support. |
+| `helpmora/engine/plan.jac` | Action-plan synthesis. |
+| `helpmora/graph/nodes.jac` / `edges.jac` | Graph schema. |
+| `helpmora/data/resources.json` | Program catalog. |
+| `helpmora/data/transitions.json` | Alternative route catalog. |
+| `helpmora/integrations/api.py` | Documented REST/webhook API layer. |
+| `helpmora/integrations/omi/adapter.py` | Omi event normalization/deduplication. |
+| `helpmora/integrations/qdrant/memory.py` | Qdrant collection/retrieval/privacy operations. |
+| `helpmora/integrations/lyzr/agents.py` | Agent role setup. |
+| `helpmora/orchestration/case_state.py` | Structured case state and trace. |
+| `helpmora/verification/verifier.py` | Verification gate. |
+| `helpmora/cmguard/gateway.py` | Defensive gateway. |
+
+## 13. API and integration routes
+
+The project handbook documents the route inventory below. Before relying on an endpoint, confirm that it is present, registered through the actual server/gateway path, and protected as specified in current code.
+
+| Method | Route | Purpose | Scope/auth concept documented |
+|---|---|---|---|
+| `GET` | `/api/integrations/health` | Integration and core health diagnostics | Public status only; no secrets |
+| `POST` | `/api/omi/events` | Real-time Omi transcript event ingestion | `OMI_WEBHOOK_SECRET` / configured webhook protection |
+| `POST` | `/omi/conversation` | Completed conversation webhook | Configured webhook protection |
+| `POST` | `/omi/realtime` | Chunked/realtime transcript webhook | Configured webhook protection |
+| `POST` | `/ask` | Memory-grounded question answering | User scope required |
+| `POST` | `/api/helpmora/run` | Run the integrated pipeline from text/voice | User/case scope required |
+| `GET` | `/api/helpmora/run/{run_id}` | Retrieve run trace/status | Run/user scope required |
+| `POST` | `/api/memory/store` | Store a vector memory | User scope required |
+| `POST` | `/api/memory/retrieve` | Semantic memory retrieval | Strict tenant filter required |
+| `DELETE` | `/api/memory/{memory_id}` | Delete an individual memory | User/case ownership required |
+| `DELETE` | `/api/memory/user/{user_id}` | Delete a user's memories | Authenticated ownership/admin policy required |
+| `POST` | `/api/memory/wipe` | Memory deletion alternative | User scope required |
+| `POST` | `/api/privacy/update` | Update retention/privacy settings | User scope required |
+| `POST` | `/api/workflow/approve` | Human approval gate | Run and user scope required |
+| `POST` | `/api/workflow/voice-to-form` | Parse speech into a form field | Validate fields and case scope |
+| `GET` | `/api/workflow/explain-field` | Explain a statutory/form field | Validate requested field and source context |
+| `GET` | `/api/workflow/recovery` | Suggest recovery options for missing prerequisites | Ground guidance in configured data |
+
+**Security note:** a route listed in documentation is not proof that it is publicly reachable or safe to expose. `cmguard` and the actual server route registration determine the public surface. Do not expose deletion, approval, or user-scoped memory routes without validating ownership and authorization.
+
+## 14. Local development
+
+<div align="center">
+  <img src="assets/helpmora-runtime.svg" alt="HELPmora local development and deployed runtime options, including local Qdrant and hosted services" width="100%" />
+</div>
+
+The project repository includes Windows startup scripts and a Python 3.12 virtual environment is documented in the project materials. Use the existing environment rather than creating another one.
+
+### Windows PowerShell
+
+From the repository root:
 
 ```powershell
-# 1. Clone repository
-git clone https://github.com/D1SH4NT121/helpmora.git
-cd helpmora
+# Optional if the existing environment is not already active
+.\.venv312\Scripts\Activate.ps1
 
-# 2. Set up virtual environment
-python -m venv .venv312
-.\.venv312\Scripts\activate
+# Install the project's pinned dependencies if required
+python -m pip install -r requirements.txt
 
-# 3. Install dependencies
-pip install -r requirements.txt
-```
-
-### Environment Configuration & Safe State Architecture
-
-HELPmora features a centralized **Safe Configuration Loader** (`helpmora/integrations/config.py`) that monitors and reports typed status across all external services without leaking API keys or secrets:
-
-| State | Behavior & Operational Mode |
-| :--- | :--- |
-| **`CONFIGURED`** | Valid endpoints and keys provided. Full cloud sync and external APIs active. |
-| **`NOT_CONFIGURED`** | Default mode. Clean fallback to embedded zero-dependency deterministic engine. |
-| **`INVALID`** | Malformed URLs or key syntax detected with actionable diagnostic explanation. |
-| **`UNAVAILABLE`** | Credentials supplied but remote service/SDK is unreachable or uninstalled. |
-
-#### Environment Variables (`.env.example`):
-
-```bash
-# NVIDIA NIM (Used by byllm for model chain in llm/stubs.jac - optional for core rules)
-NVIDIA_NIM_API_KEY=
-
-# Omi Voice Integration
-OMI_WEBHOOK_SECRET=           # Optional webhook secret or signature token for incoming Omi voice events
-OMI_API_KEY=                  # Optional API token
-PUBLIC_BASE_URL=              # Optional public base URL for webhook callbacks (e.g., https://your-domain.ngrok-free.app)
-
-# Qdrant Persistent Semantic Memory
-QDRANT_URL=                   # Remote cluster URL (leave blank to use local persistent/in-memory storage)
-QDRANT_API_KEY=               # Remote cluster API key
-QDRANT_COLLECTION_NAME=helpmora_memory
-QDRANT_STORAGE_PATH=./data/qdrant_db
-
-# Lyzr Multi-Agent Orchestration
-LYZR_API_KEY=                 # Lyzr Agent API key (leave blank for local deterministic multi-agent execution)
-LYZR_ENVIRONMENT_ID=          # Lyzr environment ID
-LYZR_MANAGER_AGENT_ID=        # Lyzr manager agent ID
-```
-
-> **Zero-Credential Guarantee:** HELPmora runs **100% locally and deterministically out-of-the-box**. No hackathon credentials or paid API keys are required to execute the graph walkers, run deterministic scoring, verify cases, or launch the web application.
-
-### Running Locally
-
-```powershell
-# Launch via PowerShell (binds to 0.0.0.0:8000)
+# Start using the project's existing script
 .\run.ps1
+```
 
-# Or launch via Command Prompt
+### Windows Command Prompt
+
+```bat
 run.bat
 ```
 
-Open your browser at:
-- **Local:** `http://localhost:8000/`
-- **LAN / Network:** `http://<your-lan-ip>:8000/`
+Open the local URL printed by the startup script. The project handbook references `http://localhost:8000/`; use the actual port configured by the active script if it differs.
 
-Navigate to the **"Adaptive Assistant"** tab to experience the full voice-to-form, stepper flow, and human consent gate.
+### Core-only mode and full integration mode
+
+- **Core-only mode:** existing local chat and deterministic functionality work without optional Omi/Qdrant Cloud/Lyzr services, to the extent supported by the current code and existing provider configuration.
+- **Full integration mode:** requires real credentials/configuration, reachable services, configured Omi webhooks, and the relevant backend routes. Validate each integration with a health/smoke test.
+
+Do not treat a non-empty environment variable as proof that a service is connected.
+
+## 15. Environment configuration
+
+The repository already has a root `.env.example`. Extend that file only when necessary. Put real values in a root `.env`, keep `.env` untracked, and never put secrets in frontend code.
+
+| Variable | Intended purpose | Required when |
+|---|---|---|
+| `NVIDIA_NIM_API_KEY` | Existing NIM model chain | The current model configuration uses NVIDIA NIM. |
+| `FEATHERLESS_API_KEY` | Optional existing fallback | Featherless fallback is enabled. |
+| `GROQ_API_KEY` | Optional existing model option | Groq model pool is enabled. |
+| `HELPMORA_POLICY_DATE` | Pin policy evaluation date where supported | When intentionally setting an effective date. |
+| `HELPMORA_LLM_MODELS` | Override the configured model fallback chain | When overriding defaults. |
+| `HELPMORA_POLYGLOT_MODELS` | Configure language-related summary models | When overriding defaults. |
+| `OMI_API_KEY` | Authenticate supported outbound Omi API calls | Only when the chosen Omi API operation requires it. |
+| `OMI_WEBHOOK_SECRET` | Secret/token used by the implemented webhook protection | When configured webhook validation uses it. |
+| `PUBLIC_BASE_URL` | Public HTTPS callback base URL | When Omi needs to call a local/deployed backend. |
+| `QDRANT_URL` | Qdrant server/cloud URL | When using server/cloud mode. |
+| `QDRANT_API_KEY` | Qdrant Cloud authentication | When the configured Qdrant endpoint requires it. |
+| `QDRANT_COLLECTION_NAME` | Memory collection name; documented default `helpmora_memory` | Used by the Qdrant integration. |
+| `QDRANT_STORAGE_PATH` | Local on-disk path where supported | When the current client uses local persistence. |
+| `LYZR_API_KEY` | Authenticate hosted Lyzr calls | When Lyzr orchestration is enabled. |
+| `LYZR_ENVIRONMENT_ID` | Lyzr environment/config identifier | If required by current client code. |
+| `LYZR_MANAGER_AGENT_ID` | Configured Lyzr Manager agent identifier | When invoking that Manager. |
+
+### Safe example
+
+```env
+# Existing model configuration — fill only what you actually use
+NVIDIA_NIM_API_KEY=
+FEATHERLESS_API_KEY=
+GROQ_API_KEY=
+HELPMORA_POLICY_DATE=
+HELPMORA_LLM_MODELS=
+HELPMORA_POLYGLOT_MODELS=
+
+# Omi — variables needed depend on the selected official capability
+OMI_API_KEY=
+OMI_WEBHOOK_SECRET=
+PUBLIC_BASE_URL=
+
+# Qdrant
+QDRANT_URL=
+QDRANT_API_KEY=
+QDRANT_COLLECTION_NAME=helpmora_memory
+QDRANT_STORAGE_PATH=./data/qdrant_db
+
+# Lyzr
+LYZR_API_KEY=
+LYZR_ENVIRONMENT_ID=
+LYZR_MANAGER_AGENT_ID=
+```
+
+This block contains placeholders only. Do not copy real secrets into this README or `.env.example`.
+
+### Local Omi webhook testing
+
+An external Omi service cannot normally call a private `localhost` URL directly. For local webhook tests, expose only the required protected route through a temporary public HTTPS tunnel, or use a deployed HTTPS environment. Configure the full webhook path in Omi according to the route that exists in the running code. Return an acknowledgement quickly after safely accepting a valid event; perform slow processing asynchronously.
+
+Use synthetic test data for webhook inspection. Do not send real citizen information or secrets to public payload-inspection services.
+
+## 16. Testing and observability
+
+Run the existing test suite using the repository's documented test command. The exact command must be confirmed from the current project configuration; do not assume a file called `test_integrations.py` is present without checking the repository.
+
+### Recommended verification matrix
+
+| Area | Test | Evidence to capture |
+|---|---|---|
+| Existing app | Start, open UI, send typed request | UI response and server logs without secrets |
+| Jac policy engine | Evaluate known synthetic profiles | Deterministic structured result and explanations |
+| Pathfinder | Test direct fit and blocked-route examples | Selected curated edge sequence or empty result |
+| Crisis | Synthetic crisis keyword case | Deterministic escalation path; no LLM dependency on critical path |
+| Omi | Send a real Omi transcript event | Webhook receipt, validated normalized event, trace/run ID |
+| Qdrant | Store then retrieve in a fresh request/runtime context | Stored point + retrieval result with user filter |
+| Tenant isolation | Query as a second synthetic user | No cross-user memory returned |
+| Lyzr | Execute the configured Manager/agent | Real provider response/trace; do not rely solely on mocks |
+| Approval | Exercise approve and reject paths | No action before approval; rejection returns safely |
+| Forget | Delete synthetic user's memory | Subsequent retrieval returns no deleted memory |
+| Failure recovery | Disable one optional service | Clear status; core functions behave according to supported fallback |
+| Accessibility | Keyboard, large text, contrast, reduced motion | Manual notes/screenshots and relevant automated tests |
+
+### Health and trace
+
+The documented health endpoint is `/api/integrations/health`. When available, it should report component states such as `CONNECTED`, `NOT_CONFIGURED`, `UNAVAILABLE` or `INVALID_CONFIGURATION` without exposing secrets. Execution traces should contain timestamps, stage, status, duration and a correlation/run ID—but not raw sensitive transcripts or credential values.
+
+Avoid hard-coding performance values into the landing page unless measured on the target environment and representative workloads. Distinguish deterministic engine latency from total user-perceived latency, which includes network, retrieval, orchestration and speech processing.
+
+## 17. Demo scenario
+
+<div align="center">
+  <img src="assets/helpmora-demo-flow.svg" alt="HELPmora hackathon demo flow with real voice, Qdrant, Lyzr, Jac, guided step and memory resume" width="100%" />
+</div>
+
+Use a synthetic, India-focused case that is realistic but does not presuppose eligibility:
+
+> “My husband is in hospital and we cannot afford the treatment. I want to know what government healthcare support we may be eligible for.”
+
+A successful demonstration should show the system identify the healthcare need, request missing facts where relevant, evaluate configured resources with the Jac engine, explain uncertainty, and produce a practical next step. Do not claim a specific person qualifies based only on the example sentence.
+
+### Five-minute demo outline
+
+| Time | Show | What to say |
+|---|---|---|
+| 0:00–0:30 | The problem and landing page | Welfare and legal-aid information is fragmented and hard to navigate. |
+| 0:30–1:15 | Real voice input | A real Omi event enters HELPmora; show the transcript arriving. |
+| 1:15–2:00 | Qdrant retrieval | Show scoped prior memory or a genuine empty result. |
+| 2:00–2:45 | Lyzr orchestration | Show a real Manager/agent call and structured output. |
+| 2:45–3:40 | Jac decision and Pathfinder | Show deterministic evaluation and any actual configured alternative path. |
+| 3:40–4:25 | Guided workflow | Show required information/documents and approval behavior. |
+| 4:25–5:00 | Session resume and trust boundary | Start a fresh request, retrieve prior case if enabled, and state that Jac—not the LLM—decides eligibility. |
+
+If an integration cannot be run live, do not stage a fake status. Explain the limitation and demonstrate the verified portions honestly.
+
+## 18. Hackathon fit and submission checklist
+
+### Recommended primary track
+
+**Accessibility & Adaptive Assistants** — the project turns high-friction welfare tasks into conversational intake, structured forms, explanations and guided workflows.
+
+Supporting strengths include collaborative multi-agent workflows and privacy-first case memory. Choose one primary track and use the same label in the submission form and README.
+
+The supplied submission guide states that working software, a clean repository and observable agent workflows contribute **60% or more** of the final score. Prioritize a real, demonstrable end-to-end loop over additional decorative UI. The same guide lists **13 October 2026, 11:59 PM IST** as the deadline; verify the live platform for any later update.
+
+### Mandatory stack evidence
+
+- [ ] **Omi:** Real transcript/voice event reaches HELPmora.
+- [ ] **Qdrant:** Real vector write and subsequent semantic retrieval work.
+- [ ] **Lyzr:** A real configured agent/Manager execution is shown.
+- [ ] **Connected loop:** One request flows through voice, memory, orchestration and the authoritative Jac core.
+- [ ] **Observable workflow:** Actual events/states are visible to a viewer.
+- [ ] **Architecture diagram:** Included in this README and aligned with the implementation.
+- [ ] **Public repository:** README, setup instructions, dependencies and safe configuration are included.
+- [ ] **Secrets:** No real API keys or `.env` committed.
+- [ ] **Build track:** Named consistently.
+- [ ] **Deployed demo:** Link works for another person or required deployment limitations are documented.
+- [ ] **Demo video:** Five minutes maximum, including problem, live workflow and Omi/Qdrant/Lyzr roles.
+- [ ] **Submission form:** Project title, description, repository, demo URL/video and technology usage are complete.
+
+The hackathon guide specifies a public repository, a working demo, an architecture diagram, all three integrations, no committed secrets and a video of no more than five minutes. Confirm the active hackathon platform for the final submission form and deadline details.
+
+## 19. Known limitations and release checks
+
+Before calling a build production-ready, verify the following against source code, current data and live services:
+
+- Official program URLs, statutory conditions, state/jurisdiction differences and effective dates are up to date.
+- The `hud_income_limits.json` file named in the repository inventory is traced and does not accidentally apply U.S.-specific rules to India-only flows.
+- The UI no longer displays legacy U.S.-specific concepts, currency, examples or “federal/HUD/HRSA” policy claims for India-focused journeys unless clearly isolated to a test fixture.
+- The 51 localization dictionaries are not described as fully human-validated language support without end-to-end tests and review.
+- Omi event payloads are captured from the actual capability and parsed from the real schema.
+- Webhook authentication matches the actual Omi integration model; a local secret variable alone does not protect an endpoint unless the code validates it.
+- Qdrant persistence and tenant isolation pass real-service tests.
+- Lyzr orchestration is verified with the actual configured agent ID and API key.
+- Case deletion removes all intended data across graph, Qdrant and other persistence layers.
+- Metrics such as latency and number of model calls are measured rather than assumed.
+
+## 20. Maintenance and contribution
+
+Policy catalogs are living data. A safe update process should record at least:
+
+- Official source name and URL.
+- Jurisdiction and program scope.
+- Effective date or applicable period, if available.
+- Last-verified date.
+- Version/change note.
+- Tests for affected eligibility rules and transition routes.
+
+Keep code changes focused. Add regression tests for changed rules or routes, preserve the deterministic/LLM boundary, and update documentation and demo claims whenever the implementation changes.
+
+For a code contribution:
+
+1. Inspect the existing architecture and tests.
+2. Make the smallest necessary change.
+3. Add or update focused tests.
+4. Run regression tests.
+5. Check secrets, logging and user-isolation boundaries.
+6. Update the matching documentation/diagram if system behavior changed.
+
+## 21. Documentation files bundled with this README
+
+The ZIP package also includes the following focused companion documents:
+
+- [`docs/architecture.md`](docs/architecture.md) — trust boundaries and failure behavior.
+- [`docs/SECURITY_CHECKLIST.md`](docs/SECURITY_CHECKLIST.md) — pre-release security and privacy verification.
+- [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) — a paced five-minute demo script.
+- [`docs/HACKATHON_CHECKLIST.md`](docs/HACKATHON_CHECKLIST.md) — project, integration and submission checklist.
+
+## 22. Official and project resources
+
+- **Omi developer documentation:** <https://docs.omi.me/>
+- **Omi open-source repository:** <https://github.com/BasedHardware/omi>
+- **Qdrant documentation:** <https://qdrant.tech/documentation/>
+- **Lyzr documentation:** <https://docs.lyzr.ai/>
+- **Jac documentation:** <https://docs.jaseci.org/>
+- **Hackathon submission page:** <https://app.hidevs.xyz/hackathons/stop-prompting-solo-agents-hackathon-2026?tab=submit>
+
+Use current official documentation for provider APIs, webhook payloads, authentication and supported features. Do not treat example endpoints or variable names in a static README as a substitute for verifying the actual implementation.
 
 ---
 
-## Verification & Automated Tests
+<div align="center">
+  **HELPmora — Your story. Your next step.**
 
-All tests execute locally without external cloud dependencies:
-
-```powershell
-# 1. Integration Suite (Omi, Qdrant, Lyzr, Verification Gate, Adaptive Assistant, Safe Config) - 23 Tests
-.\.venv312\Scripts\python.exe helpmora/tests/test_integrations.py
-
-# 2. Reverse Gateway & Security Suite (Rate limiting, headers, payload caps) - 28 Tests
-.\.venv312\Scripts\python.exe helpmora/tests/test_cmguard.py
-
-# 3. End-to-End HTTP & Graph Walker Test Suite - 69 Tests (100% Pass)
-.\.venv312\Scripts\python.exe helpmora/tests/e2e_http.py http://localhost:8000
-
-# 3. Schema & Seed Graph Smoke Test (Verifies 40 programs seed cleanly)
-.\.venv312\Scripts\python.exe -m jaclang test helpmora/tests/test_schema.jac
-
-# 4. Policy Engine Verification (Verifies statutory calculation rules)
-.\.venv312\Scripts\python.exe -m jaclang run helpmora/tests/check_policy.jac
-
-# 5. Message Catalogs Linting (Verifies 50 i18n language catalogs)
-.\.venv312\Scripts\python.exe -m jaclang run helpmora/tests/check_messages.jac
-```
-
----
-
-## Project Structure
-
-```
-HELPmora/
-├── .github/                      # CI workflows, codeowners, PR templates
-├── docs/                         # Architecture, deployment, and demo docs
-│   ├── architecture.md           # Comprehensive multi-agent & memory architecture
-│   ├── demo.md                   # Step-by-step reproduction and demo guide
-│   ├── DEMO_SCRIPT.md            # 3-minute video recording walkthrough
-│   ├── DEPLOY.md                 # Render & Docker deployment instructions
-│   ├── DEVPOST_WRITEUP.md        # Detailed project submission writeup
-│   └── MAINTENANCE.md            # Engine architecture & portability guide
-├── helpmora/                     # Core application package
-│   ├── app.sv.jac                # Main Jaclang server entrypoint
-│   ├── cmguard/                  # Reverse security gateway & rate limiters
-│   ├── components/               # Client-side UI components (React / Jac)
-│   │   ├── ActionPlan.cl.jac     # Step-by-step checklist & document guide
-│   │   ├── AdaptiveAssistant.cl.jac # Adaptive Stepper, Voice-to-Form & Consent Gate
-│   │   ├── ChatPane.cl.jac       # Conversational intake & voice button
-│   │   ├── GraphViz.cl.jac       # Interactive decision graph visualization
-│   │   ├── HELPmoraLogo.cl.jac   # Animated Guided Thread logo
-│   │   └── LandingPage.cl.jac    # Landing page & CTA header
-│   ├── data/                     # Social welfare program definitions
-│   │   ├── resources.json        # 40 Indian Social Welfare Programs
-│   │   ├── transitions.json      # 26 Multi-step escape transition edges
-│   │   └── i18n/                 # Localized message catalogs (50 languages)
-│   ├── engine/                   # Deterministic scoring, parsing, and policy
-│   ├── graph/                    # Node and edge model definitions
-│   ├── integrations/             # External integration adapters & routers
-│   │   ├── api.py                # Unified REST API router
-│   │   ├── lyzr/                 # Lyzr Agent API client & 6 specialized agents
-│   │   ├── omi/                  # Omi webhook receiver & deduplication
-│   │   └── qdrant/               # Qdrant client, schemas & multi-tenant store
-│   ├── orchestration/            # Multi-agent SuperFlow DAG & CaseState contracts
-│   ├── verification/             # Zero-hallucination verification gate
-│   ├── tests/                    # Automated integration, smoke & security tests
-│   └── walkers/                  # Jac walkers (Seed, Intake, Eligibility, etc.)
-├── Dockerfile                    # Production Docker build container
-├── LICENSE                       # MIT License
-├── PRIVACY.md                    # Privacy guarantees & data scrubbing notice
-├── README.md                     # Project documentation
-├── requirements.txt              # Python runtime dependencies
-├── run.bat                       # Windows CMD one-click launcher
-└── run.ps1                       # Windows PowerShell one-click launcher
-```
-
----
-
-## License
-
-This project is open-source and released under the [MIT License](./LICENSE).  
-Maintained by **[@D1SH4NT121](https://github.com/D1SH4NT121)**.
-
+  *AI coordinates the journey. Deterministic policy logic remains accountable for eligibility.*
+</div>

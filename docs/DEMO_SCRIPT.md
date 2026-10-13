@@ -1,85 +1,49 @@
-﻿# HELPmora — 3-Minute Demonstration Script
+# HELPmora Five-Minute Hackathon Demo
 
-> **Architecture:** Deterministic graph-and-walker engine running on Jaclang / Python 3.12 with zero external API key requirements. 40 Indian welfare programs, 26 multi-step escape paths, and immediate crisis routing. See [README.md](../README.md) for full architecture and evaluation reports.
+Keep the recording under five minutes. Use synthetic test data and show the real running application and execution trace.
 
-**Target Length:** 3:00. Recorded at 1080p, screen capture + clear voiceover. Cursor visible.
+## 0:00–0:25 — Problem
 
----
+“People often need welfare or legal aid at the same time they are dealing with job loss, healthcare costs, housing insecurity, or missing documents. Finding the right program and the next step can be confusing.”
 
-## 0:00 – 0:20 — Hook & The Core Problem
+## 0:25–0:50 — Product
 
-**On screen:** HELPmora landing page (`http://localhost:8000/`). The animated "Guided Thread" logo glows; the hero line reads *"Every bureaucratic wall has a door. HELPmora finds it."* The primary CTA *"Enter the Navigator"* is positioned above the fold.
+“HELPmora is a voice-first civic welfare and free legal-aid navigator for India. It converts a person's story into structured case state, evaluates configured program rules deterministically, and guides the user toward a practical next step.”
 
-**Voiceover:**
-> "In India, hundreds of life-saving welfare programs exist — from affordable housing and grain rations to free healthcare and legal aid. But for an unorganized worker, a single mother, or an elderly citizen, navigating government portals is a maze of red tape, complex rules, and silent rejections."
->
-> "Generative AI chatbots hallucinate eligibility rules. Caseworkers are overburdened. This is **HELPmora** — a deterministic, privacy-first social welfare and legal navigator that matches citizens with the exact schemes they qualify for in under a minute, with zero hallucinations and zero external API keys required."
+## 0:50–1:35 — Omi
 
-**Action:** Hover over the *Enter the Navigator* button and click.
+Speak a synthetic query through the configured Omi app. Show the actual Omi-originated event reaching the backend. Show the source/channel in the trace. Do not call browser voice Omi.
 
----
+## 1:35–2:10 — Qdrant
 
-## 0:20 – 1:15 — Live Intake & Deterministic Scoring
+Show user-scoped memory retrieval. If the first request finds no previous case, show an explicit empty result. Store a consented synthetic case milestone and later retrieve it in a fresh request/session.
 
-**On screen:** The Navigator chat interface opens. The footer prominently displays verified national emergency helplines: **112 (Emergency)**, **181 (Women Helpline)**, **1098 (Childline)**, **14416 (Tele-MANAS)**, and **1930 (Cyber Crime)**.
+## 2:10–2:55 — Lyzr
 
-**Action:** Type in the chat input:
-> *"I am a single mother of two in Mumbai earning ₹8,000 a month. I'm struggling with rent and need food assistance for my family."*
+Show the actual Manager/agent calls and structured result. Explain what each agent is responsible for. Never show static agent names as proof of execution.
 
-**Press Enter.**
+## 2:55–3:45 — Jac policy engine and Pathfinder
 
-**Voiceover:**
-> "Notice what happens behind the scenes. In less than a millisecond, the engine executes closed-form deterministic math across 40 seeded Indian welfare programs across Housing, Food, Healthcare, and Legal Aid."
->
-> "Instead of letting an LLM guess, HELPmora applies calibrated logistic thresholds against official statutory rules: ₹96,000 annual income against PMAY-Urban EWS limits, Antyodaya Anna Yojana criteria, and Mission Poshan guidelines."
+Show the actual deterministic Jac tool result. If a route is blocked, show the existing Pathfinder search over curated transitions. Emphasize that the LLM does not decide statutory eligibility.
 
-**On screen:** The chat returns ranked recommendations:
-1. **Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY / NFSA)** — 5 kg free food grains per family member.
-2. **Mission Poshan 2.0 (ICDS Anganwadi)** — Supplementary nutrition and hot cooked meals for young children.
-3. **PMAY-Urban Housing for All** — EWS rental and construction subsidies with female head-of-household priority.
+## 3:45–4:25 — Guided action
 
-**Action:** Click the *Action Plan* tab. Show the step-by-step checklist of required documents (*Aadhaar Card*, *Ration Card*, *Income Certificate from Tehsildar*).
+Show a missing-fact question, document list, next-step explanation, and explicit user confirmation before any consequential action.
 
----
+## 4:25–4:45 — Resume or forget
 
-## 1:15 – 2:00 — Multi-Step Graph Pathfinder (Escape Paths)
+Demonstrate real memory retrieval on a subsequent turn, or demonstrate that the Forget action removes the synthetic case from the applicable stores.
 
-**On screen:** Switch to the **Decision Flow / Graph tab**.
+## 4:45–5:00 — Close
 
-**Voiceover:**
-> "Here is HELPmora’s signature innovation: **The Escape Path Pathfinder**."
->
-> "What happens when a citizen doesn't directly qualify for permanent housing because they lack land title or a permanent address? Traditional systems return a cold 'Application Denied'."
->
-> "HELPmora runs bounded graph traversal over 26 curated transition edges. It automatically identifies a multi-hop escape path: starting with **Shelter for Urban Homeless (SUH)** night shelter admission, progressing through biometric Aadhaar generation, and completing with an in-situ **PMAY-Urban** EWS rehabilitation allotment."
+“HELPmora connects voice, persistent memory and multi-agent orchestration to a deterministic civic policy engine—so the system can guide a person without allowing an LLM to make the authoritative eligibility decision.”
 
-**Action:** Click on the graph nodes to highlight the active `leads_to` progression path.
+## Recording checklist
 
----
-
-## 2:00 – 2:30 — Safety & Crisis Escalation
-
-**On screen:** Return to Chat. Demonstrate safety features.
-
-**Action:** Type a simulated crisis distress message:
-> *"I feel completely hopeless and have nowhere safe to stay tonight."*
-
-**Voiceover:**
-> "Safety is built by construction, not by model prompts. When a message indicates acute distress or violence risk, EscalationWalker immediately routes the user to official 24/7 helplines — such as Tele-MANAS at 14416 and Women Helpline 181 — with emergency shelter instructions."
->
-> "And for users on shared or monitored devices, clicking **Quick Exit** (or pressing Shift three times) instantly clears the screen and redirects safely."
-
-**Action:** Click the red **Quick Exit** button. Show instant redirection.
-
----
-
-## 2:30 – 3:00 — Conclusion & Open Source Architecture
-
-**On screen:** Return to homepage. Highlight repository badges and MIT license.
-
-**Voiceover:**
-> "HELPmora is 100% open-source, runs completely locally without paid API keys, and puts vulnerable citizens first."
->
-> "Every bureaucratic wall has a door. HELPmora helps you find it."
-
----
+- [ ] Omi input is genuinely from Omi.
+- [ ] Qdrant write and later retrieval are real.
+- [ ] Lyzr execution is real and traceable.
+- [ ] The Jac tool/result is real.
+- [ ] No real user data or credentials appear on screen.
+- [ ] The video is no longer than five minutes.
+- [ ] URLs are tested before submission.
