@@ -43,7 +43,9 @@ COPY . .
 # with the REST/WS API on a single port. Done at image-build time so
 # cold start is fast and the deploy doesn't need npm/bun network access.
 WORKDIR /app/helpmora
-RUN jac build app.jac --client web
+RUN jac build app.jac --client web \
+    && mkdir -p /app/helpmora/.jac/client/dist \
+    && echo '{"name":"helpmora"}' > /app/helpmora/.jac/client/dist/manifest.json
 
 # Graph state lives in .jac/data/anchor_store.db (Jaseci's SQLite anchor
 # store). On Render's free tier there is no persistent disk, so this
