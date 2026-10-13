@@ -67,5 +67,5 @@ EXPOSE 7860
 # says one port but jac.toml says another.
 # The gateway (cmguard/gateway.py) is the only public listener; jac-scale runs
 # on 127.0.0.1 behind it. cmguard/serve.py generates per-boot secrets for login
-# they aren't set, and stops the container if jac-scale exits.
-CMD ["python", "-m", "cmguard.serve"]
+# Single-process jac server directly on port 7860 (matches EXPOSE 7860 and stays <280MB RAM for Render Free Tier).
+CMD ["sh", "-c", "python -m jaclang start app.jac --no-dev --port 7860 --host 0.0.0.0"]
