@@ -109,9 +109,11 @@ check("B3 follow-up does not re-ask a stated fact", d and d["question"]["key"] n
 # ---- C. Chip tap keeps the case language ----
 d0, _ = turn(uid, tok, "我今天在哪里可以得到食物？我没有工作。")
 payload = d0["chips"][0] if d0 and d0["chips"] else "How do I apply for SNAP?"
-d1, ms = turn(uid, tok, payload, d0["profile"], d0["question"]["key"], "zh")
+d0_prof = d0["profile"] if d0 and "profile" in d0 else {}
+d0_key = (d0.get("question") or {}).get("key", "") if d0 else ""
+d1, ms = turn(uid, tok, payload, d0_prof, d0_key, "zh")
 check("C1 English chip payload with pinned zh: stays zh, same case, native reply",
-      d1 and d1["language"] == "zh" and d1["reply_language"] == "zh" and not d1["profile"].get("new_case") and d1["profile"]["category"] == "food",
+      d1 and d1["language"] == "zh" and d1["reply_language"] == "zh" and not (d1.get("profile") or {}).get("new_case") and (d1.get("profile") or {}).get("category") == "food",
       payload)
 
 # ---- D. Quick reply with an English payload ----
